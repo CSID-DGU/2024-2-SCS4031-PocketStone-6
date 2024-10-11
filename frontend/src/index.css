@@ -1,0 +1,23 @@
+@font-face {
+  font-family: "NanumGothic";
+  font-weight: normal;
+  src: url("./fonts/NanumGothic.woff");
+}
+@font-face {
+  font-family: "NanumGothicBold";
+  font-weight: normal;
+  src: url("./fonts/NanumGothicBold.woff");
+}
+@font-face {
+  font-family: "NanumGothicExtraBold";
+  font-weight: normal;
+  src: url("./fonts/NanumGothicExtraBold.woff");
+}
+
+body {
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "NanumGothic";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
