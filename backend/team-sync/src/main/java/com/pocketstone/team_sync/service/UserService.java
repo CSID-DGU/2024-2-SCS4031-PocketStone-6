@@ -1,6 +1,7 @@
 package com.pocketstone.team_sync.service;
 
 import java.time.Duration;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -39,13 +40,13 @@ public class UserService {
     //회원가입
     @Transactional
     public Long save(AddUserRequest dto) {
+        
         return userRepository.save(User.builder()
                 .loginId(dto.getLoginId())
                 .email(dto.getEmail())
                 .password(bCryptPasswordEncoder.encode(dto.getPassword()))//비밀번호 암호화 저장
-                .firstName(dto.getFirstName())
-                .lastName(dto.getLastName())
-                .birthDate(dto.getBirthDate())
+                .companyName(dto.getCompanyName())
+                .joinDate(LocalDate.now())
                 .build()).getId();
     }
 
@@ -94,13 +95,13 @@ public class UserService {
     }
 
     //유저정보 조회
-    public UserInformationResponse getUserInfo(String loginId){
-        User user = userRepository.findByLoginId(loginId).orElse(null);
+    public UserInformationResponse getUserInfo(Long userId){
+        User user = userRepository.findById(userId).orElse(null);
         if (user==null){
             //예외처리
             throw new IllegalArgumentException();
         }
-        return new UserInformationResponse(loginId, user.getFirstName(), user.getLastName());
+        return new UserInformationResponse(user);
 
     }
 

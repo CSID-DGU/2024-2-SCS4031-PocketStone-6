@@ -12,8 +12,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.pocketstone.team_sync.config.jwt.TokenProvider;
-import com.pocketstone.team_sync.repository.RefreshTokenRepository;
-import com.pocketstone.team_sync.service.UserDetailService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,9 +19,9 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 public class WebSecurityConfig {
 
-    private final UserDetailService userDetailService;
+    
     private final TokenProvider tokenProvider;
-    private final RefreshTokenRepository refreshTokenRepository;
+    
     //정적인 자원에 대한 보안 제외
     @Bean
     public WebSecurityCustomizer configure() {
@@ -44,8 +42,8 @@ public class WebSecurityConfig {
 
 
         http.authorizeHttpRequests((authz) -> authz
-                .requestMatchers("/api/users/**").permitAll() //로그인, 회원가입, 토큰 재발급만 접근허용
                 .requestMatchers("/api/users/me","api/users/withdraw").authenticated()
+                .requestMatchers("/api/users/**").permitAll() //로그인, 회원가입, 토큰 재발급만 접근허용
                 .requestMatchers("/api/**").authenticated() //api로 시작하는 모든 경로 인증필요
                 .anyRequest().permitAll());
         return http.build();

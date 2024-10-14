@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import com.pocketstone.team_sync.entity.User;
+import com.pocketstone.team_sync.repository.UserRepository;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class TokenProvider {
 
     private final JwtProperties jwtProperties;
+    private final UserRepository userRepository;
 
     public String generateToken(User user, Duration expiredAt) { //토큰 발급
         Date now = new Date(); //현재시간에서
@@ -61,7 +63,12 @@ public class TokenProvider {
         Claims claims = getClaims(token);
         Set<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")); //사용자권한집합-일반사용자
         //인증된 사용자 정보
-        return new UsernamePasswordAuthenticationToken(new org.springframework.security.core.userdetails.User(claims.getSubject(), "", authorities), token, authorities);
+        //return new UsernamePasswordAuthenticationToken(new org.springframework.security.core.userdetails.User(claims.getSubject(), "", authorities), token, authorities);
+        // 토큰에서 사용자 정보 추출
+        String loginId = claims.getSubject(); // 토큰의 서브젝트에 loginId가 저장되어 있다고 가정
+        User user = userRepository.findByLoginId(loginId)
+            .orElseThrow(() -> new IllegalArgumentException("해당 아이디로 사용자를 찾을 수 없습니다: " + loginId));
+        return new UsernamePasswordAuthenticationToken(user, token, authorities);
     }
 
     //토큰 기반으로 유저 아이디를 가져오는 메소드

@@ -3,10 +3,7 @@ package com.pocketstone.team_sync.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -65,15 +62,18 @@ public class UserController {
     //회원가입
     @PostMapping("/signup")
     public ResponseEntity<MessageResponse> registerUser(@RequestBody AddUserRequest request) {
-        userService.save(request);
-        return ResponseEntity.ok(new MessageResponse("가입이 성공적으로 완료되었습니다."));
+        try {
+            userService.save(request);
+            return ResponseEntity.ok(new MessageResponse("가입이 성공적으로 완료되었습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+        
     }
 
     //회원탈퇴
     @DeleteMapping("/withdraw")
-    public ResponseEntity<MessageResponse> deleteAccount() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByLoginId(authentication.getName()).orElse(null);
+    public ResponseEntity<MessageResponse> deleteAccount(@AuthenticationPrincipal User user) {
         Long userId = user.getId();
         userService.deleteAccount(userId);
         return ResponseEntity.ok(new MessageResponse("탈퇴처리 되었습니다."));
@@ -86,7 +86,6 @@ public class UserController {
         
         String password = loginRequest.getPassword();
         
-
         LoginTokenResponse loginToken = userService.login(loginId, password);
         if (loginToken == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
@@ -99,18 +98,21 @@ public class UserController {
     //토큰 재요청
     @PostMapping("/refresh")
     public ResponseEntity<CreateAccessTokenResponse> createNewAccessToken(@RequestBody CreateAccessTokenRequest request) {
-        String newAccessToken = tokenService.createNewAccessToken(request.getRefreshToken());
+        try {
+            String newAccessToken = tokenService.createNewAccessToken(request.getRefreshToken());
+            return ResponseEntity.status(HttpStatus.CREATED).body(new CreateAccessTokenResponse(newAccessToken));
+        } catch(Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
         
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CreateAccessTokenResponse(newAccessToken));
     }
 
     
 
     //유저 정보 조회
     @GetMapping("/me")
-    public ResponseEntity<UserInformationResponse> getUserInfo(@AuthenticationPrincipal UserDetails userDetail) {
-        
-        String loginId = userDetail.getUsername();
-        return ResponseEntity.ok(userService.getUserInfo(loginId));
+    public ResponseEntity<UserInformationResponse> getUserInfo(@AuthenticationPrincipal User user) {
+        Long userId = user.getId();
+        return ResponseEntity.ok(userService.getUserInfo(userId));
     }
 }
