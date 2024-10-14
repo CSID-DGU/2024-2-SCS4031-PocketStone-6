@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import './App.css';
 import Main from './routes/Main';
 import Register from './routes/auth/Register';
@@ -6,11 +6,14 @@ import Login from './routes/auth/Login';
 import Test from './routes/Test';
 
 function App() {
+  
+  const navigate = useNavigate()
+
   return (
     <div>
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
         <h2>페이지 모든 Nav바임</h2>
-        <Link to={`/test`}>테스트페이지 이동</Link>
+        <button onClick={()=>{navigate('/test')}}>테스트페이지 이동</button>
       </div>
       <Routes>
         {/* 메인 페이지 */}
