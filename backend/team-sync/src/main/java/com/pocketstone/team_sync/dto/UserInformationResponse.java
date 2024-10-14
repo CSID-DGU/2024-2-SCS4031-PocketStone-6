@@ -1,5 +1,9 @@
 package com.pocketstone.team_sync.dto;
 
+import java.time.LocalDate;
+
+import com.pocketstone.team_sync.entity.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,6 +12,12 @@ import lombok.Getter;
 public class UserInformationResponse {
 
     private String loginId;
-    private String firstName;
-    private String lastName;
+    private String companyName;
+    private LocalDate joinDate;
+
+    public UserInformationResponse(User user){
+        loginId = user.getLoginId();
+        companyName = user.getCompanyName();
+        joinDate = user.getJoinDate();
+    }
 }
