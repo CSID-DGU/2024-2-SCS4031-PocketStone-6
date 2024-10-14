@@ -44,7 +44,8 @@ public class WebSecurityConfig {
 
 
         http.authorizeHttpRequests((authz) -> authz
-                .requestMatchers("/api/token","/login","/signup").permitAll() //로그인, 회원가입, 토큰 재발급만 접근허용
+                .requestMatchers("/api/users/**").permitAll() //로그인, 회원가입, 토큰 재발급만 접근허용
+                .requestMatchers("/api/users/me","api/users/withdraw").authenticated()
                 .requestMatchers("/api/**").authenticated() //api로 시작하는 모든 경로 인증필요
                 .anyRequest().permitAll());
         return http.build();

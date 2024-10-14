@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pocketstone.team_sync.dto.AddUserRequest;
@@ -31,7 +32,8 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-public class UserApiController {
+@RequestMapping("/api/users")
+public class UserController {
 
     @Autowired
     private UserService userService;
@@ -41,16 +43,16 @@ public class UserApiController {
     private TokenService tokenService;
 
     //아이디 중복확인
-    @PostMapping("/signup/check-loginid")
+    @PostMapping("/check-loginid")
     public ResponseEntity<MessageResponse> checkLoginId(@RequestBody CheckLoginIdRequest inputLoginId) {
         if(!userRepository.existsByLoginId(inputLoginId.getLoginId())){
             return ResponseEntity.ok(new MessageResponse("사용가능한 아이디입니다."));
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("이미 사용 중인 아이디입니다."));
-    }
+}
 
     //이메일 중복확인
-    @PostMapping("/signup/check-email")
+    @PostMapping("/check-email")
     public ResponseEntity<MessageResponse> checkEmail(@RequestBody CheckEmailRequest inputEmail) {
         if(!userRepository.existsByEmail(inputEmail.getEmail())){
             return ResponseEntity.ok(new MessageResponse("사용가능한 이메일입니다."));
@@ -68,7 +70,7 @@ public class UserApiController {
     }
 
     //회원탈퇴
-    @DeleteMapping("/api/withdraw")
+    @DeleteMapping("/withdraw")
     public ResponseEntity<MessageResponse> deleteAccount() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByLoginId(authentication.getName()).orElse(null);
@@ -83,50 +85,29 @@ public class UserApiController {
         String loginId = loginRequest.getLoginId();
         
         String password = loginRequest.getPassword();
-        //System.out.println("이게뭐야야야야야"+loginId+password);
-        // LoginTokenResponse loginToken = userService.login(loginId, password);
-        // return loginToken;
-        //try {
-        // LoginTokenResponse loginToken = userService.login(loginId, password);
-        // if (loginToken != null) {
-        //     // 로그인 성공 시 토큰과 함께 200 OK 응답
-        //     return ResponseEntity.ok(loginToken);
-        //  } //에러 처리 다시하기 
-         //else {
-        //     // 로그인 실패 시 401 Unauthorized 응답
-        //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("아이디 또는 비밀번호를 다시 확인해주세요.");
-        // }
-        // } catch (Exception e) {
-        //     // 예외 발생 시 400 Bad Request 응답
-        //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occurred");
-        //}
+        
 
         LoginTokenResponse loginToken = userService.login(loginId, password);
-        
-        
+        if (loginToken == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
         return ResponseEntity.ok(loginToken);
         
     }
 
     
     //토큰 재요청
-    @PostMapping("/api/token")
+    @PostMapping("/refresh")
     public ResponseEntity<CreateAccessTokenResponse> createNewAccessToken(@RequestBody CreateAccessTokenRequest request) {
         String newAccessToken = tokenService.createNewAccessToken(request.getRefreshToken());
         
         return ResponseEntity.status(HttpStatus.CREATED).body(new CreateAccessTokenResponse(newAccessToken));
     }
-    // //로그아웃
-    // @PostMapping("/logout")
-    // public ResponseEntity<String> logout(@RequestHeader("Authorization") String authorizationHeader) {
-    //     // "Bearer " 접두사 제거
-    //     String token = authorizationHeader.substring(7);
-    //     tokenService.blacklistToken(token);
-    //     return ResponseEntity.ok("로그아웃 되었습니다.");
-    // }
+
+    
 
     //유저 정보 조회
-    @GetMapping("/api/user")
+    @GetMapping("/me")
     public ResponseEntity<UserInformationResponse> getUserInfo(@AuthenticationPrincipal UserDetails userDetail) {
         
         String loginId = userDetail.getUsername();

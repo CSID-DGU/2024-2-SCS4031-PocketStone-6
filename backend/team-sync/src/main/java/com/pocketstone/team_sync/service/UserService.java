@@ -35,7 +35,6 @@ public class UserService {
 
     public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(14);
     public static final Duration ACCESS_TOKEN_DURATION = Duration.ofHours(2);
-   // private final AuthenticationManager authenticationManager;
 
     //회원가입
     @Transactional
@@ -53,8 +52,7 @@ public class UserService {
     //로그인
     @Transactional
     public LoginTokenResponse login(String loginId, String password) {
-        // User user = userRepository.findByLoginId(loginId)
-        //         .orElseThrow(() -> new BadCredentialsException("User not found"));
+
         User user = userRepository.findByLoginId(loginId)
                 .orElse(null);
 
@@ -62,10 +60,7 @@ public class UserService {
             return null;
         }
 
-        // if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
-        //     throw new BadCredentialsException("Invalid password");
 
-        // }
 
         if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
             //throw new BadCredentialsException("Invalid password");
@@ -81,21 +76,6 @@ public class UserService {
         return loginToken;
     }
 
-        // public LoginTokenResponse login(String loginId, String password) {
-        // Authentication authentication = authenticationManager.authenticate(
-        //     new UsernamePasswordAuthenticationToken(loginId, password)
-        // );
-
-        // UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        // User user = userRepository.findByLoginId(userDetails.getUsername())
-        //         .orElseThrow(() -> new BadCredentialsException("User not found"));//로그인 아이디로 조회
-        // String accessToken = tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION);
-        // String refreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
-        
-        // refreshTokenService.saveRefreshToken(user.getId(), refreshToken);
-        
-        // return new LoginTokenResponse("Bearer", accessToken, refreshToken);
-        // }
 
     public User findById(Long userId){
         return userRepository.findById(userId)
@@ -118,6 +98,7 @@ public class UserService {
         User user = userRepository.findByLoginId(loginId).orElse(null);
         if (user==null){
             //예외처리
+            throw new IllegalArgumentException();
         }
         return new UserInformationResponse(loginId, user.getFirstName(), user.getLastName());
 
