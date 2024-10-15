@@ -9,9 +9,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.pocketstone.team_sync.config.jwt.TokenProvider;
-import com.pocketstone.team_sync.dto.AddUserRequest;
-import com.pocketstone.team_sync.dto.LoginTokenResponse;
-import com.pocketstone.team_sync.dto.UserInformationResponse;
+import com.pocketstone.team_sync.dto.userdto.AddUserRequestDto;
+import com.pocketstone.team_sync.dto.userdto.LoginTokenResponseDto;
+import com.pocketstone.team_sync.dto.userdto.UserInformationResponseDto;
 import com.pocketstone.team_sync.entity.User;
 import com.pocketstone.team_sync.repository.RefreshTokenRepository;
 import com.pocketstone.team_sync.repository.UserRepository;
@@ -39,7 +39,7 @@ public class UserService {
 
     //회원가입
     @Transactional
-    public Long save(AddUserRequest dto) {
+    public Long save(AddUserRequestDto dto) {
         
         return userRepository.save(User.builder()
                 .loginId(dto.getLoginId())
@@ -52,7 +52,7 @@ public class UserService {
 
     //로그인
     @Transactional
-    public LoginTokenResponse login(String loginId, String password) {
+    public LoginTokenResponseDto login(String loginId, String password) {
 
         User user = userRepository.findByLoginId(loginId)
                 .orElse(null);
@@ -73,7 +73,7 @@ public class UserService {
         String refreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
         String accessToken = tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION);
         refreshTokenService.saveRefreshToken(user.getId(),refreshToken);
-        LoginTokenResponse loginToken = new LoginTokenResponse("Bearer", accessToken, refreshToken);
+        LoginTokenResponseDto loginToken = new LoginTokenResponseDto("Bearer", accessToken, refreshToken);
         return loginToken;
     }
 
@@ -95,13 +95,13 @@ public class UserService {
     }
 
     //유저정보 조회
-    public UserInformationResponse getUserInfo(Long userId){
+    public UserInformationResponseDto getUserInfo(Long userId){
         User user = userRepository.findById(userId).orElse(null);
         if (user==null){
             //예외처리
             throw new IllegalArgumentException();
         }
-        return new UserInformationResponse(user);
+        return new UserInformationResponseDto(user);
 
     }
 

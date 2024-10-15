@@ -1,4 +1,4 @@
-package com.pocketstone.team_sync.dto;
+package com.pocketstone.team_sync.dto.userdto;
 
 import java.time.LocalDate;
 
@@ -9,13 +9,13 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class UserInformationResponse {
+public class UserInformationResponseDto {
 
     private String loginId;
     private String companyName;
     private LocalDate joinDate;
 
-    public UserInformationResponse(User user){
+    public UserInformationResponseDto(User user){
         loginId = user.getLoginId();
         companyName = user.getCompanyName();
         joinDate = user.getJoinDate();
