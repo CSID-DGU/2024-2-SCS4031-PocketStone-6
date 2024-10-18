@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class MessageResponse {
+public class MessageResponseDto {
 
     private String message;
 
