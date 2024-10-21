@@ -2,7 +2,7 @@
     padding: 20px;
 }
 
-.container > * {
+.container>* {
     display: block;
 }
 

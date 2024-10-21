@@ -6,14 +6,14 @@ import Login from './routes/auth/Login';
 import Test from './routes/Test';
 
 function App() {
-  
+
   const navigate = useNavigate()
 
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <h2>페이지 모든 Nav바임</h2>
-        <button onClick={()=>{navigate('/test')}}>테스트페이지 이동</button>
+        <button onClick={() => { navigate('/test') }}>테스트페이지 이동</button>
       </div>
       <Routes>
         {/* 메인 페이지 */}
