@@ -5,8 +5,6 @@ import lombok.Data;
 @Data
 public class ProjectCharterDto {
 
-    private Long id;
-    private Long projectId;
     private String teamPositions;
     private String vision;
     private String objective;
