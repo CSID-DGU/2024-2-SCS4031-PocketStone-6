@@ -7,6 +7,10 @@ interface checkIDType {
 interface colorsType {
     [key: string]: string
 }
+interface loginInfoType {
+    loginId: string,
+    password: string
+}
 interface registerInfoType {
     loginId: string,
     email: string,
