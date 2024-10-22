@@ -1,6 +1,7 @@
 package com.pocketstone.team_sync.controller;
 
 import com.pocketstone.team_sync.dto.projectdto.ProjectDto;
+import com.pocketstone.team_sync.dto.projectdto.ProjectWrapperDto;
 import com.pocketstone.team_sync.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,8 @@ public class ProjectController {
 
     //프로젝트 생성
     @PostMapping("/add")
-    public ResponseEntity<ProjectDto> addProject(@RequestBody ProjectDto projectDto) {
-
+    public ResponseEntity<ProjectDto> addProject(@RequestBody ProjectWrapperDto projectWrapperDto) {
+        ProjectDto projectDto = projectWrapperDto.getProjectDto();
         return new ResponseEntity<>(projectService.save(projectDto), HttpStatus.CREATED);
     }
     //@GetMapping
