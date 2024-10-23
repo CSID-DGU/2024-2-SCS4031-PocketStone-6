@@ -4,6 +4,8 @@ import Main from './routes/Main';
 import Register from './routes/auth/Register';
 import Login from './routes/auth/Login';
 import Test from './routes/Test';
+import Project from './routes/project/Project';
+import About from './routes/project/About';
 
 function App() {
 
@@ -25,6 +27,12 @@ function App() {
         {/* 회원가입/로그인 */}
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
+
+        {/* 프로젝트 */}
+        <Route path='/project' element={<Project />}>
+          <Route path='new' element={<p>new</p>} />
+        </Route>
+        <Route path='/project/about' element={<About />} />
       </Routes>
     </div>
   );
