@@ -1,6 +1,7 @@
 package com.pocketstone.team_sync.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.pocketstone.team_sync.dto.projectdto.TimelineDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -33,12 +34,10 @@ public class Timeline {
 
 
     @Builder
-    public Timeline(Long id, Project project, Integer sprintOrder, String sprintContent, Integer sprintDurationWeek) {
-        this.id = id;
+    public Timeline(Project project, Integer sprintOrder, String sprintContent, Integer sprintDurationWeek) {
         this.project = project;
         this.sprintOrder = sprintOrder;
         this.sprintContent = sprintContent;
         this.sprintDurationWeek = sprintDurationWeek;
     }
-
 }
