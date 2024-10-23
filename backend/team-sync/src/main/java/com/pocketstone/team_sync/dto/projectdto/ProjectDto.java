@@ -9,4 +9,14 @@ public class ProjectDto {
     private String projectName;
     private LocalDate startDate;
     private LocalDate mvpDate;
+
+    public ProjectDto(String projectName, LocalDate startDate, LocalDate mvpDate) {
+        this.projectName = projectName;
+        this.startDate = startDate;
+        this.mvpDate = mvpDate;
+    }
 }
+
+
+
+
