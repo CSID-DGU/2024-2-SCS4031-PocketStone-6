@@ -117,7 +117,7 @@ public class ProjectController {
 
     //세부 타임라인 별 맨먼스 조회
     @GetMapping("/{projectId}/{timeLineId}/man-month")
-    public ResponseEntity<List<ManMonthUpdateDto>> getManMonth(@PathVariable Long projectId,
+    public ResponseEntity<List<ManMonthDto>> getManMonth(@PathVariable Long projectId,
                                                          @PathVariable Long timeLineId) {
         return new ResponseEntity<>(manMonthService.findManMonthByProjectAndTimeline(projectId, timeLineId), HttpStatus.OK);
     }
@@ -130,9 +130,9 @@ public class ProjectController {
 
     //맨먼스 업데이트
     @PutMapping("/{projectId}/{timeLineId}/man-month")
-    public ResponseEntity<List<ManMonthUpdateDto>> updateManMonth(@PathVariable Long projectId,
+    public ResponseEntity<List<ManMonthDto>> updateManMonth(@PathVariable Long projectId,
                                                             @PathVariable Long timeLineId,
-                                                            @RequestBody List<ManMonthUpdateDto> manMonthDtoList) {
+                                                            @RequestBody List<ManMonthDto> manMonthDtoList) {
         return new ResponseEntity<>(manMonthService.updateManMonth(projectId, timeLineId, manMonthDtoList), HttpStatus.OK);
     }
 }

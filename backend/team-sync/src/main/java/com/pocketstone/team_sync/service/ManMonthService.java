@@ -2,7 +2,6 @@ package com.pocketstone.team_sync.service;
 
 
 import com.pocketstone.team_sync.dto.projectdto.ManMonthDto;
-import com.pocketstone.team_sync.dto.projectdto.ManMonthUpdateDto;
 import com.pocketstone.team_sync.entity.ManMonth;
 import com.pocketstone.team_sync.entity.Project;
 import com.pocketstone.team_sync.entity.Timeline;
@@ -41,20 +40,17 @@ public class ManMonthService {
                 .orElseThrow(() -> new RuntimeException("타임라인 찾을 수 없음"));
 
         for (ManMonthDto manMonthDto : manMonthDtoList) {
-            manMonthRepository.save(
-                    ManMonth.builder().project(project)
-                            .timeline(timeline).position(manMonthDto.getPosition())
-                            .manMonth(manMonthDto.getManMonth())
-                            .build());
+            manMonthRepository.save(manMonthDto.toManMonth(project, timeline, manMonthDto));
+
         }
     }
 
     //프로젝트의 타임라인 별로 맨먼스 조회
-    public List<ManMonthUpdateDto> findManMonthByProjectAndTimeline(Long projectId, Long timelineId) {
+    public List<ManMonthDto> findManMonthByProjectAndTimeline(Long projectId, Long timelineId) {
 
         List<ManMonth> manMonths = manMonthRepository.findManMonthByProjectAndTimeline(projectId, timelineId);
         return manMonths.stream()
-                .map(manMonth -> new ManMonthUpdateDto(
+                .map(manMonth -> new ManMonthDto(
                         manMonth.getId(),
                         manMonth.getPosition(),
                         manMonth.getManMonth()
@@ -82,8 +78,8 @@ public class ManMonthService {
     }
 
     //맨먼스 지수 수정
-    public List<ManMonthUpdateDto> updateManMonth(Long projectId, Long timelineId, List<ManMonthUpdateDto> manMonthDtos) {
-        for (ManMonthUpdateDto manMonthDto : manMonthDtos) {
+    public List<ManMonthDto> updateManMonth(Long projectId, Long timelineId, List<ManMonthDto> manMonthDtos) {
+        for (ManMonthDto manMonthDto : manMonthDtos) {
             manMonthRepository.updateManMonthByProjectAndTimeline(
                     manMonthDto.getId(),
                     projectId,
