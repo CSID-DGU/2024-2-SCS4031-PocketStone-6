@@ -1,7 +1,6 @@
 package com.pocketstone.team_sync.controller;
 
 import com.pocketstone.team_sync.dto.projectdto.*;
-import com.pocketstone.team_sync.entity.ProjectCharter;
 import com.pocketstone.team_sync.service.ProjectCharterService;
 import com.pocketstone.team_sync.service.ProjectService;
 import com.pocketstone.team_sync.service.TimelineService;
@@ -53,7 +52,7 @@ public class ProjectController {
     //@GetMapping 프로젝트 시작일과 MVP일로 프로젝트 찾기
 
     //프로젝트 차터 생성
-    @PostMapping("/{projectId}/projectcharter")
+    @PostMapping("/{projectId}/charter")
     public ResponseEntity<ProjectCharterDto> saveProjectCharter(@PathVariable Long projectId,
                                                                 @RequestBody ProjectCharterDto projectCharterDto){
         return new ResponseEntity<>(projectCharterService.saveProjectCharter(projectId, projectCharterDto), HttpStatus.CREATED);
@@ -61,13 +60,13 @@ public class ProjectController {
     }
 
     //프로젝트 id로 차터 검색
-    @GetMapping("/{projectId}/projectcharter")
+    @GetMapping("/{projectId}/charter")
     public ResponseEntity<ProjectCharterDto> getProjectCharter(@PathVariable Long projectId){
         return new ResponseEntity<>(projectCharterService.findByProjectId(projectId), HttpStatus.OK);
     }
 
     //프로젝트 차터 업데이트
-    @PutMapping("/{projectId}/projectcharter")
+    @PutMapping("/{projectId}/charter")
     public ResponseEntity<ProjectCharterDto> updateProjectCharter(@PathVariable Long projectId,
                                                                   @RequestBody ProjectCharterDto projectCharterDto){
         return new ResponseEntity<>(projectCharterService.updateProjectCharterByProjectId(projectId, projectCharterDto), HttpStatus.OK);
