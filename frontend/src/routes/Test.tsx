@@ -3,6 +3,7 @@ import { DatePickerComponent } from "../components/Input/DatePicker";
 import { useLoginInfo } from "../hooks/useLoginInfo";
 import { doLogout } from "../api/authAPI";
 import { refreshPage } from "../utils/movePage";
+import { checkMyInfo } from "../api/checkMyInfoAPI";
 
 export default function Test() {
     const navigate = useNavigate()
@@ -17,6 +18,9 @@ export default function Test() {
                 doLogout()
                 refreshPage(navigate)
             }}>로그아웃</button>
+            <button onClick={() => {
+                checkMyInfo()
+            }}>내 정보보기</button>
         </div>
 
     )

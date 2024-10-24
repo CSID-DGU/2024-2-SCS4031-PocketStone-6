@@ -1,0 +1,1 @@
+export const API_URL: URLType = process.env.REACT_APP_API_URL

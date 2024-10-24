@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Link, Route, Routes, useNavigate } from 'react-router-dom';
 import './App.css';
 import Main from './routes/Main';
 import Register from './routes/auth/Register';
@@ -16,6 +16,7 @@ function App() {
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <h2>페이지 모든 Nav바임</h2>
         <button onClick={() => { navigate('/test') }}>테스트페이지 이동</button>
+        <button onClick={() => { navigate('/project') }}>프로젝트 관리</button>
       </div>
       <Routes>
         {/* 메인 페이지 */}

@@ -1,10 +1,9 @@
 import axios from "axios"
 import { headers } from "../constants/headers"
 import { NavigateFunction } from "react-router-dom"
-import { deleteCookies, saveCookies } from "../utils/handleCookies"
+import { deleteCookies, getCookie, saveCookies } from "../utils/handleCookies"
 import { WRONG_LOGIN_INFO } from "../constants/errorMessage"
-
-const API_URL: URLType = process.env.REACT_APP_API_URL
+import { API_URL } from "../constants/envText"
 
 export const doLogin = async (id: string, password: string, navigate: NavigateFunction) => {
     const content: loginInfoType = {
@@ -75,4 +74,23 @@ export const checkID = async (id: string) => {
 export const doLogout = () => {
     deleteCookies('access')
     deleteCookies('refresh')
+}
+
+export const getAccessToken = async () => {
+    const content: { 'refreshToken': string | null } = {
+        refreshToken: getCookie('refresh')
+    }
+
+    try {
+        const response = await axios.post(`${API_URL}/api/users/refresh`,
+            content,
+            {headers: headers}
+        )
+        return response.data
+    } catch (error) {
+        console.error(error)
+        if (axios.isAxiosError(error)) {
+            return error.response?.data
+        }
+    }
 }
