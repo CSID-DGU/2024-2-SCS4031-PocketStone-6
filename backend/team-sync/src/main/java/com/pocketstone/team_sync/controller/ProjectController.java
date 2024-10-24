@@ -88,16 +88,16 @@ public class ProjectController {
 
     //프로젝트별 타임라인(스프린트)일정 조회
     @GetMapping("/{projectId}/timelines")
-    public ResponseEntity<List<TimelineUpdateDto>> getAllTimelinesForProject(@PathVariable Long projectId) {
-        List<TimelineUpdateDto> timelines = timelineService.findAllByProjectId(projectId);
+    public ResponseEntity<List<TimelineDto>> getAllTimelinesForProject(@PathVariable Long projectId) {
+        List<TimelineDto> timelines = timelineService.findAllByProjectId(projectId);
         return new ResponseEntity<>(timelines, HttpStatus.OK);
     }
 
     //프로젝트 별 타임라인 업데이트 *업데이트 할때는 타임라인 table id도 같이 보내야함
     @PutMapping("/{projectId}/timelines")
-    public ResponseEntity<List<TimelineUpdateDto>> updateTimelines(@PathVariable Long projectId,
-                                                                   @RequestBody List<TimelineUpdateDto> timelineDtos) {
-        List<TimelineUpdateDto> updatedTimelines = timelineService.updateTimelines(projectId, timelineDtos);
+    public ResponseEntity<List<TimelineDto>> updateTimelines(@PathVariable Long projectId,
+                                                                   @RequestBody List<TimelineDto> timelineDtos) {
+        List<TimelineDto> updatedTimelines = timelineService.updateTimelines(projectId, timelineDtos);
 
         if (!updatedTimelines.isEmpty()) {
             return new ResponseEntity<>(updatedTimelines, HttpStatus.OK);

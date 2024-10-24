@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
 
 @Data
@@ -20,12 +19,13 @@ public class ManMonthDto {
     private String position;
     private BigDecimal manMonth;
 
+    //맨먼스 초기 생성시 사용하는 생성자
     public ManMonthDto(String position, BigDecimal manMonth) {
         this.position = position;
         this.manMonth = manMonth;
     }
 
-    @JsonCreator // Indicates that this constructor should be used for deserialization
+    @JsonCreator //json으로 받을때 id와 함께 호출하는 생성자
     public ManMonthDto(@JsonProperty("id") Long id,
                        @JsonProperty("position") String position,
                        @JsonProperty("manMonth") BigDecimal manMonth) {
@@ -34,8 +34,8 @@ public class ManMonthDto {
         this.manMonth = manMonth;
     }
 
-
-     public ManMonth toManMonth(Project project, Timeline timeline, ManMonthDto manMonthDto) {
+    //맨먼스Dto 엔티티로 변환
+    public ManMonth toManMonth(Project project, Timeline timeline, ManMonthDto manMonthDto) {
         return ManMonth.builder().project(project)
                 .timeline(timeline)
                 .position(manMonthDto.getPosition())
