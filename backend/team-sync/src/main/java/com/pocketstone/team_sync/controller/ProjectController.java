@@ -6,7 +6,6 @@ import com.pocketstone.team_sync.service.ProjectCharterService;
 import com.pocketstone.team_sync.service.ProjectService;
 import com.pocketstone.team_sync.service.TimelineService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
