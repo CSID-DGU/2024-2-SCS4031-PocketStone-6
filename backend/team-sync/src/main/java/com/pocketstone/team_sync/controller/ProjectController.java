@@ -1,9 +1,8 @@
 package com.pocketstone.team_sync.controller;
 
-import com.pocketstone.team_sync.dto.projectdto.ProjectDto;
-import com.pocketstone.team_sync.dto.projectdto.ProjectWrapperDto;
-import com.pocketstone.team_sync.dto.projectdto.TimelineDto;
-import com.pocketstone.team_sync.dto.projectdto.TimelineUpdateDto;
+import com.pocketstone.team_sync.dto.projectdto.*;
+import com.pocketstone.team_sync.entity.ProjectCharter;
+import com.pocketstone.team_sync.service.ProjectCharterService;
 import com.pocketstone.team_sync.service.ProjectService;
 import com.pocketstone.team_sync.service.TimelineService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +24,9 @@ public class ProjectController {
 
     @Autowired
     private TimelineService timelineService;
+
+    @Autowired
+    private ProjectCharterService projectCharterService;
 
     //프로젝트 생성
     @PostMapping("/project")
@@ -49,6 +51,27 @@ public class ProjectController {
     //@PostMapping 프로젝트 업데이트
     //@DeleteMapping 프로젝트 삭제
     //@GetMapping 프로젝트 시작일과 MVP일로 프로젝트 찾기
+
+    //프로젝트 차터 생성
+    @PostMapping("/{projectId}/projectcharter")
+    public ResponseEntity<ProjectCharterDto> saveProjectCharter(@PathVariable Long projectId,
+                                                                @RequestBody ProjectCharterDto projectCharterDto){
+        return new ResponseEntity<>(projectCharterService.saveProjectCharter(projectId, projectCharterDto), HttpStatus.CREATED);
+
+    }
+
+    //프로젝트 id로 차터 검색
+    @GetMapping("/{projectId}/projectcharter")
+    public ResponseEntity<ProjectCharterDto> getProjectCharter(@PathVariable Long projectId){
+        return new ResponseEntity<>(projectCharterService.findByProjectId(projectId), HttpStatus.OK);
+    }
+
+    //프로젝트 차터 업데이트
+    @PutMapping("/{projectId}/projectcharter")
+    public ResponseEntity<ProjectCharterDto> updateProjectCharter(@PathVariable Long projectId,
+                                                                  @RequestBody ProjectCharterDto projectCharterDto){
+        return new ResponseEntity<>(projectCharterService.updateProjectCharterByProjectId(projectId, projectCharterDto), HttpStatus.OK);
+    }
 
 
     //프로젝트별 타임라인(스프린트)일정 추가

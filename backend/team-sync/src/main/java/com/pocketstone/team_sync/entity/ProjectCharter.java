@@ -3,6 +3,7 @@ package com.pocketstone.team_sync.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -50,5 +51,18 @@ public class ProjectCharter {
     //프로젝트 원칙
     @Column (name = "principle", nullable = false)
     private String principle;
+
+    @Builder
+    public ProjectCharter(Project project, String teamPositions, String vision, String objective, String stakeholder, String scope, String risk, String principle) {
+
+        this.project = project;
+        this.teamPositions = teamPositions;
+        this.vision = vision;
+        this.objective = objective;
+        this.stakeholder = stakeholder;
+        this.scope = scope;
+        this.risk = risk;
+        this.principle = principle;
+    }
 
 }

@@ -25,6 +25,11 @@ public class ManMonth {
     @JoinColumn (name = "project_id", nullable = false)
     private Project project;
 
+    //타임라인 id, 외래키
+    @ManyToOne (fetch = FetchType.LAZY)
+    @JoinColumn (name = "timeline_id", nullable = false)
+    private Timeline timeline;
+
     //포지션
     @Column (name = "position", nullable = false)
     private String position;
