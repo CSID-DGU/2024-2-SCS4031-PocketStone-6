@@ -15,6 +15,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.pocketstone.team_sync.config.jwt.TokenProvider;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Configuration
@@ -32,7 +38,7 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors(Customizer.withDefaults()).csrf(CsrfConfigurer::disable)
+        http.csrf(CsrfConfigurer::disable)
         .httpBasic(basic -> basic.disable())//베이직 로그인 사용 안함
         .formLogin(AbstractHttpConfigurer::disable);//폼로그인 사용안함
 
@@ -47,7 +53,20 @@ public class WebSecurityConfig {
                 .requestMatchers("/api/users/**").permitAll() //로그인, 회원가입, 토큰 재발급만 접근허용
                 .requestMatchers("/api/**").authenticated() //api로 시작하는 모든 경로 인증필요
                 .anyRequest().permitAll());
+
+        http.cors(cors -> cors.configurationSource(apiConfigurationSource()));
         return http.build();
+    }
+
+    UrlBasedCorsConfigurationSource apiConfigurationSource(){
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:5000"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE","PATCH", "OPTIONS"));
+        configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean
