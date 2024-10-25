@@ -2,6 +2,7 @@ package com.pocketstone.team_sync.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -31,7 +32,7 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(CsrfConfigurer::disable)
+        http.cors(Customizer.withDefaults()).csrf(CsrfConfigurer::disable)
         .httpBasic(basic -> basic.disable())//베이직 로그인 사용 안함
         .formLogin(AbstractHttpConfigurer::disable);//폼로그인 사용안함
 
