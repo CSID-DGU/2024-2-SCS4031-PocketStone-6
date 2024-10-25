@@ -90,7 +90,8 @@ export const getAccessToken = async () => {
     } catch (error) {
         console.error(error)
         if (axios.isAxiosError(error)) {
-            return error.response?.data
+            console.error(error.response?.data)
         }
+        return Promise.reject(error);
     }
 }

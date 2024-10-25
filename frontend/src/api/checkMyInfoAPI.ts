@@ -8,6 +8,7 @@ export const checkMyInfo = async () => {
         const response = await tokenAxios.get(`${API_URL}/api/users/me`,
             { headers: headers }
         )
+        console.log(response)
         return response.data
     } catch (error) {
         console.error(error)
