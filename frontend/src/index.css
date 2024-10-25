@@ -3,11 +3,13 @@
   font-weight: normal;
   src: url("./fonts/NanumGothic.woff");
 }
+
 @font-face {
   font-family: "NanumGothicBold";
   font-weight: normal;
   src: url("./fonts/NanumGothicBold.woff");
 }
+
 @font-face {
   font-family: "NanumGothicExtraBold";
   font-weight: normal;
