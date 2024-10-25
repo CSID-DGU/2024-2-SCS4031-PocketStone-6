@@ -3,6 +3,7 @@ package com.pocketstone.team_sync.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,6 +38,14 @@ public class ManMonth {
     //필요 맨먼스 인력, 소수점 1자리까지
     @Column (name = "man_month", precision = 4, scale = 1, nullable = false)
     private BigDecimal manMonth;
+
+    @Builder
+    public ManMonth(Project project, Timeline timeline, String position, BigDecimal manMonth) {
+        this.project = project;
+        this.timeline = timeline;
+        this.position = position;
+        this.manMonth = manMonth;
+    }
 
 
 }

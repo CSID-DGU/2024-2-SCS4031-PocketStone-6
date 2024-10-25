@@ -1,7 +1,6 @@
 package com.pocketstone.team_sync.service;
 
 import com.pocketstone.team_sync.dto.projectdto.TimelineDto;
-import com.pocketstone.team_sync.dto.projectdto.TimelineUpdateDto;
 import com.pocketstone.team_sync.entity.Project;
 import com.pocketstone.team_sync.entity.Timeline;
 import com.pocketstone.team_sync.repository.ProjectRepository;
@@ -32,25 +31,18 @@ public class TimelineService {
 
         //각 타임라인dto를 타임라인 엔티티로 저장
         for (TimelineDto timelineDto : timelineDtos) {
-            Timeline timeline = Timeline.builder()
-                    .project(project)
-                    .sprintOrder(timelineDto.getSprintOrder())
-                    .sprintContent(timelineDto.getSprintContent())
-                    .sprintDurationWeek(timelineDto.getSprintDurationWeek())
-                    .build();
-
-            timelineRepository.save(timeline);
+            timelineRepository.save(timelineDto.toTimeline(project, timelineDto));
         }
     }
 
     //프로젝트 타임라인 프로젝트 id로 조회
-    public List<TimelineUpdateDto> findAllByProjectId(Long projectId) {
+    public List<TimelineDto> findAllByProjectId(Long projectId) {
         //해당 프로젝트의 모든 타임라인 엔티티에서 조회
         List<Timeline> timelines = timelineRepository.findAllByProjectId(projectId);
 
         //dto로 반환
         return timelines.stream()
-                .map(timeline -> new TimelineUpdateDto(
+                .map(timeline -> new TimelineDto(
                         timeline.getId(),
                         timeline.getSprintOrder(),
                         timeline.getSprintContent(),
@@ -60,9 +52,9 @@ public class TimelineService {
     }
 
     //프로젝트 타임라인 업데이트
-    public List<TimelineUpdateDto> updateTimelines(Long projectId, List<TimelineUpdateDto> timelineDtos) {
+    public List<TimelineDto> updateTimelines(Long projectId, List<TimelineDto> timelineDtos) {
         //타임라인Dto 리스트에 변동 된 타임라인 업데이트
-        for (TimelineUpdateDto timelineDto : timelineDtos) {
+        for (TimelineDto timelineDto : timelineDtos) {
             timelineRepository.updateTimelineByProjectId(
                     projectId,
                     timelineDto.getId(),
