@@ -28,9 +28,4 @@ public class TokenService {
         return tokenProvider.generateToken(user, Duration.ofHours(2)); //새로운 엑세스토큰 발급
     }
 
-    // //리프레시 토큰 
-    // public void blacklistToken(String token) {
-    //     // 
-    //     throw new UnsupportedOperationException("Unimplemented method 'blacklistToken'");
-    // }
 }

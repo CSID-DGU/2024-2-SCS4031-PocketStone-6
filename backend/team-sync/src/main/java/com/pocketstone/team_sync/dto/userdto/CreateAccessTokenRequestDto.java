@@ -1,11 +1,11 @@
-package com.pocketstone.team_sync.dto;
+package com.pocketstone.team_sync.dto.userdto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateAccessTokenRequest {
+public class CreateAccessTokenRequestDto {
 
     private String refreshToken;
 }

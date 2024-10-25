@@ -1,6 +1,7 @@
 package com.pocketstone.team_sync.service;
 
 import java.time.Duration;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -8,9 +9,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.pocketstone.team_sync.config.jwt.TokenProvider;
-import com.pocketstone.team_sync.dto.AddUserRequest;
-import com.pocketstone.team_sync.dto.LoginTokenResponse;
-import com.pocketstone.team_sync.dto.UserInformationResponse;
+import com.pocketstone.team_sync.dto.userdto.AddUserRequestDto;
+import com.pocketstone.team_sync.dto.userdto.LoginTokenResponseDto;
+import com.pocketstone.team_sync.dto.userdto.UserInformationResponseDto;
 import com.pocketstone.team_sync.entity.User;
 import com.pocketstone.team_sync.repository.RefreshTokenRepository;
 import com.pocketstone.team_sync.repository.UserRepository;
@@ -35,26 +36,24 @@ public class UserService {
 
     public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(14);
     public static final Duration ACCESS_TOKEN_DURATION = Duration.ofHours(2);
-   // private final AuthenticationManager authenticationManager;
 
     //회원가입
     @Transactional
-    public Long save(AddUserRequest dto) {
+    public Long save(AddUserRequestDto dto) {
+        
         return userRepository.save(User.builder()
                 .loginId(dto.getLoginId())
                 .email(dto.getEmail())
                 .password(bCryptPasswordEncoder.encode(dto.getPassword()))//비밀번호 암호화 저장
-                .firstName(dto.getFirstName())
-                .lastName(dto.getLastName())
-                .birthDate(dto.getBirthDate())
+                .companyName(dto.getCompanyName())
+                .joinDate(LocalDate.now())
                 .build()).getId();
     }
 
     //로그인
     @Transactional
-    public LoginTokenResponse login(String loginId, String password) {
-        // User user = userRepository.findByLoginId(loginId)
-        //         .orElseThrow(() -> new BadCredentialsException("User not found"));
+    public LoginTokenResponseDto login(String loginId, String password) {
+
         User user = userRepository.findByLoginId(loginId)
                 .orElse(null);
 
@@ -62,10 +61,7 @@ public class UserService {
             return null;
         }
 
-        // if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
-        //     throw new BadCredentialsException("Invalid password");
 
-        // }
 
         if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
             //throw new BadCredentialsException("Invalid password");
@@ -77,25 +73,10 @@ public class UserService {
         String refreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
         String accessToken = tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION);
         refreshTokenService.saveRefreshToken(user.getId(),refreshToken);
-        LoginTokenResponse loginToken = new LoginTokenResponse("Bearer", accessToken, refreshToken);
+        LoginTokenResponseDto loginToken = new LoginTokenResponseDto("Bearer", accessToken, refreshToken);
         return loginToken;
     }
 
-        // public LoginTokenResponse login(String loginId, String password) {
-        // Authentication authentication = authenticationManager.authenticate(
-        //     new UsernamePasswordAuthenticationToken(loginId, password)
-        // );
-
-        // UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        // User user = userRepository.findByLoginId(userDetails.getUsername())
-        //         .orElseThrow(() -> new BadCredentialsException("User not found"));//로그인 아이디로 조회
-        // String accessToken = tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION);
-        // String refreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
-        
-        // refreshTokenService.saveRefreshToken(user.getId(), refreshToken);
-        
-        // return new LoginTokenResponse("Bearer", accessToken, refreshToken);
-        // }
 
     public User findById(Long userId){
         return userRepository.findById(userId)
@@ -114,12 +95,13 @@ public class UserService {
     }
 
     //유저정보 조회
-    public UserInformationResponse getUserInfo(String loginId){
-        User user = userRepository.findByLoginId(loginId).orElse(null);
+    public UserInformationResponseDto getUserInfo(Long userId){
+        User user = userRepository.findById(userId).orElse(null);
         if (user==null){
             //예외처리
+            throw new IllegalArgumentException();
         }
-        return new UserInformationResponse(loginId, user.getFirstName(), user.getLastName());
+        return new UserInformationResponseDto(user);
 
     }
 

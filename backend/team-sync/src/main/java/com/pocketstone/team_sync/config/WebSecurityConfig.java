@@ -2,6 +2,7 @@ package com.pocketstone.team_sync.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -12,18 +13,22 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.pocketstone.team_sync.config.jwt.TokenProvider;
-import com.pocketstone.team_sync.repository.RefreshTokenRepository;
-import com.pocketstone.team_sync.service.UserDetailService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Configuration
 public class WebSecurityConfig {
 
-    private final UserDetailService userDetailService;
+    
     private final TokenProvider tokenProvider;
-    private final RefreshTokenRepository refreshTokenRepository;
+    
     //정적인 자원에 대한 보안 제외
     @Bean
     public WebSecurityCustomizer configure() {
@@ -44,10 +49,24 @@ public class WebSecurityConfig {
 
 
         http.authorizeHttpRequests((authz) -> authz
-                .requestMatchers("/api/token","/login","/signup").permitAll() //로그인, 회원가입, 토큰 재발급만 접근허용
+                .requestMatchers("/api/users/me","api/users/withdraw").authenticated()
+                .requestMatchers("/api/users/**").permitAll() //로그인, 회원가입, 토큰 재발급만 접근허용
                 .requestMatchers("/api/**").authenticated() //api로 시작하는 모든 경로 인증필요
                 .anyRequest().permitAll());
+
+        http.cors(cors -> cors.configurationSource(apiConfigurationSource()));
         return http.build();
+    }
+
+    UrlBasedCorsConfigurationSource apiConfigurationSource(){
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:5000"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE","PATCH", "OPTIONS"));
+        configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean

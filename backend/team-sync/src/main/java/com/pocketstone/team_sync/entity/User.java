@@ -44,24 +44,21 @@ public class User implements UserDetails {
     private String password;
 
     //유저 기본정보
-    //이름
+    //회사이름
     @Column(nullable = false)
-    private String firstName;
-    //성
+    private String companyName;
+    
+    //가입일
     @Column(nullable = false)
-    private String lastName;
-    //생년월일
-    @Column(nullable = false)
-    private LocalDate birthDate;
+    private LocalDate joinDate;
 
     @Builder
-    public User(String loginId, String email, String password, String firstName, String lastName, LocalDate birthDate, String auth) {
+    public User(String loginId, String email, String password, String companyName, LocalDate joinDate) {
         this.loginId = loginId;
         this.email = email;
         this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthDate = birthDate;
+        this.companyName = companyName;
+        this.joinDate = joinDate;
     }
 
 
