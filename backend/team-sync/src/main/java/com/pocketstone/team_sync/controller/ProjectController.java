@@ -22,14 +22,6 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
-    @Autowired
-    private TimelineService timelineService;
-
-    @Autowired
-    private ProjectCharterService projectCharterService;
-
-    @Autowired
-    private ManMonthService manMonthService;
 
     //프로젝트 생성
     @PostMapping("/project")
