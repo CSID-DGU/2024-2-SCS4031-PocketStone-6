@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { handleSubmit } from '../../api/handleFileChange';
+import { submitExcelData } from '../../api/submitExcelData';
 
 export const ExcelUploader = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -13,7 +13,7 @@ export const ExcelUploader = () => {
   return (
     <form
       onSubmit={(e) => {
-        handleSubmit(e, file);
+        submitExcelData(e, file);
       }}
       encType="multipart/form-data"
     >
