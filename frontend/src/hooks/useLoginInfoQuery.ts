@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export const useLoginInfo = () => {
+export const useLoginInfoQuery = () => {
     // 로그인 정보 확인
     const [isLogin, setIsLogin] = useState(false)
     const [accessToken, setAccessToken] = useState("")
