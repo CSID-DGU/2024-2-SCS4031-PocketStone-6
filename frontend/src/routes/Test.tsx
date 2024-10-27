@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom"
 import { DatePickerComponent } from "../components/Input/DatePicker";
-import { useLoginInfo } from "../hooks/useLoginInfo";
+import { useLoginInfoQuery } from "../hooks/useLoginInfoQuery";
 import { doLogout } from "../api/authAPI";
 import { refreshPage } from "../utils/movePage";
 import { useUserInfo } from "../hooks/useUserInfo";
 
 export default function Test() {
     const navigate = useNavigate()
-    const [isLogin, accessToken] = useLoginInfo()
+    const [isLogin, accessToken] = useLoginInfoQuery()
     const userInfoQuery = useUserInfo()
     return (
         <div>
