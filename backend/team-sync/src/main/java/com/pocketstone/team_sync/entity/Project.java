@@ -36,17 +36,21 @@ public class  Project {
     @Column (name = "mvp_date", nullable = false)
     private LocalDate mvpDate;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
 
     //@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     //private List<Timeline> timelines;
 
     @Builder
-    public Project(Long id, String projectName, LocalDate startDate, LocalDate mvpDate) {
+    public Project(Long id, String projectName, LocalDate startDate, LocalDate mvpDate, User user) {
         this.id = id;
         this.projectName = projectName;
         this.startDate = startDate;
         this.mvpDate = mvpDate;
+        this.user = user;
     }
 
 }

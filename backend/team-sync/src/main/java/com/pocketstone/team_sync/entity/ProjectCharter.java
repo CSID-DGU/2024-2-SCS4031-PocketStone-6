@@ -1,11 +1,15 @@
 package com.pocketstone.team_sync.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.pocketstone.team_sync.entity.Charter.*;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table
@@ -24,45 +28,32 @@ public class ProjectCharter {
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
-    //필요한 포지션들
-    @Column(name = "team_positions", nullable = false)
-    private String teamPositions;
+    @OneToMany(mappedBy = "projectCharter", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Position> positions;
 
-    //프로젝트 비션
-    @Column (name = "vision", nullable = false)
-    private String vision;
+    @OneToMany(mappedBy = "projectCharter", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Objective> objectives;
 
-    //프로젝트 목표
-    @Column (name = "objective", nullable = false)
-    private String objective;
+    @OneToMany(mappedBy = "projectCharter", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Principle> principles;
 
-    //프로젝트 이해관계자
-    @Column (name = "stakeholder", nullable = false)
-    private String stakeholder;
+    @OneToMany(mappedBy = "projectCharter", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Risk> risks;
 
-    //프로젝트 범위
-    @Column (name = "scope", nullable = false)
-    private String scope;
+    @OneToMany(mappedBy = "projectCharter", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Scope> scopes;
 
-    //프로젝트 위험
-    @Column (name = "risk", nullable = false)
-    private String risk;
+    @OneToMany(mappedBy = "projectCharter", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Stakeholder> stakeholders;
 
-    //프로젝트 원칙
-    @Column (name = "principle", nullable = false)
-    private String principle;
+    @OneToMany(mappedBy = "projectCharter", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Vision> visions;
+
 
     @Builder
-    public ProjectCharter(Project project, String teamPositions, String vision, String objective, String stakeholder, String scope, String risk, String principle) {
-
+    public ProjectCharter(Project project) {
         this.project = project;
-        this.teamPositions = teamPositions;
-        this.vision = vision;
-        this.objective = objective;
-        this.stakeholder = stakeholder;
-        this.scope = scope;
-        this.risk = risk;
-        this.principle = principle;
     }
+
 
 }

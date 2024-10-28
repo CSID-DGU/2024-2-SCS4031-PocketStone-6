@@ -3,8 +3,10 @@ package com.pocketstone.team_sync.service;
 import com.pocketstone.team_sync.dto.projectdto.TimelineDto;
 import com.pocketstone.team_sync.entity.Project;
 import com.pocketstone.team_sync.entity.Timeline;
+import com.pocketstone.team_sync.entity.User;
 import com.pocketstone.team_sync.repository.ProjectRepository;
 import com.pocketstone.team_sync.repository.TimelineRepository;
+import com.pocketstone.team_sync.utility.ProjectValidationUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +26,11 @@ public class TimelineService {
     private ProjectRepository projectRepository;
 
     // 프로젝트별 타임라인(스프린트)일정 추가
-    public void saveTimelines(Long projectId, List<TimelineDto> timelineDtos) {
+    public void saveTimelines(User user, Long projectId, List<TimelineDto> timelineDtos) {
         //전달 받은 프로젝트 아이디로 프로젝트 찾기
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("프로젝트 찾을 수 없음"));
+        ProjectValidationUtils.validateProjectOwner(user, project);
 
         //각 타임라인dto를 타임라인 엔티티로 저장
         for (TimelineDto timelineDto : timelineDtos) {
@@ -36,9 +39,10 @@ public class TimelineService {
     }
 
     //프로젝트 타임라인 프로젝트 id로 조회
-    public List<TimelineDto> findAllByProjectId(Long projectId) {
+    public List<TimelineDto> findAllByProjectId(User user, Long projectId) {
         //해당 프로젝트의 모든 타임라인 엔티티에서 조회
         List<Timeline> timelines = timelineRepository.findAllByProjectId(projectId);
+        ProjectValidationUtils.validateTimelineOwner(user, timelines.get(0));
 
         //dto로 반환
         return timelines.stream()
@@ -52,7 +56,7 @@ public class TimelineService {
     }
 
     //프로젝트 타임라인 업데이트
-    public List<TimelineDto> updateTimelines(Long projectId, List<TimelineDto> timelineDtos) {
+    public List<TimelineDto> updateTimelines(User user, Long projectId, List<TimelineDto> timelineDtos) {
         //타임라인Dto 리스트에 변동 된 타임라인 업데이트
         for (TimelineDto timelineDto : timelineDtos) {
             timelineRepository.updateTimelineByProjectId(
@@ -62,6 +66,6 @@ public class TimelineService {
                     timelineDto.getSprintDurationWeek(),
                     timelineDto.getSprintOrder());
         }
-        return findAllByProjectId (projectId);
+        return findAllByProjectId (user, projectId);
     }
 }
