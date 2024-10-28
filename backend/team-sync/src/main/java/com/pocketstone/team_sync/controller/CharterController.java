@@ -2,6 +2,7 @@ package com.pocketstone.team_sync.controller;
 
 
 import com.pocketstone.team_sync.dto.projectdto.ProjectCharterDto;
+import com.pocketstone.team_sync.entity.ProjectCharter;
 import com.pocketstone.team_sync.entity.User;
 import com.pocketstone.team_sync.service.ProjectCharterService;
 import lombok.NoArgsConstructor;
@@ -31,7 +32,7 @@ public class CharterController {
     //프로젝트 id로 차터 검색
     @GetMapping("/{projectId}")
     public ResponseEntity<ProjectCharterDto> getProjectCharter(@AuthenticationPrincipal User user,
-                                                               @PathVariable Long projectId) {
+                                                            @PathVariable Long projectId) {
         return new ResponseEntity<>(projectCharterService.findByProjectId(user, projectId), HttpStatus.OK);
     }
 

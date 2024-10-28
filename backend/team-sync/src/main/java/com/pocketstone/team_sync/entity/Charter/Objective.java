@@ -1,0 +1,41 @@
+package com.pocketstone.team_sync.entity.Charter;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.pocketstone.team_sync.entity.ProjectCharter;
+import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table
+@NoArgsConstructor
+@Getter
+public class Objective {
+
+        @Id
+        @JsonIgnore
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private long id;
+
+        @ManyToOne
+        @JoinColumn(name = "project_charter_id", nullable = false) // Foreign key reference
+        private ProjectCharter projectCharter;
+
+        @Column(name = "objective_name", nullable = false)
+        private String objectiveName;
+
+        @Column(name = "objective_content", nullable = false)
+        private String objectiveContent;
+
+        @Builder
+        public Objective(ProjectCharter projectCharter, String objectiveName, String objectiveContent) {
+                this.projectCharter = projectCharter;
+                this.objectiveName = objectiveName;
+                this.objectiveContent = objectiveContent;
+        }
+
+
+}
+
+

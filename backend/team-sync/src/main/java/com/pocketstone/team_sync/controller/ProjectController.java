@@ -24,8 +24,7 @@ public class ProjectController {
 
     //프로젝트 생성
     @PostMapping("/project")
-    public ResponseEntity<ProjectDto> addProject(@AuthenticationPrincipal User user, @RequestBody ProjectWrapperDto projectWrapperDto) {
-        ProjectDto projectDto = projectWrapperDto.getProjectDto();
+    public ResponseEntity<ProjectDto> addProject(@AuthenticationPrincipal User user, @RequestBody ProjectDto projectDto) {
         return new ResponseEntity<>(projectService.save(user, projectDto), HttpStatus.CREATED);
     }
 
