@@ -1,5 +1,4 @@
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import './App.css';
 import Main from './routes/Main';
 import Register from './routes/auth/Register';
 import Login from './routes/auth/Login';
@@ -8,13 +7,17 @@ import Project from './routes/project/Project';
 import About from './routes/project/About';
 import Employee from './routes/employee/Employee';
 import { NewProject } from './routes/project/NewProject';
+import S from './App.module.css'
 
 function App() {
   const navigate = useNavigate();
 
   return (
     <div>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div
+        className={S.navContainer}
+        style={{ display: 'flex', alignItems: 'center' }}
+      >
         <h2
           onClick={() => {
             navigate('/');
@@ -44,25 +47,27 @@ function App() {
           인원 관리
         </button>
       </div>
-      <Routes>
-        {/* 메인 페이지 */}
-        <Route path="/" element={<Main />} />
+      <div className={S.contentContainer}>
+        <Routes>
+          {/* 메인 페이지 */}
+          <Route path="/" element={<Main />} />
 
-        {/* 테스트 페이지 */}
-        <Route path="/test" element={<Test />} />
+          {/* 테스트 페이지 */}
+          <Route path="/test" element={<Test />} />
 
-        {/* 회원가입/로그인 */}
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
+          {/* 회원가입/로그인 */}
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
 
-        {/* 프로젝트 */}
-        <Route path="/project" element={<Project />} />
-        <Route path="/project/about" element={<About />} />
-        <Route path="/project/new" element={<NewProject />} />
+          {/* 프로젝트 */}
+          <Route path="/project" element={<Project />} />
+          <Route path="/project/about" element={<About />} />
+          <Route path="/project/new" element={<NewProject />} />
 
-        {/* 인원 관리 */}
-        <Route path="/employee" element={<Employee />} />
-      </Routes>
+          {/* 인원 관리 */}
+          <Route path="/employee" element={<Employee />} />
+        </Routes>
+      </div>
     </div>
   );
 }

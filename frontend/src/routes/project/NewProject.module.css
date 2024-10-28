@@ -1,5 +1,4 @@
 .container {
-  padding: 10px;
 }
 
 .container > * {
@@ -7,5 +6,5 @@
 }
 
 .inlineBlockContainer {
-    display: inline-block;
+  display: inline-block;
 }
