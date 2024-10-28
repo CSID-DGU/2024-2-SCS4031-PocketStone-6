@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom"
-import { DatePickerComponent } from "../components/Input/DatePicker";
+import { DatePickerComponent } from "../components/Input/DatePickerComponent";
 import { useLoginInfoQuery } from "../hooks/useLoginInfoQuery";
 import { doLogout } from "../api/authAPI";
 import { refreshPage } from "../utils/movePage";

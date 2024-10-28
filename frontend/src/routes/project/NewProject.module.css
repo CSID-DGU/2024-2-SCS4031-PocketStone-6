@@ -1,0 +1,11 @@
+.container {
+  padding: 10px;
+}
+
+.container > * {
+  display: block;
+}
+
+.inlineBlockContainer {
+    display: inline-block;
+}

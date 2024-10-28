@@ -1,5 +1,5 @@
 import axios from "axios"
-import { headers } from "../constants/headers"
+import { HEADERS } from "../constants/HEADERS"
 import { NavigateFunction } from "react-router-dom"
 import { deleteCookies, getCookie, saveCookies } from "../utils/handleCookies"
 import { WRONG_LOGIN_INFO } from "../constants/errorMessage"
@@ -15,7 +15,7 @@ export const doLogin = async (id: string, password: string, navigate: NavigateFu
     try {
         const response = await axios.post(`${API_URL}/api/users/login`,
             content,
-            { headers: headers }
+            { headers: HEADERS }
         )
         const { accessToken, refreshToken } = response.data
         saveCookies('access', accessToken)
@@ -42,7 +42,7 @@ export const doRegister = async (id: string, email: string, password: string, co
     try {
         const response = await axios.post(`${API_URL}/api/users/signup`,
             content,
-            { headers: headers }
+            { headers: HEADERS }
         )
         return response.data
     } catch (error) {
@@ -60,7 +60,7 @@ export const checkID = async (id: string) => {
     try {
         const response = await axios.post(`${API_URL}/api/users/check-loginid`,
             content,
-            { headers: headers }
+            { headers: HEADERS }
         )
         return response.data
     } catch (error) {
@@ -84,7 +84,7 @@ export const getAccessToken = async () => {
     try {
         const response = await axios.post(`${API_URL}/api/users/refresh`,
             content,
-            {headers: headers}
+            {headers: HEADERS}
         )
         return response.data
     } catch (error) {

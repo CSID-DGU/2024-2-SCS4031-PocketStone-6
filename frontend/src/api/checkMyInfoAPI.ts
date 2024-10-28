@@ -1,12 +1,12 @@
 import axios from "axios"
-import { headers } from "../constants/headers"
+import { HEADERS } from "../constants/HEADERS"
 import { tokenAxios } from "./tokenAPI"
 import { API_URL } from "../constants/envText"
 
 export const checkMyInfo = async () => {
     try {
         const response = await tokenAxios.get(`${API_URL}/api/users/me`,
-            { headers: headers }
+            { headers: HEADERS }
         )
         return response.data
     } catch (error) {
