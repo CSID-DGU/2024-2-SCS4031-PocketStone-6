@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.pocketstone.team_sync.dto.MessageResponseDto;
+import com.pocketstone.team_sync.entity.Company;
 import com.pocketstone.team_sync.entity.User;
+import com.pocketstone.team_sync.repository.CompanyRepository;
 import com.pocketstone.team_sync.service.EmployeeService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,13 +24,13 @@ public class EmployeeController {
 
     // 의존성
     private final EmployeeService employeeService;
-
+    private final CompanyRepository companyRepository;
 
      //사원 엑셀 등록
     @PostMapping("/add-excel")
     public ResponseEntity<MessageResponseDto> addExcel(@AuthenticationPrincipal User user, @RequestParam("file") MultipartFile file) {
-        Long userId = user.getId();
-        employeeService.enrollEmployeeList(userId, file);
+        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
+        employeeService.enrollEmployeeList(company, file);
         return ResponseEntity.ok(new MessageResponseDto("등록되었습니다."));
     }
 }
