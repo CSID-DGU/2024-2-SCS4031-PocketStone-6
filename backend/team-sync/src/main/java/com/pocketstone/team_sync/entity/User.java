@@ -8,11 +8,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -44,20 +46,22 @@ public class User implements UserDetails {
     private String password;
 
     //유저 기본정보
-    //회사이름
-    @Column(nullable = false)
-    private String companyName;
+    
     
     //가입일
     @Column(nullable = false)
     private LocalDate joinDate;
 
+    //회사정보 조회를 쉽게 하기 위해
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Company company;
+
     @Builder
-    public User(String loginId, String email, String password, String companyName, LocalDate joinDate) {
+    public User(String loginId, String email, String password, Company company, LocalDate joinDate) {
         this.loginId = loginId;
         this.email = email;
         this.password = password;
-        this.companyName = companyName;
+        this.company = company;
         this.joinDate = joinDate;
     }
 
