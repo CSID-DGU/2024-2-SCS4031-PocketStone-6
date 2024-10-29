@@ -1,14 +1,12 @@
 package com.pocketstone.team_sync.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.pocketstone.team_sync.entity.Charter.*;
+import com.pocketstone.team_sync.entity.charter.*;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity

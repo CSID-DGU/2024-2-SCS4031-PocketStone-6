@@ -2,7 +2,7 @@ package com.pocketstone.team_sync.dto.projectdto.charterdto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.pocketstone.team_sync.entity.Charter.Objective;
+import com.pocketstone.team_sync.entity.charter.Objective;
 import com.pocketstone.team_sync.entity.ProjectCharter;
 import lombok.Data;
 
