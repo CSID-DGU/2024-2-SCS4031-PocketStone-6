@@ -26,6 +26,7 @@ public enum Skill {
     SASS("Sass"),
     GRAPHQL("GraphQL");
 
+    //데이터 기술이나 pm기술도 추가하기
     private final String label;
 
      // 생성자 정의
