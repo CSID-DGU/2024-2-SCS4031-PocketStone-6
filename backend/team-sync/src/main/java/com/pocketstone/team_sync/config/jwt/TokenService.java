@@ -1,11 +1,11 @@
-package com.pocketstone.team_sync.service;
+package com.pocketstone.team_sync.config.jwt;
 
 import java.time.Duration;
 
 import org.springframework.stereotype.Service;
 
-import com.pocketstone.team_sync.config.jwt.TokenProvider;
 import com.pocketstone.team_sync.entity.User;
+import com.pocketstone.team_sync.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
