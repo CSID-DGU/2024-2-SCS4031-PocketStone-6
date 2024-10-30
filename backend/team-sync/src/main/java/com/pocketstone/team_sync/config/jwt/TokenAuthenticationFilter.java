@@ -1,12 +1,10 @@
-package com.pocketstone.team_sync.config;
+package com.pocketstone.team_sync.config.jwt;
 
 import java.io.IOException;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import com.pocketstone.team_sync.config.jwt.TokenProvider;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -1,4 +1,4 @@
-package com.pocketstone.team_sync.service;
+package com.pocketstone.team_sync.config.jwt;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

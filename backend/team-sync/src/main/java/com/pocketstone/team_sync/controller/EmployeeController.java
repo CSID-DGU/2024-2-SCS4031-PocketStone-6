@@ -36,6 +36,10 @@ public class EmployeeController {
         return ResponseEntity.ok(new MessageResponseDto("등록되었습니다."));
     }
 
+    //사원 목록 조회
+    //1. 이름이랑 사원번호, 부서, 직책만
+    //2. 개인정보 조회 - 특정인
+    //3. 이력 조회 - 특정인
     @GetMapping("/")
     public ResponseEntity<EmployeeListResponse> getEmployeeList(@AuthenticationPrincipal User user){
         Company company  = companyRepository.findByUserId(user.getId()).orElse(null);

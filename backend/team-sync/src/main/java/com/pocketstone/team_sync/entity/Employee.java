@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pocketstone.team_sync.entity.enums.Role;
 import com.pocketstone.team_sync.entity.enums.Skill;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -77,8 +78,8 @@ public class Employee {
     //과거 프로젝트 내역
     // 양방향 관계 설정
     @JsonIgnore
-    @OneToMany(mappedBy = "employee")
-    private List<PastProject> projects = new ArrayList<>();
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+    private List<PastProject> pastProjects = new ArrayList<>();
     
     
     //사원과 회사 관계
