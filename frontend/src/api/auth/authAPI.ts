@@ -1,9 +1,9 @@
 import axios from "axios"
-import { headers } from "../constants/headers"
 import { NavigateFunction } from "react-router-dom"
-import { deleteCookies, getCookie, saveCookies } from "../utils/handleCookies"
-import { WRONG_LOGIN_INFO } from "../constants/errorMessage"
-import { API_URL } from "../constants/envText"
+import { API_URL } from "../../constants/envText"
+import { headers } from "../../constants/headers"
+import { WRONG_LOGIN_INFO } from "../../constants/errorMessage"
+import { deleteCookies, getCookie, saveCookies } from "../../utils/handleCookies"
 
 export const doLogin = async (id: string, password: string, navigate: NavigateFunction) => {
     const content: loginInfoType = {
@@ -13,7 +13,7 @@ export const doLogin = async (id: string, password: string, navigate: NavigateFu
 
     // 로그인 시도
     try {
-        const response = await axios.post(`${API_URL}/api/users/login`,
+        const response = await axios.post(`${API_URL}/api/auth/login`,
             content,
             { headers: headers }
         )
@@ -40,7 +40,7 @@ export const doRegister = async (id: string, email: string, password: string, co
     }
 
     try {
-        const response = await axios.post(`${API_URL}/api/users/signup`,
+        const response = await axios.post(`${API_URL}/api/auth/signup`,
             content,
             { headers: headers }
         )
@@ -82,7 +82,7 @@ export const getAccessToken = async () => {
     }
 
     try {
-        const response = await axios.post(`${API_URL}/api/users/refresh`,
+        const response = await axios.post(`${API_URL}/api/auth/refresh`,
             content,
             {headers: headers}
         )
