@@ -1,4 +1,4 @@
-package com.pocketstone.team_sync.entity.Charter;
+package com.pocketstone.team_sync.entity.charter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pocketstone.team_sync.entity.ProjectCharter;
@@ -7,11 +7,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Table
+@Entity
 @Getter
 @NoArgsConstructor
-public class Stakeholder {
+public class Position {
 
         @Id
         @JsonIgnore
@@ -22,16 +22,16 @@ public class Stakeholder {
         @JoinColumn(name = "project_charter_id", nullable = false) // Foreign key reference
         private ProjectCharter projectCharter;
 
-        @Column(name = "stakeholder_name", nullable = false)
-        private String stakeholderName;
+        @Column(name = "position_name", nullable = false)
+        private String positionName;
 
-        @Column(name = "stakeholder_content", nullable = false)
-        private String stakeholderContent;
+        @Column(name = "position_content", nullable = false)
+        private String positionContent;
 
         @Builder
-        public Stakeholder(ProjectCharter projectCharter, String stakeholderName, String stakeholderContent) {
+        public Position(ProjectCharter projectCharter, String positionName, String positionContent) {
                 this.projectCharter = projectCharter;
-                this.stakeholderName = stakeholderName;
-                this.stakeholderContent = stakeholderContent;
+                this.positionName = positionName;
+                this.positionContent = positionContent;
         }
 }
