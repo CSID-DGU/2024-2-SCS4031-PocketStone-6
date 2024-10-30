@@ -1,6 +1,6 @@
 package com.pocketstone.team_sync.repository.charter;
 
-import com.pocketstone.team_sync.entity.Charter.Stakeholder;
+import com.pocketstone.team_sync.entity.charter.Stakeholder;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

@@ -1,4 +1,4 @@
-package com.pocketstone.team_sync.entity.Charter;
+package com.pocketstone.team_sync.entity.charter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pocketstone.team_sync.entity.ProjectCharter;
