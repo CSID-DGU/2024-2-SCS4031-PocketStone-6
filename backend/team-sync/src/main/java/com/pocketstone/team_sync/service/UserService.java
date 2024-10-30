@@ -12,6 +12,7 @@ import com.pocketstone.team_sync.config.jwt.TokenProvider;
 import com.pocketstone.team_sync.dto.userdto.AddUserRequestDto;
 import com.pocketstone.team_sync.dto.userdto.LoginTokenResponseDto;
 import com.pocketstone.team_sync.dto.userdto.UserInformationResponseDto;
+import com.pocketstone.team_sync.entity.Company;
 import com.pocketstone.team_sync.entity.User;
 import com.pocketstone.team_sync.repository.RefreshTokenRepository;
 import com.pocketstone.team_sync.repository.UserRepository;
@@ -41,13 +42,22 @@ public class UserService {
     @Transactional
     public Long save(AddUserRequestDto dto) {
         
-        return userRepository.save(User.builder()
-                .loginId(dto.getLoginId())
-                .email(dto.getEmail())
-                .password(bCryptPasswordEncoder.encode(dto.getPassword()))//비밀번호 암호화 저장
-                .companyName(dto.getCompanyName())
-                .joinDate(LocalDate.now())
-                .build()).getId();
+        // 회사 객체 생성
+        Company company = new Company();
+        company.setCompanyName(dto.getCompanyName());
+        
+        User user = User.builder()
+                            .loginId(dto.getLoginId())
+                            .email(dto.getEmail())
+                            .password(bCryptPasswordEncoder.encode(dto.getPassword()))//비밀번호 암호화 저장
+                            .company(company)
+                            .joinDate(LocalDate.now())
+                            .build();
+
+        // 회사의 유저 필드도 설정
+        company.setUser(user); // 회사와 유저의 양방향 연결
+
+        return userRepository.save(user).getId();
     }
 
     //로그인

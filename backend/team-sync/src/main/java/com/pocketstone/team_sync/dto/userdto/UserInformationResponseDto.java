@@ -17,7 +17,7 @@ public class UserInformationResponseDto {
 
     public UserInformationResponseDto(User user){
         loginId = user.getLoginId();
-        companyName = user.getCompanyName();
+        companyName = user.getCompany().getCompanyName();
         joinDate = user.getJoinDate();
     }
 }
