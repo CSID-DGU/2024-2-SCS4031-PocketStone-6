@@ -17,3 +17,8 @@ interface registerInfoType {
   password: string;
   companyName: string;
 }
+interface projectInfoType {
+  projectName: string;
+  startDate: string;
+  mvpDate: string;
+}
