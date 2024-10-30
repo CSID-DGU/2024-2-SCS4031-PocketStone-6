@@ -12,17 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pocketstone.team_sync.dto.MessageResponseDto;
-import com.pocketstone.team_sync.dto.userdto.AddUserRequestDto;
 import com.pocketstone.team_sync.dto.userdto.CheckEmailRequestDto;
 import com.pocketstone.team_sync.dto.userdto.CheckLoginIdRequestDto;
-import com.pocketstone.team_sync.dto.userdto.CreateAccessTokenRequestDto;
-import com.pocketstone.team_sync.dto.userdto.CreateAccessTokenResponseDto;
-import com.pocketstone.team_sync.dto.userdto.LoginRequestDto;
-import com.pocketstone.team_sync.dto.userdto.LoginTokenResponseDto;
 import com.pocketstone.team_sync.dto.userdto.UserInformationResponseDto;
 import com.pocketstone.team_sync.entity.User;
 import com.pocketstone.team_sync.repository.UserRepository;
-import com.pocketstone.team_sync.service.TokenService;
 import com.pocketstone.team_sync.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -36,8 +30,7 @@ public class UserController {
     private UserService userService;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private TokenService tokenService;
+
 
     //아이디 중복확인
     @PostMapping("/check-loginid")
@@ -59,17 +52,7 @@ public class UserController {
     }
 
 
-    //회원가입
-    @PostMapping("/signup")
-    public ResponseEntity<MessageResponseDto> registerUser(@RequestBody AddUserRequestDto request) {
-        try {
-            userService.save(request);
-            return ResponseEntity.ok(new MessageResponseDto("가입이 성공적으로 완료되었습니다."));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
-        }
-        
-    }
+
 
     //회원탈퇴
     @DeleteMapping("/withdraw")
@@ -79,33 +62,6 @@ public class UserController {
         return ResponseEntity.ok(new MessageResponseDto("탈퇴처리 되었습니다."));
     }
 
-    //로그인
-    @PostMapping("/login")
-    public ResponseEntity<LoginTokenResponseDto> login(@RequestBody LoginRequestDto loginRequest) {
-        String loginId = loginRequest.getLoginId();
-        
-        String password = loginRequest.getPassword();
-        
-        LoginTokenResponseDto loginToken = userService.login(loginId, password);
-        if (loginToken == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        }
-        return ResponseEntity.ok(loginToken);
-        
-    }
-
-    
-    //토큰 재요청
-    @PostMapping("/refresh")
-    public ResponseEntity<CreateAccessTokenResponseDto> createNewAccessToken(@RequestBody CreateAccessTokenRequestDto request) {
-        try {
-            String newAccessToken = tokenService.createNewAccessToken(request.getRefreshToken());
-            return ResponseEntity.status(HttpStatus.CREATED).body(new CreateAccessTokenResponseDto(newAccessToken));
-        } catch(Exception e) {
-            return ResponseEntity.badRequest().body(null);
-        }
-        
-    }
 
     
 

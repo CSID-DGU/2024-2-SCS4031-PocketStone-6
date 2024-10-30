@@ -1,4 +1,4 @@
-package com.pocketstone.team_sync.dto.userdto;
+package com.pocketstone.team_sync.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

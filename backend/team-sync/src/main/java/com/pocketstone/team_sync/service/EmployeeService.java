@@ -60,7 +60,7 @@ public class EmployeeService {
 
         employee.setName(row.getCell(0).getStringCellValue());
         employee.setEmail(row.getCell(1).getStringCellValue());
-        employee.setEmployeeId(row.getCell(2).getStringCellValue());
+        employee.setStaffId(row.getCell(2).getStringCellValue());
         employee.setPhoneNumber(row.getCell(3).getStringCellValue());
         employee.setPosition(row.getCell(4).getStringCellValue());
         employee.setDepartment(row.getCell(5).getStringCellValue());
