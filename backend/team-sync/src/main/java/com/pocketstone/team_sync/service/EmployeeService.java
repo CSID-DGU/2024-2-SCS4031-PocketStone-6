@@ -70,4 +70,8 @@ public class EmployeeService {
         return employee;
     }
 
+    public List<Employee> getEmployees(Company company){
+        List<Employee> employees = employeeRepository.findByCompany(company);
+        return employees;
+    }
 }

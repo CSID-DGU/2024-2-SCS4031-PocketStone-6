@@ -5,10 +5,8 @@ public enum Role {
     BACKEND_DEVELOPER("Backend Developer"),
     FRONTEND_DEVELOPER("Frontend Developer"),
     PRODUCT_MANAGER("Product Manager"),
-    //QA_ENGINEER("QA Engineer"),
-    //DEVOPS_ENGINEER("DevOps Engineer"),
-    UI_UX_DESIGNER("UI/UX Designer");
-    //BUSINESS_ANALYST("Business Analyst")
+    UI_UX_DESIGNER("UI/UX Designer"),
+    DATA_ANALYST("Data Analyst");
 
     private final String label;
 
