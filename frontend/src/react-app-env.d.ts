@@ -1,19 +1,24 @@
 /// <reference types="react-scripts" />
 
-type URLType = string | undefined
+type URLType = string | undefined;
 interface checkIDType {
-    loginId: string
+  loginId: string;
 }
 interface colorsType {
-    [key: string]: string
+  [key: string]: string;
 }
 interface loginInfoType {
-    loginId: string,
-    password: string
+  loginId: string;
+  password: string;
 }
 interface registerInfoType {
-    loginId: string,
-    email: string,
-    password: string,
-    companyName: string
+  loginId: string;
+  email: string;
+  password: string;
+  companyName: string;
+}
+interface projectInfoType {
+  projectName: string;
+  startDate: string;
+  mvpDate: string;
 }

@@ -5,9 +5,9 @@ import Register from './routes/auth/Register';
 import Login from './routes/auth/Login';
 import Test from './routes/Test';
 import Project from './routes/project/Project';
-import About from './routes/project/About';
 import Employee from './routes/employee/Employee';
 import { Navbar } from './components/Navbar';
+import ProjectNew from './routes/project/ProjectNew';
 
 function App() {
   return (
@@ -26,10 +26,8 @@ function App() {
           <Route path="/login" element={<Login />} />
 
           {/* 프로젝트 */}
-          <Route path="/project" element={<Project />}>
-            <Route path="new" element={<p>new</p>} />
-          </Route>
-          <Route path="/project/about" element={<About />} />
+          <Route path="/project" element={<Project />} />
+          <Route path="/project/new" element={<ProjectNew />} />
 
           {/* 인원 관리 */}
           <Route path="/employee" element={<Employee />} />

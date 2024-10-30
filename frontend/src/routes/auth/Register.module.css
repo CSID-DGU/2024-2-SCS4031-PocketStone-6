@@ -1,11 +1,11 @@
 .container {
-    padding: 20px;
+  padding: 20px;
 }
 
-.container>* {
-    display: block;
+.container > * {
+  display: block;
 }
 
 .display_flex {
-    display: flex;
+  display: flex;
 }
