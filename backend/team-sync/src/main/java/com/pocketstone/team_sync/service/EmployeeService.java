@@ -1,6 +1,7 @@
 package com.pocketstone.team_sync.service;
 
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.pocketstone.team_sync.dto.employeeDto.EmployeeInformationResponseDto;
+import com.pocketstone.team_sync.dto.employeeDto.EmployeeListResponseDto;
 import com.pocketstone.team_sync.entity.Company;
 import com.pocketstone.team_sync.entity.Employee;
 import com.pocketstone.team_sync.repository.EmployeeRepository;
@@ -64,14 +67,54 @@ public class EmployeeService {
         employee.setPhoneNumber(row.getCell(3).getStringCellValue());
         employee.setPosition(row.getCell(4).getStringCellValue());
         employee.setDepartment(row.getCell(5).getStringCellValue());
+        employee.setHireDate(LocalDate.now());
         //employee.setRole(row.getCell(6));이건 별도로 할지 고민을 좀...
         employee.setCompany(company); // 사원과 회사 연결
 
         return employee;
     }
 
-    public List<Employee> getEmployees(Company company){
+    // //사원목록 조회
+    public List<EmployeeListResponseDto> getEmployees(Company company){
         List<Employee> employees = employeeRepository.findByCompany(company);
-        return employees;
+        if(employees == null || employees.isEmpty()){
+            return null;
+        }
+
+        List<EmployeeListResponseDto> employeeList = new ArrayList<>(); ;
+
+        for (int i=0; i < employees.size(); i++){
+
+            Employee employee = employees.get(i);
+            EmployeeListResponseDto dto = new EmployeeListResponseDto(
+                            employee.getId(),
+                            employee.getStaffId(),
+                            employee.getName(),
+                            employee.getDepartment(),
+                            employee.getPosition()
+            );
+            employeeList.add(dto);
+        }
+    
+        return employeeList;
+    }
+
+    public EmployeeInformationResponseDto getEmployeeInfo(Company company, Long employeeId) {
+        Employee employee = employeeRepository.findByCompanyAndId(company,employeeId).orElse(null);
+        if(employee == null){
+            return null;
+        }
+
+        EmployeeInformationResponseDto dto = new EmployeeInformationResponseDto(
+                                                employee.getId(),
+                                                employee.getStaffId(),
+                                                employee.getName(),
+                                                employee.getDepartment(),
+                                                employee.getPosition(),
+                                                employee.getPhoneNumber(),
+                                                employee.getEmail(),
+                                                employee.getHireDate()
+                                            );
+        return dto;
     }
 }

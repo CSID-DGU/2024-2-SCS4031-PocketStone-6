@@ -1,8 +1,11 @@
 package com.pocketstone.team_sync.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,7 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.pocketstone.team_sync.dto.MessageResponseDto;
-import com.pocketstone.team_sync.dto.employeeDto.EmployeeListResponse;
+import com.pocketstone.team_sync.dto.employeeDto.EmployeeInformationResponseDto;
+import com.pocketstone.team_sync.dto.employeeDto.EmployeeListResponseDto;
 import com.pocketstone.team_sync.entity.Company;
 import com.pocketstone.team_sync.entity.User;
 import com.pocketstone.team_sync.repository.CompanyRepository;
@@ -35,15 +39,35 @@ public class EmployeeController {
         employeeService.enrollEmployeeList(company, file);
         return ResponseEntity.ok(new MessageResponseDto("등록되었습니다."));
     }
+    
+    //사원 등록
+    //사원 삭제
+    //사원 기본 정보 수정
 
-    //사원 목록 조회
-    //1. 이름이랑 사원번호, 부서, 직책만
-    //2. 개인정보 조회 - 특정인
-    //3. 이력 조회 - 특정인
-    @GetMapping("/")
-    public ResponseEntity<EmployeeListResponse> getEmployeeList(@AuthenticationPrincipal User user){
+    //사원 조회
+
+    //1.목록조회: 이름이랑 사원번호, 부서, 직책만
+    @GetMapping("")
+    public ResponseEntity<List<EmployeeListResponseDto>> getEmployeeList(@AuthenticationPrincipal User user){
         Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
-        EmployeeListResponse response = new EmployeeListResponse(employeeService.getEmployees(company));
+        List<EmployeeListResponseDto> employeeList = employeeService.getEmployees(company);
+        return ResponseEntity.ok(employeeList);
+    }
+
+    //2. 개인정보 조회 - 특정인
+    @GetMapping("/{employeeId}/info")
+    public ResponseEntity<EmployeeInformationResponseDto> getInfo(@AuthenticationPrincipal User user, @PathVariable("employeeId") Long employeeId){
+        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
+        EmployeeInformationResponseDto response = employeeService.getEmployeeInfo(company, employeeId);
         return ResponseEntity.ok(response);
     }
+
+    //3. 이력 조회 - 특정인
+
+    // @GetMapping("/")
+    // public ResponseEntity<List<EmployeeListResponse>> getEmployeeList(@AuthenticationPrincipal User user){
+    //     Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
+    //     List<EmployeeListResponse> response = new EmployeeListResponse(employeeService.getEmployees(company));
+    //     return ResponseEntity.ok(response);
+    // }
 }

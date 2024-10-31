@@ -2,7 +2,7 @@ package com.pocketstone.team_sync.entity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java. util.List;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pocketstone.team_sync.entity.enums.Role;
@@ -10,7 +10,7 @@ import com.pocketstone.team_sync.entity.enums.Skill;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta. persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
@@ -29,6 +29,7 @@ public class Employee {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "employee_id", updatable = false)
     private Long id;
 
     @Column(length = 50, nullable = false)
