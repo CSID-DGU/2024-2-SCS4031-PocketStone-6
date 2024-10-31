@@ -1,5 +1,6 @@
 package com.pocketstone.team_sync.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +17,7 @@ public class PastProject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "past_project_id", updatable = false)
     private Long id;
 
     //해당 사원
