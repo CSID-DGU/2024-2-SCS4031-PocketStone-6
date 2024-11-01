@@ -24,9 +24,14 @@ public enum Skill {
     HTML_CSS("HTML/CSS"),
     TYPESCRIPT("TypeScript"),
     SASS("Sass"),
-    GRAPHQL("GraphQL");
+    GRAPHQL("GraphQL"),
 
     //데이터 기술이나 pm기술도 추가하기
+    PYTHON("Python");
+
+
+
+
     private final String label;
 
      // 생성자 정의
@@ -35,6 +40,17 @@ public enum Skill {
     }
     public String getLabel() {
         return label;
+    }
+
+
+    // label로 Skill을 찾는 메서드 추가
+    public static Skill fromLabel(String label) {
+        for (Skill skill : Skill.values()) {
+            if (skill.getLabel().equalsIgnoreCase(label.trim())) {
+                return skill;
+            }
+        }
+        throw new IllegalArgumentException("Invalid skill label: " + label);
     }
 
 }
