@@ -43,5 +43,20 @@ public class ProjectController {
         return new ResponseEntity<>(projectService.findAll(user), HttpStatus.OK);
     }
 
+    @GetMapping("/upcoming")
+    public ResponseEntity<List<ProjectDto>> getUpcomingProjects(@AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(projectService.findUpcomingProjects(user), HttpStatus.OK);
+    }
+
+    @GetMapping("/ongoing")
+    public ResponseEntity<List<ProjectDto>> getOngoingProjects(@AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(projectService.findOngoingProjects(user), HttpStatus.OK);
+    }
+
+    @GetMapping("/completed")
+    public ResponseEntity<List<ProjectDto>> getCompletedProjects(@AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(projectService.findCompletedProjects(user), HttpStatus.OK);
+    }
+
     //@DeleteMapping 프로젝트 삭제
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,7 +22,6 @@ public class ProjectService {
 
     @Autowired
     private ProjectRepository projectRepository;
-
 
 
     public ProjectDto save(User user, ProjectDto dto){
@@ -60,4 +60,42 @@ public class ProjectService {
         ));
     }
 
+    public List<ProjectDto> findUpcomingProjects(User user){
+        List<Project> projects = projectRepository.findAllByUser(user);
+        return projects.stream()
+                .filter(project -> project.getStartDate().isAfter(LocalDate.now()))
+                .map(project -> new ProjectDto(
+                        project.getId(),
+                        project.getProjectName(),
+                        project.getStartDate(),
+                        project.getMvpDate()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    public List<ProjectDto> findOngoingProjects(User user){
+        List<Project> projects = projectRepository.findAllByUser(user);
+        return projects.stream()
+                .filter(project -> project.getStartDate().isBefore(LocalDate.now()) && project.getMvpDate().isAfter(LocalDate.now()))
+                .map(project -> new ProjectDto(
+                        project.getId(),
+                        project.getProjectName(),
+                        project.getStartDate(),
+                        project.getMvpDate()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    public List<ProjectDto> findCompletedProjects(User user){
+        List<Project> projects = projectRepository.findAllByUser(user);
+        return projects.stream()
+                .filter(project -> project.getMvpDate().isBefore(LocalDate.now()))
+                .map(project -> new ProjectDto(
+                        project.getId(),
+                        project.getProjectName(),
+                        project.getStartDate(),
+                        project.getMvpDate()
+                ))
+                .collect(Collectors.toList());
+    }
 }
