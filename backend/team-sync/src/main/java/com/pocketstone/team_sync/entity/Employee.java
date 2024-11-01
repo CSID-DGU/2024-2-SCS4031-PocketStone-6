@@ -9,14 +9,18 @@ import com.pocketstone.team_sync.entity.enums.Role;
 import com.pocketstone.team_sync.entity.enums.Skill;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta. persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
@@ -59,13 +63,17 @@ public class Employee {
     private Role role; // 프론트/백 등등
 
     //스킬 목록
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "employee_skill", joinColumns = @JoinColumn(name = "employee_id"))
+    @Column(name = "skill")
     @Enumerated(EnumType.STRING)
     private List<Skill> skillSet;
     //역량 점수
     private double skillScore;
 
     //성향
-    @Column()
+    @Lob
+    @Column
     private String personalType;
 
     //kpi평가점수
