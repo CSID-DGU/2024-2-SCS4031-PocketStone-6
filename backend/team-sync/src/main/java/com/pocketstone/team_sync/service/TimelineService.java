@@ -4,6 +4,7 @@ import com.pocketstone.team_sync.dto.projectdto.TimelineDto;
 import com.pocketstone.team_sync.entity.Project;
 import com.pocketstone.team_sync.entity.Timeline;
 import com.pocketstone.team_sync.entity.User;
+import com.pocketstone.team_sync.exception.ProjectNotFoundException;
 import com.pocketstone.team_sync.repository.ProjectRepository;
 import com.pocketstone.team_sync.repository.TimelineRepository;
 import com.pocketstone.team_sync.utility.ProjectValidationUtils;
@@ -29,7 +30,7 @@ public class TimelineService {
     public void saveTimelines(User user, Long projectId, List<TimelineDto> timelineDtos) {
         //전달 받은 프로젝트 아이디로 프로젝트 찾기
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new RuntimeException("프로젝트 찾을 수 없음"));
+                .orElseThrow(() -> new ProjectNotFoundException(" "));
         ProjectValidationUtils.validateProjectOwner(user, project);
 
         //각 타임라인dto를 타임라인 엔티티로 저장
@@ -58,6 +59,11 @@ public class TimelineService {
     //프로젝트 타임라인 업데이트
     public List<TimelineDto> updateTimelines(User user, Long projectId, List<TimelineDto> timelineDtos) {
         //타임라인Dto 리스트에 변동 된 타임라인 업데이트
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException(" "));
+        TimelineDto validateTimeline = timelineDtos.get(0);
+        ProjectValidationUtils.validateTimelineOwner(user,
+                validateTimeline.toTimeline(project, validateTimeline));
         for (TimelineDto timelineDto : timelineDtos) {
             timelineRepository.updateTimelineByProjectId(
                     projectId,
@@ -66,6 +72,6 @@ public class TimelineService {
                     timelineDto.getSprintDurationWeek(),
                     timelineDto.getSprintOrder());
         }
-        return findAllByProjectId (user, projectId);
+        return timelineDtos;
     }
 }

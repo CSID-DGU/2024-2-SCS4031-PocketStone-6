@@ -32,9 +32,7 @@ public class ProjectController {
     //프로젝트 이름으로 프로젝트 찾기
     @GetMapping("/{projectName}")
     public ResponseEntity<ProjectDto> getProject(@AuthenticationPrincipal User user, @PathVariable String projectName) {
-        return projectService.findByProjectName(user, projectName)
-                .map(project -> new ResponseEntity<>(project, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND)); //optional 값 없을때 404 반환
+        return new ResponseEntity<>(projectService.findByProjectName(user, projectName), HttpStatus.OK);
     }
 
     //모든 프로젝트 찾기

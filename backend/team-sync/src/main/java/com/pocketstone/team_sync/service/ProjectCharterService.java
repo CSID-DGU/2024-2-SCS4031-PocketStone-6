@@ -5,6 +5,7 @@ import com.pocketstone.team_sync.dto.projectdto.charterdto.*;
 import com.pocketstone.team_sync.entity.Project;
 import com.pocketstone.team_sync.entity.ProjectCharter;
 import com.pocketstone.team_sync.entity.User;
+import com.pocketstone.team_sync.exception.ProjectNotFoundException;
 import com.pocketstone.team_sync.repository.ProjectCharterRepository;
 import com.pocketstone.team_sync.repository.ProjectRepository;
 import com.pocketstone.team_sync.repository.charter.*;
@@ -41,7 +42,7 @@ public class ProjectCharterService {
     public ProjectCharterDto saveProjectCharter(User user, Long projectId, ProjectCharterDto projectCharterDto) {
 
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new RuntimeException("해당 ID의 프로젝트 찾을 수 없음"));
+                .orElseThrow(() -> new ProjectNotFoundException(" "));
 
 
         ProjectValidationUtils.validateProjectOwner(user, project);
@@ -77,7 +78,7 @@ public class ProjectCharterService {
     //프로젝트 아이디로 프로젝트 차터 조회
     public ProjectCharterDto findByProjectId(User user, Long projectId) {
         ProjectCharter projectCharter = projectCharterRepository.findByProjectId(projectId)
-                .orElseThrow(() -> new RuntimeException("해당 프로젝트 찾을 수 없음"));
+                .orElseThrow(() -> new ProjectNotFoundException(" "));
         ProjectValidationUtils.validateCharterOwner(user, projectCharter);
 
         List<ObjectiveDto> objectives = projectCharter.getObjectives().stream()
@@ -121,7 +122,7 @@ public class ProjectCharterService {
     //프로젝트 차터 수정
     public ProjectCharterDto updateProjectCharterByProjectId(User user, Long projectId, ProjectCharterDto projectCharterDto) {
         ProjectCharter projectCharter = projectCharterRepository.findByProjectId(projectId)
-                .orElseThrow(() -> new RuntimeException("프로젝트 찾을 수 없음"));
+                .orElseThrow(() -> new ProjectNotFoundException(" "));
         ProjectValidationUtils.validateCharterOwner(user, projectCharter);
 
         for (ObjectiveDto objectiveDto : projectCharterDto.getObjectives()) {

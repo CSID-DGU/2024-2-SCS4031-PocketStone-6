@@ -22,11 +22,11 @@ public class TimelineController {
 
     //프로젝트별 타임라인(스프린트)일정 추가
     @PostMapping("/{projectId}")
-    public ResponseEntity<Void> addTimelines(@AuthenticationPrincipal User user,
+    public ResponseEntity<List<TimelineDto>> addTimelines(@AuthenticationPrincipal User user,
                                              @PathVariable Long projectId,
                                              @RequestBody List<TimelineDto> timelineDtos) {
         timelineService.saveTimelines(user, projectId, timelineDtos);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(timelineDtos, HttpStatus.CREATED);
     }
 
     //프로젝트별 타임라인(스프린트)일정 조회
@@ -44,10 +44,7 @@ public class TimelineController {
                                                              @RequestBody List<TimelineDto> timelineDtos) {
         List<TimelineDto> updatedTimelines = timelineService.updateTimelines(user, projectId, timelineDtos);
 
-        if (!updatedTimelines.isEmpty()) {
-            return new ResponseEntity<>(updatedTimelines, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(updatedTimelines, HttpStatus.OK);
+
     }
 }

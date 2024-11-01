@@ -3,6 +3,8 @@ package com.pocketstone.team_sync.service;
 import com.pocketstone.team_sync.dto.projectdto.ProjectDto;
 import com.pocketstone.team_sync.entity.Project;
 import com.pocketstone.team_sync.entity.User;
+import com.pocketstone.team_sync.exception.ProjectNotFoundException;
+import com.pocketstone.team_sync.exception.UnauthorizedAccessException;
 import com.pocketstone.team_sync.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,15 +51,14 @@ public class ProjectService {
     }
 
     //이름으로 프로젝트 찾기, dto로 변환
-    public Optional<ProjectDto> findByProjectName(User user, String projectName){
-        System.out.println("해당 프로젝트 찾는중: " + projectName); //디버깅용
-        Optional<Project> projectOptional =  projectRepository.findByProjectNameAndUser(projectName, user
-        );
-        return projectOptional.map (project -> new ProjectDto(
-                project.getProjectName(),
-                project.getStartDate(),
-                project.getMvpDate()
-        ));
+    public ProjectDto findByProjectName(User user, String projectName){
+        return projectRepository.findByProjectNameAndUser(projectName, user)
+                .map(project -> new ProjectDto(
+                        project.getProjectName(),
+                        project.getStartDate(),
+                        project.getMvpDate()
+                ))
+                .orElseThrow(() -> new ProjectNotFoundException(projectName));
     }
 
     public List<ProjectDto> findUpcomingProjects(User user){
