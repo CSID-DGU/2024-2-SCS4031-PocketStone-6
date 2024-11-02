@@ -1,5 +1,7 @@
 package com.pocketstone.team_sync.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,6 +24,7 @@ public class PastProject {
 
     //해당 사원
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
 
