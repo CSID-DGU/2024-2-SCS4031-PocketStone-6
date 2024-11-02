@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.pocketstone.team_sync.entity.RefreshToken;
+import com.pocketstone.team_sync.entity.User;
 import com.pocketstone.team_sync.repository.RefreshTokenRepository;
+import com.pocketstone.team_sync.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,6 +16,8 @@ public class RefreshTokenService {
 
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     public RefreshToken findByRefreshToken(String refreshToken) {
         return refreshTokenRepository.findByRefreshToken(refreshToken)
@@ -24,7 +28,8 @@ public class RefreshTokenService {
         RefreshToken refreshTokenSave = refreshTokenRepository.findByUserId(userId).orElse(null);
 
         if (refreshTokenSave==null) {
-            refreshTokenRepository.save(new RefreshToken(userId, refreshToken));
+            User user = userRepository.findById(userId).orElse(null);
+            refreshTokenRepository.save(new RefreshToken(user, refreshToken));
         } else {
             refreshTokenSave.update(refreshToken);
         }
