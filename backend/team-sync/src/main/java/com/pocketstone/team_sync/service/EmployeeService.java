@@ -236,4 +236,16 @@ public class EmployeeService {
                                             );
         return dto;
     }
+
+
+    //사원 삭제
+    //계정삭제
+    @Transactional
+    public void deleteEmployee(Company company, Long employeeId) {
+        employeeRepository.deleteByCompanyAndId(company, employeeId);//계정삭제
+    }
+    @Transactional
+    public void deleteAllEmployee(Company company) {
+        employeeRepository.deleteByCompany(company);//계정삭제
+    }
 }

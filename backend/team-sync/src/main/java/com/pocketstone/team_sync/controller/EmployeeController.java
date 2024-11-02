@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,8 +43,35 @@ public class EmployeeController {
     }
     
     //사원 등록
+
+
     //사원 삭제
+    //사원 개인 삭제
+    @DeleteMapping("/{employeeId}")
+    public ResponseEntity<MessageResponseDto> deleteEmployee(@AuthenticationPrincipal User user, @PathVariable("employeeId") Long employeeId){
+        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
+        if (company == null){
+            return null;
+        }
+        employeeService.deleteEmployee(company, employeeId);
+        return ResponseEntity.ok(new MessageResponseDto("해당 사원이 삭제 되었습니다."));
+    }
+
+    //사원 전체 삭제
+    @DeleteMapping("")
+    public ResponseEntity<MessageResponseDto> deleteAllEmployee(@AuthenticationPrincipal User user ){
+        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
+        if (company == null){
+            return null;
+        }
+        employeeService.deleteAllEmployee(company);
+        return ResponseEntity.ok(new MessageResponseDto("모든 사원 정보가 삭제 되었습니다."));
+    }
+
+
     //사원 기본 정보 수정
+
+
 
     //사원 조회
 
