@@ -32,15 +32,28 @@ public class ProjectController {
     //프로젝트 이름으로 프로젝트 찾기
     @GetMapping("/{projectName}")
     public ResponseEntity<ProjectDto> getProject(@AuthenticationPrincipal User user, @PathVariable String projectName) {
-        return projectService.findByProjectName(user, projectName)
-                .map(project -> new ResponseEntity<>(project, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND)); //optional 값 없을때 404 반환
+        return new ResponseEntity<>(projectService.findByProjectName(user, projectName), HttpStatus.OK);
     }
 
     //모든 프로젝트 찾기
     @GetMapping("/all")
     public ResponseEntity<List<ProjectDto>> getAllProjects(@AuthenticationPrincipal User user) {
         return new ResponseEntity<>(projectService.findAll(user), HttpStatus.OK);
+    }
+
+    @GetMapping("/upcoming")
+    public ResponseEntity<List<ProjectDto>> getUpcomingProjects(@AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(projectService.findUpcomingProjects(user), HttpStatus.OK);
+    }
+
+    @GetMapping("/ongoing")
+    public ResponseEntity<List<ProjectDto>> getOngoingProjects(@AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(projectService.findOngoingProjects(user), HttpStatus.OK);
+    }
+
+    @GetMapping("/completed")
+    public ResponseEntity<List<ProjectDto>> getCompletedProjects(@AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(projectService.findCompletedProjects(user), HttpStatus.OK);
     }
 
     //@DeleteMapping 프로젝트 삭제
