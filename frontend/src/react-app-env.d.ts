@@ -18,6 +18,7 @@ interface registerInfoType {
   companyName: string;
 }
 interface projectInfoType {
+  id: 0;
   projectName: string;
   startDate: string;
   mvpDate: string;
