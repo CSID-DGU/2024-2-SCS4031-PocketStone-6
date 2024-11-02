@@ -59,7 +59,7 @@ public class EmployeeController {
 
     //사원 전체 삭제
     @DeleteMapping("")
-    public ResponseEntity<MessageResponseDto> deleteAllEmployee(@AuthenticationPrincipal User user){
+    public ResponseEntity<MessageResponseDto> deleteAllEmployee(@AuthenticationPrincipal User user ){
         Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
         if (company == null){
             return null;
