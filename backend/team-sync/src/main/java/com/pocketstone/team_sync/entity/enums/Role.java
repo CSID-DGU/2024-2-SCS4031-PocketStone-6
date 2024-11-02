@@ -2,11 +2,11 @@ package com.pocketstone.team_sync.entity.enums;
 
 public enum Role {
 
-    BACKEND_DEVELOPER("Backend Developer"),
-    FRONTEND_DEVELOPER("Frontend Developer"),
-    PRODUCT_MANAGER("Product Manager"),
+    BACKEND_DEVELOPER("BE"),
+    FRONTEND_DEVELOPER("FE"),
+    PRODUCT_MANAGER("PM"),
     UI_UX_DESIGNER("UI/UX Designer"),
-    DATA_ANALYST("Data Analyst");
+    DATA_ANALYST("DA");
 
     private final String label;
 
@@ -16,5 +16,15 @@ public enum Role {
 
     public String getLabel() {
         return label;
+    }
+
+    // label로 Role을 찾는 메서드 추가
+    public static Role fromLabel(String label) {
+        for (Role role : Role.values()) {
+            if (role.getLabel().equalsIgnoreCase(label)) {
+                return role;
+            }
+        }
+        throw new IllegalArgumentException("Invalid role label: " + label);
     }
 }
