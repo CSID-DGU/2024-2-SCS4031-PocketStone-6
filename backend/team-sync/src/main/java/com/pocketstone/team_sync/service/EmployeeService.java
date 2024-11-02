@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.pocketstone.team_sync.dto.employeeDto.EmployeeInformationResponseDto;
 import com.pocketstone.team_sync.dto.employeeDto.EmployeeListResponseDto;
+import com.pocketstone.team_sync.dto.employeeDto.EmployeeSpecificationResponseDto;
 import com.pocketstone.team_sync.entity.Company;
 import com.pocketstone.team_sync.entity.Employee;
 import com.pocketstone.team_sync.entity.PastProject;
@@ -212,6 +213,26 @@ public class EmployeeService {
                                                 employee.getPhoneNumber(),
                                                 employee.getEmail(),
                                                 employee.getHireDate()
+                                            );
+        return dto;
+
+    }
+
+    //사원 스펙정보 조회
+    public EmployeeSpecificationResponseDto getEmployeeSpec(Company company, Long employeeId) {
+        Employee employee = employeeRepository.findByCompanyAndId(company,employeeId).orElse(null);
+        if(employee == null){
+            return null;
+        }
+
+        EmployeeSpecificationResponseDto dto = new EmployeeSpecificationResponseDto(
+                                                employee.getId(),
+                                                employee.getSkillScore(),
+                                                employee.getSkillSet(),
+                                                employee.getKpiScore(),
+                                                employee.getPeerEvaluationScore(),
+                                                employee.getPersonalType(),
+                                                employee.getPastProjects()
                                             );
         return dto;
     }

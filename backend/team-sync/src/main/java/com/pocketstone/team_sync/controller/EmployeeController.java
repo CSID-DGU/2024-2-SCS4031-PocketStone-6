@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.pocketstone.team_sync.dto.MessageResponseDto;
 import com.pocketstone.team_sync.dto.employeeDto.EmployeeInformationResponseDto;
 import com.pocketstone.team_sync.dto.employeeDto.EmployeeListResponseDto;
+import com.pocketstone.team_sync.dto.employeeDto.EmployeeSpecificationResponseDto;
 import com.pocketstone.team_sync.entity.Company;
 import com.pocketstone.team_sync.entity.User;
 import com.pocketstone.team_sync.repository.CompanyRepository;
@@ -64,10 +65,10 @@ public class EmployeeController {
 
     //3. 이력 조회 - 특정인
 
-    // @GetMapping("/")
-    // public ResponseEntity<List<EmployeeListResponse>> getEmployeeList(@AuthenticationPrincipal User user){
-    //     Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
-    //     List<EmployeeListResponse> response = new EmployeeListResponse(employeeService.getEmployees(company));
-    //     return ResponseEntity.ok(response);
-    // }
+    @GetMapping("/{employeeId}/spec")
+    public ResponseEntity<EmployeeSpecificationResponseDto> getSpecification(@AuthenticationPrincipal User user, @PathVariable("employeeId") Long employeeId){
+        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
+        EmployeeSpecificationResponseDto response = employeeService.getEmployeeSpec(company, employeeId);
+        return ResponseEntity.ok(response);
+    }
 }
