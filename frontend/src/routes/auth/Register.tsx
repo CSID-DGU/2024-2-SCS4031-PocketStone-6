@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import S from './Register.module.css';
 import { checkID, doRegister } from '../../api/auth/authAPI';
+import { useNavigate } from 'react-router-dom';
 
 export default function Register() {
   const [id, setId] = useState('');
@@ -9,6 +10,8 @@ export default function Register() {
   const [emailID, setEmailID] = useState('');
   const [emailDomain, setEmailDomain] = useState('');
   const [companyName, setCompanyName] = useState('');
+
+  const navigate = useNavigate();
 
   return (
     <div className={S.container}>
@@ -71,7 +74,8 @@ export default function Register() {
             id,
             `${emailID}@${emailDomain}`,
             password,
-            companyName
+            companyName,
+            navigate
           );
           console.log(response);
         }}

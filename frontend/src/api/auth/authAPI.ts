@@ -40,7 +40,8 @@ export const doRegister = async (
   id: string,
   email: string,
   password: string,
-  companyName: string
+  companyName: string,
+  navigate: NavigateFunction
 ) => {
   const content: registerInfoType = {
     loginId: id,
@@ -53,7 +54,8 @@ export const doRegister = async (
     const response = await axios.post(`${API_URL}/api/auth/signup`, content, {
       headers: headers,
     });
-    return response.data;
+    alert(response.data.message)
+    navigate('/login');
   } catch (error) {
     if (axios.isAxiosError(error)) {
       return error.response?.data;
@@ -72,7 +74,7 @@ export const checkID = async (id: string) => {
       content,
       { headers: headers }
     );
-    return response.data;
+    alert(response.data.message)
   } catch (error) {
     console.error(error);
     if (axios.isAxiosError(error)) {
