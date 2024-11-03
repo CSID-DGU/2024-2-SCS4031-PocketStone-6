@@ -18,7 +18,15 @@ interface registerInfoType {
   companyName: string;
 }
 interface projectInfoType {
+  id: 0;
   projectName: string;
   startDate: string;
   mvpDate: string;
+}
+interface employeeInfoType {
+  employeeId: number;
+  staffId: string;
+  name: string;
+  departmeent: string;
+  position: string;
 }

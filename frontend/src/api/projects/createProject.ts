@@ -12,6 +12,7 @@ export const createProject = async (
   navigate: NavigateFunction
 ) => {
   const content: projectInfoType = {
+    id: 0,
     projectName,
     startDate,
     mvpDate,

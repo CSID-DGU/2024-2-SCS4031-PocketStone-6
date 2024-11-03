@@ -3,7 +3,7 @@ import { getAllProject } from '../api/projects/getProject';
 
 export const useAllProjectQuery = () => {
   const query = useQuery({
-    queryKey: ['useAllProjectInfo'],
+    queryKey: ['useAllProject'],
     queryFn: getAllProject,
   });
 

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { submitExcelData } from '../../api/submitExcelData';
+import { submitExcelData } from '../../api/employee/submitExcelData';
+import { useNavigate } from 'react-router-dom';
 
 export const ExcelUploader = () => {
   const [file, setFile] = useState<File | null>(null);
+  const navigate = useNavigate();
 
   // 파일 선택 시 상태 업데이트
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -13,7 +15,7 @@ export const ExcelUploader = () => {
   return (
     <form
       onSubmit={(e) => {
-        submitExcelData(e, file);
+        submitExcelData(e, file, navigate);
       }}
       encType="multipart/form-data"
     >
