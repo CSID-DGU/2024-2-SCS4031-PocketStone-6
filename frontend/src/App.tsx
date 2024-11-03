@@ -9,6 +9,7 @@ import Employee from './routes/employee/Employee';
 import { Navbar } from './components/Navbar';
 import ProjectNew from './routes/project/ProjectNew';
 import ProjectDetail from './routes/project/ProjectDetail';
+import EmployeeDetail from './routes/employee/EmployeeDetail';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
 
           {/* 인원 관리 */}
           <Route path="/employee" element={<Employee />} />
+          <Route path="/employee/:id" element={<EmployeeDetail />} />
         </Routes>
       </div>
     </div>
