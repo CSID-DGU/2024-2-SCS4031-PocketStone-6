@@ -23,3 +23,10 @@ interface projectInfoType {
   startDate: string;
   mvpDate: string;
 }
+interface employeeInfoType {
+  employeeId: number;
+  staffId: string;
+  name: string;
+  departmeent: string;
+  position: string;
+}

@@ -8,14 +8,14 @@ export default function Project() {
   return (
     <div>
       <h2>프로젝트 목록</h2>
-      {allProjectQuery.data?.map((project: projectInfoType) => (
+      {allProjectQuery.data?.map(({id, projectName, startDate, mvpDate}: projectInfoType) =>
         <ProjectBlock
-          id={project.id}
-          projectName={project.projectName}
-          startDate={project.startDate}
-          mvpDate={project.mvpDate}
+          id={id}
+          projectName={projectName}
+          startDate={startDate}
+          mvpDate={mvpDate}
         />
-      ))}
+      )}
       <button
         onClick={() => {
           navigate('/project/new');
