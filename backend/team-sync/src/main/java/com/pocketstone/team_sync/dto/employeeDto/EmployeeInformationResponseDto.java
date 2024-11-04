@@ -10,7 +10,7 @@ public class EmployeeInformationResponseDto {
     private Long employeeId;
     private String staffId;
     private String name;
-    private String departmeent;
+    private String department;
     private String position;
     private String phoneNumber;
     private String email;
