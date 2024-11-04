@@ -27,13 +27,13 @@ public class ProjectService {
 
 
     public ProjectDto save(User user, ProjectDto dto){
-        projectRepository.save(Project.builder()
+        Project project = projectRepository.save(Project.builder()
                 .projectName(dto.getProjectName())
                 .startDate(dto.getStartDate())
                 .mvpDate(dto.getMvpDate())
                 .user(user)
                 .build());
-        return dto;
+        return ProjectDto.toProjectDto(project);
     }
 
     //모든 프로젝트 찾기, dto로 변환
@@ -43,6 +43,7 @@ public class ProjectService {
         // 프로젝트 엔티티 dto 로 변환
         return projects.stream()
                 .map(project -> new ProjectDto(
+                        project.getId(),
                         project.getProjectName(),
                         project.getStartDate(),
                         project.getMvpDate()
@@ -54,6 +55,7 @@ public class ProjectService {
     public ProjectDto findByProjectName(User user, String projectName){
         return projectRepository.findByProjectNameAndUser(projectName, user)
                 .map(project -> new ProjectDto(
+                        project.getId(),
                         project.getProjectName(),
                         project.getStartDate(),
                         project.getMvpDate()

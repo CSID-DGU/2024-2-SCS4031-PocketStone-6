@@ -1,6 +1,7 @@
 package com.pocketstone.team_sync.dto.projectdto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.pocketstone.team_sync.entity.Project;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -28,6 +29,14 @@ public class ProjectDto {
         this.projectName = projectName;
         this.startDate = startDate;
         this.mvpDate = mvpDate;
+    }
+
+    public  static ProjectDto toProjectDto(Project project) {
+        return new ProjectDto(
+                project.getId(),
+                project.getProjectName(),
+                project.getStartDate(),
+                project.getMvpDate());
     }
 }
 
