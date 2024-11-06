@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table
@@ -14,7 +15,6 @@ import lombok.NoArgsConstructor;
 public class Principle {
 
     @Id
-    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
@@ -22,7 +22,9 @@ public class Principle {
     private String principleName;
 
     @ManyToOne
-    @JoinColumn(name = "project_charter_id", nullable = false) // Foreign key reference
+    @JsonIgnore
+    @Setter
+    @JoinColumn(name = "project_charter_id", nullable = false)
     private ProjectCharter projectCharter;
 
     @Column(name = "principle_content", nullable = false)

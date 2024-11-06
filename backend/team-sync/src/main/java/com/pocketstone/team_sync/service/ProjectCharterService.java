@@ -1,10 +1,10 @@
 package com.pocketstone.team_sync.service;
 
 import com.pocketstone.team_sync.dto.projectdto.ProjectCharterDto;
-import com.pocketstone.team_sync.dto.projectdto.charterdto.*;
 import com.pocketstone.team_sync.entity.Project;
 import com.pocketstone.team_sync.entity.ProjectCharter;
 import com.pocketstone.team_sync.entity.User;
+import com.pocketstone.team_sync.entity.charter.*;
 import com.pocketstone.team_sync.exception.ProjectNotFoundException;
 import com.pocketstone.team_sync.repository.ProjectCharterRepository;
 import com.pocketstone.team_sync.repository.ProjectRepository;
@@ -12,23 +12,16 @@ import com.pocketstone.team_sync.repository.charter.*;
 import com.pocketstone.team_sync.utility.ProjectValidationUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class ProjectCharterService {
 
-    @Autowired
-    private ProjectCharterRepository projectCharterRepository;
-
-    @Autowired
-    private ProjectRepository projectRepository;
-
+    private final ProjectCharterRepository projectCharterRepository;
+    private final ProjectRepository projectRepository;
     private final ObjectiveRepository objectiveRepository;
     private final ScopeRepository scopeRepository;
     private final PositionRepository positionRepository;
@@ -44,79 +37,30 @@ public class ProjectCharterService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(" "));
 
-
         ProjectValidationUtils.validateProjectOwner(user, project);
 
+        projectCharterRepository.save(projectCharterDto.toProjectCharter(project, projectCharterDto));
 
-        ProjectCharter projectCharter =
-                projectCharterRepository.save(ProjectCharter.builder().project(project).build());
-
-            for (ObjectiveDto objectiveDto : projectCharterDto.getObjectives()) {
-                objectiveRepository.save(objectiveDto.toObjective(projectCharter, objectiveDto));
-            }
-            for (ScopeDto scopeDto : projectCharterDto.getScopes()) {
-                scopeRepository.save(scopeDto.toScope(projectCharter, scopeDto));
-            }
-            for (PositionDto positionDto : projectCharterDto.getPositions()) {
-                positionRepository.save(positionDto.toPosition(projectCharter, positionDto));
-            }
-            for (VisionDto visionDto : projectCharterDto.getVisions()) {
-                visionRepository.save(visionDto.toVision(projectCharter, visionDto));
-            }
-            for (StakeholderDto stakeholderDto : projectCharterDto.getStakeholders()) {
-                stakeholderRepository.save(stakeholderDto.toStakeholder(projectCharter, stakeholderDto));
-            }
-            for (PrincipleDto principleDto : projectCharterDto.getPrinciples()) {
-                principleRepository.save(principleDto.toPrinciple(projectCharter, principleDto));
-            }
-            for (RiskDto riskDto : projectCharterDto.getRisks()) {
-                riskRepository.save(riskDto.toRisk(projectCharter, riskDto));
-            }
         return projectCharterDto;
 
     }
+
     //프로젝트 아이디로 프로젝트 차터 조회
     public ProjectCharterDto findByProjectId(User user, Long projectId) {
         ProjectCharter projectCharter = projectCharterRepository.findByProjectId(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(" "));
         ProjectValidationUtils.validateCharterOwner(user, projectCharter);
 
-        List<ObjectiveDto> objectives = projectCharter.getObjectives().stream()
-                .map(objective -> new ObjectiveDto(objective.getId(),objective.getObjectiveName(), objective.getObjectiveContent()))
-                .collect(Collectors.toList());
 
-        List<PositionDto> positions = projectCharter.getPositions().stream()
-                .map(position -> new PositionDto(position.getId(), position.getPositionName(), position.getPositionContent()))
-                .collect(Collectors.toList());
-
-        List<PrincipleDto> principles = projectCharter.getPrinciples().stream()
-                .map(principle -> new PrincipleDto(principle.getId(), principle.getPrincipleName(), principle.getPrincipleContent()))
-                .collect(Collectors.toList());
-
-        List<ScopeDto> scopes = projectCharter.getScopes().stream()
-                .map(scope -> new ScopeDto(scope.getId(), scope.getScopeName(), scope.getScopeContent()))
-                .collect(Collectors.toList());
-
-        List<VisionDto> visions = projectCharter.getVisions().stream()
-                .map(vision -> new VisionDto(vision.getId(), vision.getVisionName(), vision.getVisionContent()))
-                .collect(Collectors.toList());
-
-        List<StakeholderDto> stakeholders = projectCharter.getStakeholders().stream()
-                .map(stakeholder -> new StakeholderDto(stakeholder.getId(), stakeholder.getStakeholderName(), stakeholder.getStakeholderContent()))
-                .collect(Collectors.toList());
-
-        List<RiskDto> risks = projectCharter.getRisks().stream()
-                .map(risk -> new RiskDto(risk.getId(), risk.getRiskName(), risk.getRiskContent()))
-                .collect(Collectors.toList());
-
-        return new ProjectCharterDto(objectives,
-                positions,
-                principles,
-                scopes,
-                visions,
-                stakeholders,
-                risks);
-
+        return new ProjectCharterDto(
+                projectCharter.getId(),
+                projectCharter.getObjectives(),
+                projectCharter.getPositions(),
+                projectCharter.getPrinciples(),
+                projectCharter.getScopes(),
+                projectCharter.getVisions(),
+                projectCharter.getStakeholders(),
+                projectCharter.getRisks());
     }
 
     //프로젝트 차터 수정
@@ -125,62 +69,62 @@ public class ProjectCharterService {
                 .orElseThrow(() -> new ProjectNotFoundException(" "));
         ProjectValidationUtils.validateCharterOwner(user, projectCharter);
 
-        for (ObjectiveDto objectiveDto : projectCharterDto.getObjectives()) {
-            objectiveRepository.updateObjectiveByProjectId(
-                    projectId,
-                    objectiveDto.getId(),
-                    objectiveDto.getObjectiveName(),
-                    objectiveDto.getObjectiveContent());
-        }
-
-        for (ScopeDto scopeDto : projectCharterDto.getScopes()) {
-            scopeRepository.updateScopeByProjectId(
-                    projectId,
-                    scopeDto.getId(),
-                    scopeDto.getScopeName(),
-                    scopeDto.getScopeContent());
-        }
-
-        for (PositionDto positionDto : projectCharterDto.getPositions()) {
-            positionRepository.updatePositionByProjectId(
-                    projectId,
-                    positionDto.getId(),
-                    positionDto.getPositionName(),
-                    positionDto.getPositionContent());
-        }
-
-        for (VisionDto visionDto : projectCharterDto.getVisions()) {
-            visionRepository.updateVisionByProjectId(
-                    projectId,
-                    visionDto.getId(),
-                    visionDto.getVisionName(),
-                    visionDto.getVisionContent());
-        }
-
-        for (StakeholderDto stakeholderDto : projectCharterDto.getStakeholders()) {
-            stakeholderRepository.updateStakeholderByProjectId(
-                    projectId,
-                    stakeholderDto.getId(),
-                    stakeholderDto.getStakeholderName(),
-                    stakeholderDto.getStakeholderContent());
-        }
-
-        for  (PrincipleDto principleDto : projectCharterDto.getPrinciples()) {
-            principleRepository.updatePrincipleByProjectId(
-                    projectId,
-                    principleDto.getId(),
-                    principleDto.getPrincipleName(),
-                    principleDto.getPrincipleContent());
-        }
-
-        for (RiskDto riskDto : projectCharterDto.getRisks()) {
-            riskRepository.updateRiskByProjectId(
-                    projectId,
-                    riskDto.getId(),
-                    riskDto.getRiskName(),
-                    riskDto.getRiskContent());
-        }
+        ProjectCharter updatedProjectCharter = projectCharterDto.toProjectCharter(projectCharter.getProject(), projectCharterDto);
+        updateObjectives(projectId, updatedProjectCharter);
+        updatePositions(projectId, updatedProjectCharter);
+        updatePrinciples(projectId, updatedProjectCharter);
+        updateScopes(projectId, updatedProjectCharter);
+        updateVisions(projectId, updatedProjectCharter);
+        updateStakeholders(projectId, updatedProjectCharter);
+        updateRisks(projectId, updatedProjectCharter);
 
         return projectCharterDto;
     }
+
+
+    private void updateObjectives(Long projectId, ProjectCharter projectCharter) {
+        for (Objective objective : projectCharter.getObjectives()) {
+            objectiveRepository.updateObjectiveByProjectId(projectId, objective.getId(), objective.getObjectiveName(), objective.getObjectiveContent());
+        }
+    }
+
+    private void updatePositions(Long projectId, ProjectCharter projectCharter) {
+        for (Position position : projectCharter.getPositions()) {
+            positionRepository.updatePositionByProjectId(projectId, position.getId(), position.getPositionName(), position.getPositionContent());
+        }
+    }
+
+    private void updatePrinciples(Long projectId, ProjectCharter projectCharter) {
+        for (Principle principle : projectCharter.getPrinciples()) {
+            principleRepository.updatePrincipleByProjectId(projectId, principle.getId(), principle.getPrincipleName(), principle.getPrincipleContent());
+        }
+    }
+
+    private void updateScopes(Long projectId, ProjectCharter projectCharter) {
+        for (Scope scope : projectCharter.getScopes()) {
+            scopeRepository.updateScopeByProjectId(projectId, scope.getId(), scope.getScopeName(), scope.getScopeContent());
+        }
+    }
+
+    private void updateVisions(Long projectId, ProjectCharter projectCharter) {
+        for (Vision vision : projectCharter.getVisions()) {
+            visionRepository.updateVisionByProjectId(projectId, vision.getId(), vision.getVisionName(), vision.getVisionContent());
+        }
+    }
+
+    private void updateStakeholders(Long projectId, ProjectCharter projectCharter) {
+        for (Stakeholder stakeholder : projectCharter.getStakeholders()) {
+            stakeholderRepository.updateStakeholderByProjectId(projectId, stakeholder.getId(), stakeholder.getStakeholderName(), stakeholder.getStakeholderContent());
+        }
+    }
+
+    private void updateRisks(Long projectId, ProjectCharter projectCharter) {
+        for (Risk risk : projectCharter.getRisks()) {
+            riskRepository.updateRiskByProjectId(projectId, risk.getId(), risk.getRiskName(), risk.getRiskContent());
+        }
+    }
+
+
 }
+
+
