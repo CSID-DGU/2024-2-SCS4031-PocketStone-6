@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Table
 @NoArgsConstructor
@@ -14,12 +15,13 @@ import lombok.NoArgsConstructor;
 public class Risk {
 
         @Id
-        @JsonIgnore
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private long id;
 
         @ManyToOne
-        @JoinColumn(name = "project_charter_id", nullable = false) // Foreign key reference
+        @JsonIgnore
+        @Setter
+        @JoinColumn(name = "project_charter_id", nullable = false)
         private ProjectCharter projectCharter;
 
         @Column(name = "risk_name", nullable = false)

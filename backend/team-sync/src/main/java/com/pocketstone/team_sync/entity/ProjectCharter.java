@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @Table
 @NoArgsConstructor//(access = AccessLevel.PROTECTED)
 @Getter
-
+@Setter
 public class ProjectCharter {
 
     @Id
@@ -22,7 +23,7 @@ public class ProjectCharter {
     private Long id;
 
     //프로젝트 id, 외래키
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
@@ -49,8 +50,26 @@ public class ProjectCharter {
 
 
     @Builder
-    public ProjectCharter(Project project) {
+    public ProjectCharter(Project project, List<Position> positions, List<Objective> objectives, List<Principle> principles, List<Risk> risks, List<Scope> scopes, List<Stakeholder> stakeholders, List<Vision> visions) {
+
         this.project = project;
+        this.positions = positions;
+        this.objectives = objectives;
+        this.principles = principles;
+        this.risks = risks;
+        this.scopes = scopes;
+        this.stakeholders = stakeholders;
+        this.visions = visions;
+
+
+        if (objectives != null) objectives.forEach(objective -> objective.setProjectCharter(this));
+        if (principles != null) principles.forEach(principle -> principle.setProjectCharter(this));
+        if (risks != null) risks.forEach(risk -> risk.setProjectCharter(this));
+        if (scopes != null) scopes.forEach(scope -> scope.setProjectCharter(this));
+        if (stakeholders != null) stakeholders.forEach(stakeholder -> stakeholder.setProjectCharter(this));
+        if (visions != null) visions.forEach(vision -> vision.setProjectCharter(this));
+        if (positions != null) positions.forEach(position -> position.setProjectCharter(this));
+
     }
 
 

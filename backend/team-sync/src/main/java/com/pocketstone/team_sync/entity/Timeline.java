@@ -1,9 +1,7 @@
 package com.pocketstone.team_sync.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.pocketstone.team_sync.dto.projectdto.TimelineDto;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
