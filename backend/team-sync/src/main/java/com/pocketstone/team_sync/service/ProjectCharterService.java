@@ -5,7 +5,7 @@ import com.pocketstone.team_sync.entity.Project;
 import com.pocketstone.team_sync.entity.ProjectCharter;
 import com.pocketstone.team_sync.entity.User;
 import com.pocketstone.team_sync.entity.charter.*;
-import com.pocketstone.team_sync.exception.ProjectNotFoundException;
+import com.pocketstone.team_sync.exception.*;
 import com.pocketstone.team_sync.repository.ProjectCharterRepository;
 import com.pocketstone.team_sync.repository.ProjectRepository;
 import com.pocketstone.team_sync.repository.charter.*;
@@ -38,6 +38,8 @@ public class ProjectCharterService {
                 .orElseThrow(() -> new ProjectNotFoundException(" "));
 
         ProjectValidationUtils.validateProjectOwner(user, project);
+        if (projectCharterRepository.findByProjectId(projectId).isPresent())throw new CharterAlreadyExistsException();
+
 
         projectCharterRepository.save(projectCharterDto.toProjectCharter(project, projectCharterDto));
 
@@ -47,8 +49,10 @@ public class ProjectCharterService {
 
     //프로젝트 아이디로 프로젝트 차터 조회
     public ProjectCharterDto findByProjectId(User user, Long projectId) {
-        ProjectCharter projectCharter = projectCharterRepository.findByProjectId(projectId)
+        Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(" "));
+        ProjectCharter projectCharter = projectCharterRepository.findByProjectId(projectId)
+                .orElseThrow(() -> new CharterNotFoundException());
         ProjectValidationUtils.validateCharterOwner(user, projectCharter);
 
 
