@@ -15,15 +15,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TimelineDto {
     private Long id;
-    @Min(value = 0)
-    @Max(value = 100)
-    @NotNull
+    @Min(value = 0, message = "스프린트는 0번부터 시작합니다.")
+    @Max(value = 100, message = "스프린트는 100번까지 설정 가능합니다.")
+    @NotNull (message = "스프린트 순서를 입력해주세요.")
     private Integer sprintOrder;
-    @NotEmpty
+    @NotEmpty (message = "스프린트 내용을 입력해주세요.")
     private String sprintContent;
-    @Min(value = 1)
-    @Max(value = 54)
-    @NotNull
+    @Min(value = 1, message = "스프린트는 주 단위로 진행됩니다.")
+    @Max(value = 54, message = "스프린트의 기간이 1년을 넘을 수 없습니다.")
+    @NotNull (message = "스프린트 기간을 입력해주세요.")
     private Integer sprintDurationWeek;
 
 

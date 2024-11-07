@@ -16,19 +16,19 @@ import java.util.List;
     @NoArgsConstructor
     public class ProjectCharterDto {
         private Long id;
-        @NotEmpty
+        @NotEmpty (message = "목표를 입력해주세요.")
         private List<Objective> objectives;
-        @NotEmpty
+        @NotEmpty  (message = "포지션을 입력해주세요.")
         private List<Position> positions;
-        @NotEmpty
+        @NotEmpty (message = "원칙을 입력해주세요.")
         private List<Principle> principles;
-        @NotEmpty
+        @NotEmpty (message = "스코프를 입력해주세요.")
         private List<Scope> scopes;
-        @NotEmpty
+        @NotEmpty (message = "비전을 입력해주세요.")
         private List<Vision> visions;
-        @NotEmpty
+        @NotEmpty (message = "이해관계자를 입력해주세요.")
         private List<Stakeholder> stakeholders;
-        @NotEmpty
+        @NotEmpty (message = "리스크를 입력해주세요.")
         private List<Risk> risks;
 
         public ProjectCharterDto(List<Objective> objectives,

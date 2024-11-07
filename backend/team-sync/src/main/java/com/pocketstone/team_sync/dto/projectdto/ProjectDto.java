@@ -13,10 +13,10 @@ import java.time.LocalDate;
 @Data
 public class ProjectDto {
     private Long id;
-    @NotEmpty
+    @NotEmpty (message = "프로젝트 이름을 입력해주세요.")
     private String projectName;
     private LocalDate startDate;
-    @Future
+    @Future (message = "날짜를 다시 확인해주세요")
     private LocalDate mvpDate;
 
     public ProjectDto(String projectName, LocalDate startDate, LocalDate mvpDate) {
