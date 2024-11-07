@@ -6,6 +6,7 @@ import com.pocketstone.team_sync.dto.projectdto.charterdto.*;
 import com.pocketstone.team_sync.entity.Project;
 import com.pocketstone.team_sync.entity.ProjectCharter;
 import com.pocketstone.team_sync.entity.charter.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,12 +16,19 @@ import java.util.List;
     @NoArgsConstructor
     public class ProjectCharterDto {
         private Long id;
+        @NotEmpty
         private List<Objective> objectives;
+        @NotEmpty
         private List<Position> positions;
+        @NotEmpty
         private List<Principle> principles;
+        @NotEmpty
         private List<Scope> scopes;
+        @NotEmpty
         private List<Vision> visions;
+        @NotEmpty
         private List<Stakeholder> stakeholders;
+        @NotEmpty
         private List<Risk> risks;
 
         public ProjectCharterDto(List<Objective> objectives,

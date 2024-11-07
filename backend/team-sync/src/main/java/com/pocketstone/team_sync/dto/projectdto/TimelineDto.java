@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pocketstone.team_sync.entity.Project;
 import com.pocketstone.team_sync.entity.Timeline;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,8 +15,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TimelineDto {
     private Long id;
+    @Min(value = 0)
+    @Max(value = 100)
+    @NotNull
     private Integer sprintOrder;
+    @NotEmpty
     private String sprintContent;
+    @Min(value = 1)
+    @Max(value = 54)
+    @NotNull
     private Integer sprintDurationWeek;
 
 

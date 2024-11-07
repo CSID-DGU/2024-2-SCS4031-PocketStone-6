@@ -3,6 +3,7 @@ package com.pocketstone.team_sync.entity.charter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pocketstone.team_sync.entity.ProjectCharter;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,9 +26,11 @@ public class Risk {
         private ProjectCharter projectCharter;
 
         @Column(name = "risk_name", nullable = false)
+        @NotEmpty (message = "리스크를 입력해주세요.")
         private String riskName;
 
         @Column(name = "risk_content", nullable = false)
+        @NotEmpty(message = "리스크 세부내용을 작성해주세요.")
         private String riskContent;
 
         @Builder

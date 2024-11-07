@@ -5,6 +5,7 @@ import com.pocketstone.team_sync.dto.projectdto.ProjectCharterDto;
 import com.pocketstone.team_sync.entity.ProjectCharter;
 import com.pocketstone.team_sync.entity.User;
 import com.pocketstone.team_sync.service.ProjectCharterService;
+import jakarta.validation.Valid;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class CharterController {
     @PostMapping("/{projectId}")
     public ResponseEntity<ProjectCharterDto> saveProjectCharter(@AuthenticationPrincipal User user,
                                                                 @PathVariable Long projectId,
-                                                                @RequestBody ProjectCharterDto projectCharterDto) {
+                                                                @Valid @RequestBody ProjectCharterDto projectCharterDto) {
         return new ResponseEntity<>(projectCharterService.saveProjectCharter(user, projectId, projectCharterDto), HttpStatus.CREATED);
 
     }

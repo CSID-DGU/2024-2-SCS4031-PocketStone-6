@@ -3,6 +3,7 @@ package com.pocketstone.team_sync.controller;
 import com.pocketstone.team_sync.dto.projectdto.*;
 import com.pocketstone.team_sync.entity.User;
 import com.pocketstone.team_sync.service.ProjectService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class ProjectController {
 
     //프로젝트 생성
     @PostMapping("/project")
-    public ResponseEntity<ProjectDto> addProject(@AuthenticationPrincipal User user, @RequestBody ProjectDto projectDto) {
+    public ResponseEntity<ProjectDto> addProject(@AuthenticationPrincipal User user, @Valid @RequestBody ProjectDto projectDto) {
         return new ResponseEntity<>(projectService.save(user, projectDto), HttpStatus.CREATED);
     }
 

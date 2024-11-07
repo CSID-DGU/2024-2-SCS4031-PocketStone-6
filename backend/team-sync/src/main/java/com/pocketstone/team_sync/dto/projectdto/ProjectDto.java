@@ -2,6 +2,9 @@ package com.pocketstone.team_sync.dto.projectdto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pocketstone.team_sync.entity.Project;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -10,8 +13,10 @@ import java.time.LocalDate;
 @Data
 public class ProjectDto {
     private Long id;
+    @NotEmpty
     private String projectName;
     private LocalDate startDate;
+    @Future
     private LocalDate mvpDate;
 
     public ProjectDto(String projectName, LocalDate startDate, LocalDate mvpDate) {

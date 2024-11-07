@@ -4,12 +4,16 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pocketstone.team_sync.entity.charter.Stakeholder;
 import com.pocketstone.team_sync.entity.ProjectCharter;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class StakeholderDto {
     private Long id;
+    @NotEmpty
     private String stakeholderName;
+    @NotNull
     private String stakeholderContent;
 
     public StakeholderDto(String stakeholderName, String stakeholderContent) {

@@ -4,12 +4,16 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pocketstone.team_sync.entity.charter.Principle;
 import com.pocketstone.team_sync.entity.ProjectCharter;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class PrincipleDto {
     private Long id;
+    @NotEmpty
     private String principleName;
+    @NotNull
     private String principleContent;
 
     public PrincipleDto(String principleName, String principleContent) {

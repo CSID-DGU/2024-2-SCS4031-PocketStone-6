@@ -3,6 +3,7 @@ package com.pocketstone.team_sync.entity.charter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pocketstone.team_sync.entity.ProjectCharter;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,9 +26,11 @@ public class Stakeholder {
         private ProjectCharter projectCharter;
 
         @Column(name = "stakeholder_name", nullable = false)
+        @NotEmpty (message = "이해관계자를 입력해주세요.")
         private String stakeholderName;
 
         @Column(name = "stakeholder_content", nullable = false)
+        @NotEmpty (message = "이해관계자 세부내용을 작성해주세요.")
         private String stakeholderContent;
 
         @Builder
