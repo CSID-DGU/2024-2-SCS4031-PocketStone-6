@@ -2,6 +2,7 @@ package com.pocketstone.team_sync.controller;
 
 import com.pocketstone.team_sync.dto.projectdto.*;
 import com.pocketstone.team_sync.entity.User;
+import com.pocketstone.team_sync.entity.enums.ProjectStatus;
 import com.pocketstone.team_sync.service.ProjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,24 +38,12 @@ public class ProjectController {
     }
 
     //모든 프로젝트 찾기
-    @GetMapping("/all")
-    public ResponseEntity<List<ProjectDto>> getAllProjects(@AuthenticationPrincipal User user) {
-        return new ResponseEntity<>(projectService.findAll(user), HttpStatus.OK);
-    }
-
-    @GetMapping("/upcoming")
-    public ResponseEntity<List<ProjectDto>> getUpcomingProjects(@AuthenticationPrincipal User user) {
-        return new ResponseEntity<>(projectService.findUpcomingProjects(user), HttpStatus.OK);
-    }
-
-    @GetMapping("/ongoing")
-    public ResponseEntity<List<ProjectDto>> getOngoingProjects(@AuthenticationPrincipal User user) {
-        return new ResponseEntity<>(projectService.findOngoingProjects(user), HttpStatus.OK);
-    }
-
-    @GetMapping("/completed")
-    public ResponseEntity<List<ProjectDto>> getCompletedProjects(@AuthenticationPrincipal User user) {
-        return new ResponseEntity<>(projectService.findCompletedProjects(user), HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<List<ProjectDto>> getProjects(@AuthenticationPrincipal User user, @RequestParam(value = "status",required = false) ProjectStatus status) {
+        status = (status == null) ? ProjectStatus.ALL : status;
+        List<ProjectDto> projects = projectService.getProjectsByStatus(status, user);
+        return new ResponseEntity<>(projects, HttpStatus.OK);
+        //return new ResponseEntity<>(projectService.findAll(user), HttpStatus.OK);
     }
 
     //@DeleteMapping 프로젝트 삭제
