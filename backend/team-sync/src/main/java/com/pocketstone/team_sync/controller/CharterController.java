@@ -8,8 +8,8 @@ import com.pocketstone.team_sync.service.CharterFileService;
 import com.pocketstone.team_sync.service.ProjectCharterService;
 import jakarta.validation.Valid;
 import lombok.NoArgsConstructor;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -52,8 +52,16 @@ public class CharterController {
     }
 
 
-    @PostMapping(value ="/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<FileUploadResponseDto> uploadFile(@RequestParam("file") MultipartFile file) {
-        return new ResponseEntity<>(charterFileService.uploadFile(file), HttpStatus.OK);
+    @PostMapping(value ="/{projectId}/pdf", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<FileUploadResponseDto> uploadPDF(@AuthenticationPrincipal User user,
+                                                            @PathVariable Long projectId,
+                                                            @RequestParam("file") MultipartFile file) {
+        return new ResponseEntity<>(charterFileService.uploadFile(user, projectId, file), HttpStatus.OK);
+    }
+
+    @GetMapping( "/{projectId}/pdf")
+    public ResponseEntity<ByteArrayResource> downloadPDF (@AuthenticationPrincipal User user,
+                                                          @PathVariable Long projectId) {
+        return (charterFileService.downloadFile(user, projectId));
     }
 }
