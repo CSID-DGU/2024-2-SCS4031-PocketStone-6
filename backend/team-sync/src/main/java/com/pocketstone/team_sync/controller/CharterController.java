@@ -55,16 +55,15 @@ public class CharterController {
     @PostMapping(value ="/{projectId}/pdf", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<FileUploadResponseDto> uploadPDF(@AuthenticationPrincipal User user,
                                                             @PathVariable Long projectId,
-                                                            @RequestParam("file") MultipartFile file) {
-        return new ResponseEntity<>(charterFileService.uploadFile(user, projectId, file), HttpStatus.OK);
+                                                            @RequestParam("file") MultipartFile file,
+                                                            @RequestParam(value = "reUpload", defaultValue = "false") boolean reUpload) {
+        FileUploadResponseDto response = reUpload
+                ? charterFileService.reUploadFile(user, projectId, file)
+                : charterFileService.uploadFile(user, projectId, file);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping(value ="/{projectId}/pdf/re", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<FileUploadResponseDto> reUploadPDF(@AuthenticationPrincipal User user,
-                                                           @PathVariable Long projectId,
-                                                           @RequestParam("file") MultipartFile file) {
-        return new ResponseEntity<>(charterFileService.reUploadFile(user, projectId, file), HttpStatus.OK);
-    }
 
     @GetMapping( "/{projectId}/pdf")
     public ResponseEntity<ByteArrayResource> downloadPDF (@AuthenticationPrincipal User user,
