@@ -3,6 +3,7 @@ package com.pocketstone.team_sync.controller;
 import com.pocketstone.team_sync.dto.projectdto.TimelineDto;
 import com.pocketstone.team_sync.entity.User;
 import com.pocketstone.team_sync.service.TimelineService;
+import jakarta.validation.Valid;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class TimelineController {
     @PostMapping("/{projectId}")
     public ResponseEntity<List<TimelineDto>> addTimelines(@AuthenticationPrincipal User user,
                                              @PathVariable Long projectId,
-                                             @RequestBody List<TimelineDto> timelineDtos) {
+                                             @Valid @RequestBody List<TimelineDto> timelineDtos) {
         timelineService.saveTimelines(user, projectId, timelineDtos);
         return new ResponseEntity<>(timelineDtos, HttpStatus.CREATED);
     }

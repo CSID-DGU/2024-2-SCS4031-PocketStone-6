@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pocketstone.team_sync.entity.Project;
 import com.pocketstone.team_sync.entity.Timeline;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,8 +15,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TimelineDto {
     private Long id;
+    @Min(value = 0, message = "스프린트는 0번부터 시작합니다.")
+    @Max(value = 100, message = "스프린트는 100번까지 설정 가능합니다.")
+    @NotNull (message = "스프린트 순서를 입력해주세요.")
     private Integer sprintOrder;
+    @NotEmpty (message = "스프린트 내용을 입력해주세요.")
     private String sprintContent;
+    @Min(value = 1, message = "스프린트는 주 단위로 진행됩니다.")
+    @Max(value = 54, message = "스프린트의 기간이 1년을 넘을 수 없습니다.")
+    @NotNull (message = "스프린트 기간을 입력해주세요.")
     private Integer sprintDurationWeek;
 
 
