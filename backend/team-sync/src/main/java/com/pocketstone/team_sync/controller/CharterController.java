@@ -9,13 +9,18 @@ import com.pocketstone.team_sync.service.ProjectCharterService;
 import jakarta.validation.Valid;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @NoArgsConstructor
@@ -29,9 +34,17 @@ public class CharterController {
 
     //프로젝트 차터 저장
     @PostMapping("/{projectId}")
-    public ResponseEntity<ProjectCharterDto> saveProjectCharter(@AuthenticationPrincipal User user,
+    public ResponseEntity<Object> saveProjectCharter(@AuthenticationPrincipal User user,
                                                                 @PathVariable Long projectId,
-                                                                @Valid @RequestBody ProjectCharterDto projectCharterDto) {
+                                                                @Valid @RequestBody ProjectCharterDto projectCharterDto,
+                                                                BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<String> errors = bindingResult.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.badRequest().body(errors);
+        }
         return new ResponseEntity<>(projectCharterService.saveProjectCharter(user, projectId, projectCharterDto), HttpStatus.CREATED);
 
     }
@@ -45,9 +58,17 @@ public class CharterController {
 
     //프로젝트 차터 업데이트
     @PutMapping("/{projectId}")
-    public ResponseEntity<ProjectCharterDto> updateProjectCharter(@AuthenticationPrincipal User user,
+    public ResponseEntity<Object> updateProjectCharter(@AuthenticationPrincipal User user,
                                                                   @PathVariable Long projectId,
-                                                                  @RequestBody ProjectCharterDto projectCharterDto) {
+                                                                  @RequestBody ProjectCharterDto projectCharterDto,
+                                                                  BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<String> errors = bindingResult.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.badRequest().body(errors);
+        }
         return new ResponseEntity<>(projectCharterService.updateProjectCharterByProjectId(user, projectId, projectCharterDto), HttpStatus.OK);
     }
 
