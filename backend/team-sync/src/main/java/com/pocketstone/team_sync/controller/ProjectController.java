@@ -55,7 +55,6 @@ public class ProjectController {
         status = (status == null) ? ProjectStatus.ALL : status;
         List<ProjectDto> projects = projectService.getProjectsByStatus(status, user);
         return new ResponseEntity<>(projects, HttpStatus.OK);
-        //return new ResponseEntity<>(projectService.findAll(user), HttpStatus.OK);
     }
 
     //@DeleteMapping 프로젝트 삭제
