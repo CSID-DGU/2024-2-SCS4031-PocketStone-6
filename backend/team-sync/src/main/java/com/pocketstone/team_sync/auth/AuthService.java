@@ -2,6 +2,8 @@ package com.pocketstone.team_sync.auth;
 import java.time.Duration;
 import java.time.LocalDate;
 
+import com.pocketstone.team_sync.exception.CredentialsInvalidException;
+import com.pocketstone.team_sync.exception.CredentialsNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -59,19 +61,11 @@ public class AuthService {
     public LoginTokenResponseDto login(String loginId, String password) {
 
         User user = userRepository.findByLoginId(loginId)
-                .orElse(null);
-
-        if(user == null) {
-            return null;
-        }
-
-
+                .orElseThrow(() -> new CredentialsNotFoundException(loginId));
 
         if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
-            //throw new BadCredentialsException("Invalid password");
-            return null;
+            throw new CredentialsInvalidException();
         }
-
         
 
         String refreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);

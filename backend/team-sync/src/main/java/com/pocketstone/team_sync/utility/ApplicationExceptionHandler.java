@@ -16,12 +16,12 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(UnauthorizedAccessException.class)
+    @ExceptionHandler({UnauthorizedAccessException.class, CredentialsInvalidException.class})
     public ResponseEntity<Object> handleUnauthorizedAccessException(RuntimeException ex) {
         ErrorResponse error = new ErrorResponse(Collections.singletonList(ex.getMessage()));
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
-    @ExceptionHandler({ProjectNotFoundException.class, CharterNotFoundException.class, CharterPdfNotFoundException.class})
+    @ExceptionHandler({CredentialsNotFoundException.class, ProjectNotFoundException.class, CharterNotFoundException.class, CharterPdfNotFoundException.class})
     public ResponseEntity<Object> NotFoundException(RuntimeException ex) {
         ErrorResponse error = new ErrorResponse(Collections.singletonList(ex.getMessage()));
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
