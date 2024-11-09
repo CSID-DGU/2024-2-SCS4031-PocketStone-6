@@ -32,6 +32,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	//스프링시큐리티
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation 'org.springframework.security:spring-security-test'
 	// 유효성 검증을 위한 의존성
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 	//jwt 토큰 인증
@@ -45,6 +46,9 @@ dependencies {
 	implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.777'
 
 	implementation 'org.apache.poi:poi-ooxml:5.2.3' // 엑셀 파일 처리
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2'
+
+
 }
 
 tasks.named('test') {
