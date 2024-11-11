@@ -6,12 +6,15 @@ import com.pocketstone.team_sync.service.TimelineService;
 import jakarta.validation.Valid;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @NoArgsConstructor
@@ -23,10 +26,11 @@ public class TimelineController {
 
     //프로젝트별 타임라인(스프린트)일정 추가
     @PostMapping("/{projectId}")
-    public ResponseEntity<List<TimelineDto>> addTimelines(@AuthenticationPrincipal User user,
-                                             @PathVariable Long projectId,
-                                             @Valid @RequestBody List<TimelineDto> timelineDtos) {
-        timelineService.saveTimelines(user, projectId, timelineDtos);
+    public ResponseEntity<Object> addTimelines(@AuthenticationPrincipal User user,
+                                                          @PathVariable Long projectId,
+                                                          @Valid @RequestBody List<TimelineDto> timelineDtos) {
+
+            timelineService.saveTimelines(user, projectId, timelineDtos);
         return new ResponseEntity<>(timelineDtos, HttpStatus.CREATED);
     }
 
@@ -38,11 +42,11 @@ public class TimelineController {
         return new ResponseEntity<>(timelines, HttpStatus.OK);
     }
 
-    //프로젝트 별 타임라인 업데이트 *업데이트 할때는 타임라인 table id도 같이 보내야함
     @PutMapping("/{projectId}")
-    public ResponseEntity<List<TimelineDto>> updateTimelines(@AuthenticationPrincipal User user,
+    public ResponseEntity<Object> updateTimelines(@AuthenticationPrincipal User user,
                                                              @PathVariable Long projectId,
                                                              @RequestBody List<TimelineDto> timelineDtos) {
+
         List<TimelineDto> updatedTimelines = timelineService.updateTimelines(user, projectId, timelineDtos);
 
         return new ResponseEntity<>(updatedTimelines, HttpStatus.OK);

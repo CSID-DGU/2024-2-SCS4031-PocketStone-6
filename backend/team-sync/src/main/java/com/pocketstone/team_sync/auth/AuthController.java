@@ -42,9 +42,6 @@ public class AuthController {
         String password = loginRequest.getPassword();
         
         LoginTokenResponseDto loginToken = authService.login(loginId, password);
-        if (loginToken == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        }
         return ResponseEntity.ok(loginToken);
         
     }
