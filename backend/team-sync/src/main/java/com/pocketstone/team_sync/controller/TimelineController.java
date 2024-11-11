@@ -28,15 +28,7 @@ public class TimelineController {
     @PostMapping("/{projectId}")
     public ResponseEntity<Object> addTimelines(@AuthenticationPrincipal User user,
                                                           @PathVariable Long projectId,
-                                                          @Valid @RequestBody List<TimelineDto> timelineDtos,
-                                                          BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            List<String> errors = bindingResult.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-
-            return ResponseEntity.badRequest().body(errors);
-        }
+                                                          @Valid @RequestBody List<TimelineDto> timelineDtos) {
 
             timelineService.saveTimelines(user, projectId, timelineDtos);
         return new ResponseEntity<>(timelineDtos, HttpStatus.CREATED);
@@ -53,15 +45,8 @@ public class TimelineController {
     @PutMapping("/{projectId}")
     public ResponseEntity<Object> updateTimelines(@AuthenticationPrincipal User user,
                                                              @PathVariable Long projectId,
-                                                             @RequestBody List<TimelineDto> timelineDtos,
-                                                             BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            List<String> errors = bindingResult.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
+                                                             @RequestBody List<TimelineDto> timelineDtos) {
 
-            return ResponseEntity.badRequest().body(errors);
-        }
         List<TimelineDto> updatedTimelines = timelineService.updateTimelines(user, projectId, timelineDtos);
 
         return new ResponseEntity<>(updatedTimelines, HttpStatus.OK);

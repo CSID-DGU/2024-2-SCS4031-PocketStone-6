@@ -36,15 +36,7 @@ public class CharterController {
     @PostMapping("/{projectId}")
     public ResponseEntity<Object> saveProjectCharter(@AuthenticationPrincipal User user,
                                                                 @PathVariable Long projectId,
-                                                                @Valid @RequestBody ProjectCharterDto projectCharterDto,
-                                                                BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            List<String> errors = bindingResult.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-
-            return ResponseEntity.badRequest().body(errors);
-        }
+                                                                @Valid @RequestBody ProjectCharterDto projectCharterDto) {
         return new ResponseEntity<>(projectCharterService.saveProjectCharter(user, projectId, projectCharterDto), HttpStatus.CREATED);
 
     }
@@ -60,15 +52,8 @@ public class CharterController {
     @PutMapping("/{projectId}")
     public ResponseEntity<Object> updateProjectCharter(@AuthenticationPrincipal User user,
                                                                   @PathVariable Long projectId,
-                                                                  @RequestBody ProjectCharterDto projectCharterDto,
-                                                                  BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            List<String> errors = bindingResult.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
+                                                                  @RequestBody ProjectCharterDto projectCharterDto) {
 
-            return ResponseEntity.badRequest().body(errors);
-        }
         return new ResponseEntity<>(projectCharterService.updateProjectCharterByProjectId(user, projectId, projectCharterDto), HttpStatus.OK);
     }
 

@@ -30,15 +30,7 @@ public class ProjectController {
     //프로젝트 생성
     @PostMapping("/project")
     public ResponseEntity<Object> addProject(@AuthenticationPrincipal User user,
-                                                 @Valid @RequestBody ProjectDto projectDto,
-                                                 BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            List<String> errors = bindingResult.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-
-            return ResponseEntity.badRequest().body(errors);
-        }
+                                                 @Valid @RequestBody ProjectDto projectDto) {
         return new ResponseEntity<>(projectService.save(user, projectDto), HttpStatus.CREATED);
     }
 
