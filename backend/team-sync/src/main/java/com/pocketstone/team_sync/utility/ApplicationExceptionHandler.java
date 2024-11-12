@@ -27,13 +27,13 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
         ErrorResponse error = new ErrorResponse(Collections.singletonList(ex.getMessage()));
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
-    @ExceptionHandler({CredentialsNotFoundException.class, ProjectNotFoundException.class, CharterNotFoundException.class, CharterPdfNotFoundException.class})
+    @ExceptionHandler({CredentialsNotFoundException.class, ProjectNotFoundException.class, CharterNotFoundException.class, CharterPdfNotFoundException.class, UserNotFoundException.class})
     public ResponseEntity<Object> NotFoundException(RuntimeException ex) {
         ErrorResponse error = new ErrorResponse(Collections.singletonList(ex.getMessage()));
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({CharterAlreadyExistsException.class, CharterPdfAlreadyExistsException.class})
+    @ExceptionHandler({CharterAlreadyExistsException.class, CharterPdfAlreadyExistsException.class, LoginIdAlreadyExistsException.class, EmailAlreadyExistsException.class})
     public ResponseEntity<Object> AlreadyExistsException(RuntimeException ex) {
         ErrorResponse error = new ErrorResponse(Collections.singletonList(ex.getMessage()));
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);

@@ -1,5 +1,6 @@
 package com.pocketstone.team_sync.auth;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class AuthController {
 
         //회원가입
     @PostMapping("/signup")
-    public ResponseEntity<MessageResponseDto> registerUser(@RequestBody AddUserRequestDto request) {
+    public ResponseEntity<MessageResponseDto> registerUser(@Valid @RequestBody AddUserRequestDto request) {
         try {
             authService.save(request);
             return ResponseEntity.ok(new MessageResponseDto("가입이 성공적으로 완료되었습니다."));
