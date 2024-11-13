@@ -21,8 +21,10 @@ import com.pocketstone.team_sync.dto.employeeDto.EmployeeSpecificationResponseDt
 import com.pocketstone.team_sync.entity.Company;
 import com.pocketstone.team_sync.entity.Employee;
 import com.pocketstone.team_sync.entity.PastProject;
+import com.pocketstone.team_sync.entity.User;
 import com.pocketstone.team_sync.entity.enums.Role;
 import com.pocketstone.team_sync.entity.enums.Skill;
+import com.pocketstone.team_sync.repository.CompanyRepository;
 import com.pocketstone.team_sync.repository.EmployeeRepository;
 import com.pocketstone.team_sync.repository.PastProjectRepository;
 
@@ -36,10 +38,12 @@ public class EmployeeService {
     //의존성
     private final EmployeeRepository employeeRepository;
     private final PastProjectRepository pastProjectRepository;
+    private final CompanyRepository companyRepository;
 
     // 엑셀로 사원 목록 등록
     @Transactional
-    public void enrollEmployeeList(Company company, MultipartFile file) {
+    public void enrollEmployeeList(User user, MultipartFile file) {
+        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
         List<Employee> employees = parseExcelFile(company, file);
         List<PastProject> pastProjects = parseExcelFileProject(company, file, employees);
         employeeRepository.saveAll(employees);
@@ -173,7 +177,11 @@ public class EmployeeService {
     
 
     // //사원목록 조회
-    public List<EmployeeListResponseDto> getEmployees(Company company){
+    public List<EmployeeListResponseDto> getEmployees(User user){
+        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
+        if (company == null){
+            return null;
+        }
         List<Employee> employees = employeeRepository.findByCompany(company);
         if(employees == null || employees.isEmpty()){
             return null;
@@ -198,7 +206,11 @@ public class EmployeeService {
     }
 
     //사원 정보 조회
-    public EmployeeInformationResponseDto getEmployeeInfo(Company company, Long employeeId) {
+    public EmployeeInformationResponseDto getEmployeeInfo(User user, Long employeeId) {
+        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
+        if (company == null){
+            return null;
+        }
         Employee employee = employeeRepository.findByCompanyAndId(company,employeeId).orElse(null);
         if(employee == null){
             return null;
@@ -219,7 +231,11 @@ public class EmployeeService {
     }
 
     //사원 스펙정보 조회
-    public EmployeeSpecificationResponseDto getEmployeeSpec(Company company, Long employeeId) {
+    public EmployeeSpecificationResponseDto getEmployeeSpec(User user, Long employeeId) {
+        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
+        if (company == null){
+            return null;
+        }
         Employee employee = employeeRepository.findByCompanyAndId(company,employeeId).orElse(null);
         if(employee == null){
             return null;
@@ -241,11 +257,13 @@ public class EmployeeService {
     //사원 삭제
     //계정삭제
     @Transactional
-    public void deleteEmployee(Company company, Long employeeId) {
+    public void deleteEmployee(User user, Long employeeId) {
+        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
         employeeRepository.deleteByCompanyAndId(company, employeeId);//계정삭제
     }
     @Transactional
-    public void deleteAllEmployee(Company company) {
+    public void deleteAllEmployee(User user) {
+        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
         employeeRepository.deleteByCompany(company);//계정삭제
     }
 }

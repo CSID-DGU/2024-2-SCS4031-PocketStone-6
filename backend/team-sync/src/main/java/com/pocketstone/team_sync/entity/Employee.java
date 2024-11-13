@@ -23,11 +23,19 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
+@Table(
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"company_id", "staffId"}),
+        @UniqueConstraint(columnNames = {"company_id", "email"})
+    }
+)
 @Entity
 public class Employee {
     
@@ -39,11 +47,11 @@ public class Employee {
     @Column(length = 50, nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String email;
 
     //사원아이디
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String staffId;
 
     @Column(length = 15)
