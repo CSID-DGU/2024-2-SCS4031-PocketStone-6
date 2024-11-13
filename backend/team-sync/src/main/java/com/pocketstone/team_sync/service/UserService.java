@@ -35,6 +35,14 @@ public class UserService {
         return userRepository.findByLoginId(loginId).orElseThrow(() -> new UsernameNotFoundException("해당 id의 사용자가 없습니다: " + loginId));
     }
 
+    public boolean checkLoginId(String loginId){
+        return userRepository.existsByLoginId(loginId);
+    }
+
+    public boolean checkEmail(String email){
+        return userRepository.existsByEmail(email);
+    }
+    
     //계정삭제
     @Transactional
     public void deleteAccount(Long userId) {

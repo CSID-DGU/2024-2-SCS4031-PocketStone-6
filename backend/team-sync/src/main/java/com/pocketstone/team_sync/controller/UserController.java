@@ -16,7 +16,6 @@ import com.pocketstone.team_sync.dto.userdto.CheckEmailRequestDto;
 import com.pocketstone.team_sync.dto.userdto.CheckLoginIdRequestDto;
 import com.pocketstone.team_sync.dto.userdto.UserInformationResponseDto;
 import com.pocketstone.team_sync.entity.User;
-import com.pocketstone.team_sync.repository.UserRepository;
 import com.pocketstone.team_sync.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -28,27 +27,27 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private UserRepository userRepository;
 
 
     //아이디 중복확인
     @PostMapping("/check-loginid")
     public ResponseEntity<MessageResponseDto> checkLoginId(@RequestBody CheckLoginIdRequestDto inputLoginId) {
-        if(!userRepository.existsByLoginId(inputLoginId.getLoginId())){
+        if(userService.checkLoginId(inputLoginId.getLoginId())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponseDto("이미 사용 중인 아이디입니다."));
+        } else {
             return ResponseEntity.ok(new MessageResponseDto("사용가능한 아이디입니다."));
         }
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponseDto("이미 사용 중인 아이디입니다."));
+        
 }
 
     //이메일 중복확인
     @PostMapping("/check-email")
     public ResponseEntity<MessageResponseDto> checkEmail(@RequestBody CheckEmailRequestDto inputEmail) {
-        if(!userRepository.existsByEmail(inputEmail.getEmail())){
+        if(userService.checkEmail(inputEmail.getEmail())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponseDto("이미 등록된 이메일입니다."));
+        } else {
             return ResponseEntity.ok(new MessageResponseDto("사용가능한 이메일입니다."));
         }
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponseDto("이미 등록된 이메일입니다."));
-    
     }
 
 
