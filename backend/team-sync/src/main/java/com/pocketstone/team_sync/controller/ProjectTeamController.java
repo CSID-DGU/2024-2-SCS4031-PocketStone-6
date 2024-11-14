@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/team")
-public class TeamController {
+public class ProjectTeamController {
 
     //팀 요청
     //팀 생성

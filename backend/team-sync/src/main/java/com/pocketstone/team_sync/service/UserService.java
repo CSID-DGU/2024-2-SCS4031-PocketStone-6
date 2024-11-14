@@ -43,6 +43,14 @@ public class UserService {
         return userRepository.findByLoginId(loginId).orElseThrow(() -> new UserNotFoundException(loginId));
     }
 
+    public boolean checkLoginId(String loginId){
+        return userRepository.existsByLoginId(loginId);
+    }
+
+    public boolean checkEmail(String email){
+        return userRepository.existsByEmail(email);
+    }
+    
     //계정삭제
     @Transactional
     public MessageResponseDto deleteAccount(User user) {
