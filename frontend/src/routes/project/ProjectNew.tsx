@@ -14,25 +14,21 @@ export default function ProjectNew() {
         type="text"
         onChange={(e) => {
           setProjectName(e.target.value);
-        }}
-      ></input>
+        }}></input>
       <input
         type="text"
         onChange={(e) => {
           setStartDate(e.target.value);
-        }}
-      ></input>
+        }}></input>
       <input
         type="text"
         onChange={(e) => {
           setMvpDate(e.target.value);
-        }}
-      ></input>
+        }}></input>
       <button
         onClick={() => {
           createProject(projectName, startDate, mvpDate, navigate);
-        }}
-      >
+        }}>
         프로젝트 등록
       </button>
     </div>

@@ -12,19 +12,16 @@ export default function Login() {
         type="text"
         onChange={(e) => {
           setId(e.target.value);
-        }}
-      ></input>
+        }}></input>
       <input
         type="password"
         onChange={(e) => {
           setPassword(e.target.value);
-        }}
-      ></input>
+        }}></input>
       <button
         onClick={() => {
           doLogin(id, password, navigate);
-        }}
-      >
+        }}>
         로그인
       </button>
     </div>

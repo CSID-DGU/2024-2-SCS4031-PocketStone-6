@@ -21,15 +21,13 @@ export default function Register() {
           placeholder="ID"
           onChange={(e) => {
             setId(e.target.value);
-          }}
-        ></input>
+          }}></input>
         <button
           onClick={async () => {
             console.log(id);
             const response = await checkID(id);
             console.log(response);
-          }}
-        >
+          }}>
           아이디 중복 확인
         </button>
       </div>
@@ -38,36 +36,31 @@ export default function Register() {
         placeholder="비밀번호 입력"
         onChange={(e) => {
           setPassword(e.target.value);
-        }}
-      ></input>
+        }}></input>
       <input
         type="password"
         placeholder="비밀번호 확인"
         onChange={(e) => {
           setPasswordConfirm(e.target.value);
-        }}
-      ></input>
+        }}></input>
       <input
         type="text"
         placeholder="이메일 ID"
         onChange={(e) => {
           setEmailID(e.target.value);
-        }}
-      ></input>
+        }}></input>
       <input
         type="text"
         placeholder="이메일 주소"
         onChange={(e) => {
           setEmailDomain(e.target.value);
-        }}
-      ></input>
+        }}></input>
       <input
         type="text"
         placeholder="회사명"
         onChange={(e) => {
           setCompanyName(e.target.value);
-        }}
-      ></input>
+        }}></input>
       <button
         onClick={async () => {
           const response = await doRegister(
@@ -78,8 +71,7 @@ export default function Register() {
             navigate
           );
           console.log(response);
-        }}
-      >
+        }}>
         회원가입
       </button>
     </div>

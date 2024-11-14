@@ -14,15 +14,13 @@ export default function Test() {
       <button
         onClick={() => {
           navigate('/register');
-        }}
-      >
+        }}>
         회원가입
       </button>
       <button
         onClick={() => {
           navigate('/login');
-        }}
-      >
+        }}>
         로그인
       </button>
       <DatePickerComponent></DatePickerComponent>
@@ -34,8 +32,7 @@ export default function Test() {
         onClick={() => {
           doLogout();
           refreshPage(navigate);
-        }}
-      >
+        }}>
         로그아웃
       </button>
     </div>

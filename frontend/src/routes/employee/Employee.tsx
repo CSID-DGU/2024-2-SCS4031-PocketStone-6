@@ -3,6 +3,7 @@ import ExcelUploader from '../../components/Input/ExcelUploader';
 import { useAllEmployeeInfoQuery } from '../../hooks/useAllEmployeeInfoQuery';
 import { deleteOneEmployee } from '../../api/employee/deleteOneEmployee';
 import { refreshPage } from '../../utils/movePage';
+import { UseQueryResult } from '@tanstack/react-query';
 
 export default function Employee() {
   const allEmployInfoQuery = useAllEmployeeInfoQuery();
@@ -11,14 +12,8 @@ export default function Employee() {
     <div>
       <p>Employee</p>
       <ExcelUploader />
-      {allEmployInfoQuery.data?.map(
-        ({
-          employeeId,
-          staffId,
-          name,
-          departmeent,
-          position,
-        }: employeeInfoType) => (
+      {allEmployInfoQuery.data.map(
+        ({ employeeId, staffId, name, departmeent, position }: employeeInfoType) => (
           <EmployBlock
             employeeId={employeeId}
             staffId={staffId}
@@ -32,13 +27,7 @@ export default function Employee() {
   );
 }
 
-const EmployBlock = ({
-  employeeId,
-  staffId,
-  name,
-  departmeent,
-  position,
-}: employeeInfoType) => {
+const EmployBlock = ({ employeeId, staffId, name, departmeent, position }: employeeInfoType) => {
   const navigate = useNavigate();
 
   return (
@@ -46,14 +35,17 @@ const EmployBlock = ({
       <span
         onClick={() => {
           navigate(`/employee/${employeeId}`);
-        }}
-      >
+        }}>
         {employeeId} {staffId} {name} {departmeent} {position}
       </span>
-      ...... <button onClick={async ()=>{
-        await deleteOneEmployee(employeeId)
-        refreshPage(navigate)
-      }}>삭제</button>
+      ......{' '}
+      <button
+        onClick={async () => {
+          await deleteOneEmployee(employeeId);
+          refreshPage(navigate);
+        }}>
+        삭제
+      </button>
     </div>
   );
 };

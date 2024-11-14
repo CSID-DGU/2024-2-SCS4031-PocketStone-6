@@ -7,5 +7,7 @@ export const useAllEmployeeInfoQuery = () => {
     queryFn: getAllEmployeeInfo,
   });
 
+  console.log(query)
+
   return query;
 };
