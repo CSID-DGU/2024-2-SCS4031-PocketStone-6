@@ -15,7 +15,7 @@ function App() {
   return (
     <div>
       <Navbar />
-      <div className={S.contentContainer}>
+      <div>
         <Routes>
           {/* 메인 페이지 */}
           <Route path="/" element={<Main />} />

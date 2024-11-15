@@ -14,5 +14,5 @@ export const useLoginInfoQuery = () => {
     setAccessToken(accessTokenValue);
   }, []);
 
-  return [isLogin, accessToken];
+  return {isLogin, accessToken};
 };

@@ -24,6 +24,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+div,
+input {
+  box-sizing: border-box;
+}
+
 p,
 h1,
 h2,
