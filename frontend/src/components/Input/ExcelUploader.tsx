@@ -17,8 +17,7 @@ export const ExcelUploader = () => {
       onSubmit={(e) => {
         submitExcelData(e, file, navigate);
       }}
-      encType="multipart/form-data"
-    >
+      encType="multipart/form-data">
       <input type="file" accept=".xlsx, .xls" onChange={handleFileChange} />
       <button type="submit">파일 업로드</button>
     </form>

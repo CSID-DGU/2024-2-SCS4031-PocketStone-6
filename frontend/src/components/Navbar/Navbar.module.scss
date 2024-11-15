@@ -1,0 +1,50 @@
+.container {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);
+}
+
+.navMain {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  height: 30px;
+}
+
+.navLogo {
+  height: 100%;
+  margin-right: 10px;
+}
+
+.navTitle {
+  font-family: 'NanumGothicExtraBold';
+  font-size: x-large;
+  margin-right: 20px;
+}
+
+%btn {
+  cursor: pointer;
+  padding: 10px;
+  margin-right: 15px;
+  border-radius: 10px;
+  border: none;
+  background: none;
+  font-size: medium;
+  font-family: 'NanumGothicBold';
+  transition: 0.3s background;
+}
+
+.navBtn {
+  @extend %btn;
+}
+
+.selectedNavBtn {
+  @extend %btn;
+  color: #e52828;
+}
+
+.selectedNavBtn:hover,
+.navBtn:hover {
+  background: #e8e8e8;
+}

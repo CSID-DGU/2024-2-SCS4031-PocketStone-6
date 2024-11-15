@@ -1,6 +1,6 @@
 export const colors: colorsType = {
     DarkYellow: '#F1B61B',
-    LightYellow: '#',
+    LightYellow: '#FFDE1C',
     White: '#FFFFFF',
     Black: '#000000',
     LightBlack: '#868686',

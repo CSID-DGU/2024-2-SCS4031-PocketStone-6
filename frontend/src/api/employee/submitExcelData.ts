@@ -1,9 +1,6 @@
 import { NavigateFunction } from 'react-router-dom';
 import { API_URL } from '../../constants/envText';
-import {
-  IS_DUPLICATED_EXCEL,
-  NO_EXCEL_FILE,
-} from '../../constants/errorMessage';
+import { IS_DUPLICATED_EXCEL, NO_EXCEL_FILE } from '../../constants/errorMessage';
 import { tokenAxios } from '../tokenAPI';
 import { refreshPage } from '../../utils/movePage';
 
@@ -24,20 +21,14 @@ export const submitExcelData = async (
   formData.append('file', file);
 
   try {
-    const response = await tokenAxios.post(
-      `${API_URL}/api/employee/add-excel`,
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
-    );
-    console.log('파일 전송 성공:', response.data);
+    const response = await tokenAxios.post(`${API_URL}/api/employee/add-excel`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     alert(response.data.message);
     refreshPage(navigate);
   } catch (error) {
-    console.error('파일 전송 실패:', error);
     alert(IS_DUPLICATED_EXCEL);
     refreshPage(navigate);
   }
