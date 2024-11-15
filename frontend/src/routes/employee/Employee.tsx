@@ -4,13 +4,14 @@ import { useAllEmployeeInfoQuery } from '../../hooks/useAllEmployeeInfoQuery';
 import { deleteOneEmployee } from '../../api/employee/deleteOneEmployee';
 import { refreshPage } from '../../utils/movePage';
 import { deleteAllEmployInfo } from '../../api/employee/deleteAllEmployInfo';
+import MS from 'routes/Main.module.scss';
 
 export default function Employee() {
   const allEmployInfoQuery = useAllEmployeeInfoQuery();
   const navigate = useNavigate();
 
   return (
-    <div>
+    <div className={MS.container}>
       <h2>Employee</h2>
       <ExcelUploader />
       <button onClick={() => deleteAllEmployInfo(navigate)}>사원정보 삭제</button>
