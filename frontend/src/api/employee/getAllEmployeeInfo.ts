@@ -8,12 +8,13 @@ export const getAllEmployeeInfo = async () => {
     const response = await tokenAxios.get(`${API_URL}/api/employee`, {
       headers: headers,
     });
-    console.log(response);
+
+    if (response.data === undefined || response.data === "") return [];
     return response.data;
   } catch (error) {
     console.error(error);
     if (axios.isAxiosError(error)) {
-      return error.response?.data;
+      return [];
     }
   }
 };

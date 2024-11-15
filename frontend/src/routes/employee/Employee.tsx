@@ -3,18 +3,18 @@ import ExcelUploader from '../../components/Input/ExcelUploader';
 import { useAllEmployeeInfoQuery } from '../../hooks/useAllEmployeeInfoQuery';
 import { deleteOneEmployee } from '../../api/employee/deleteOneEmployee';
 import { refreshPage } from '../../utils/movePage';
-import { UseQueryResult } from '@tanstack/react-query';
 
 export default function Employee() {
   const allEmployInfoQuery = useAllEmployeeInfoQuery();
 
   return (
     <div>
-      <p>Employee</p>
+      <h2>Employee</h2>
       <ExcelUploader />
-      {allEmployInfoQuery.data.map(
-        ({ employeeId, staffId, name, departmeent, position }: employeeInfoType) => (
+      {allEmployInfoQuery.data?.map(
+        ({ employeeId, staffId, name, departmeent, position }: employeeInfoType, i: number) => (
           <EmployBlock
+            key={i}
             employeeId={employeeId}
             staffId={staffId}
             name={name}
