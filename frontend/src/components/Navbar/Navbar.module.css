@@ -1,0 +1,54 @@
+.container {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 3px 3px rgba(0,0,0,0.2);
+}
+
+.navMain {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  height: 30px;
+}
+
+.navLogo {
+  height: 100%;
+  margin-right: 10px;
+}
+
+.navTitle {
+  font-family: 'NanumGothicExtraBold';
+  font-size: x-large;
+  margin-right: 20px;
+}
+
+.navBtn {
+  cursor: pointer;
+  padding: 10px;
+  margin-right: 15px;
+  border-radius: 10px;
+  border: none;
+  background: none;
+  font-size: medium;
+  font-family: 'NanumGothicBold';
+  transition: 0.3s background;
+}
+
+.selectedNavBtn {
+  cursor: pointer;
+  padding: 10px;
+  margin-right: 15px;
+  border-radius: 10px;
+  border: none;
+  background: none;
+  font-size: medium;
+  font-family: 'NanumGothicBold';
+  color: #e52828;
+  transition: 0.3s background;
+}
+
+.selectedNavBtn:hover,
+.navBtn:hover {
+  background: #e8e8e8;
+}

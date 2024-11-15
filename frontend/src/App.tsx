@@ -6,7 +6,7 @@ import Login from './routes/auth/Login';
 import Test from './routes/Test';
 import Project from './routes/project/Project';
 import Employee from './routes/employee/Employee';
-import { Navbar } from './components/Navbar';
+import { Navbar } from './components/Navbar/Navbar';
 import ProjectNew from './routes/project/ProjectNew';
 import ProjectDetail from './routes/project/ProjectDetail';
 import EmployeeDetail from './routes/employee/EmployeeDetail';
