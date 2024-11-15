@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import S from './Navbar.module.css';
+import S from './Navbar.module.scss';
 import { useCategoryLocation } from '../../hooks/useCategoryLocation';
 
 export const Navbar = () => {
