@@ -1,3 +1,24 @@
 .container {
+  min-height: 100vh;
   padding: 10px;
+  background: #d8d8d8;
+}
+
+.content {
+  margin: 0px auto 20px auto;
+  background-color: #f8f8f8;
+  width: 80vw;
+  min-width: 786px;
+  border-radius: 10px;
+}
+
+.contentTitle {
+  padding: 10px 20px;
+  font-size: x-large;
+  font-family: 'NanumGothicBold';
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);
+}
+
+.contentBox {
+  padding: 10px 20px;
 }
