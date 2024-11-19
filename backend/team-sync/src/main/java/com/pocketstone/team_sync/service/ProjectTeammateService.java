@@ -38,7 +38,7 @@ public class ProjectTeammateService {
     }
 
     private Mono<RecommendationResponseDto> requestRecommendation(RecommendationRequestDto body){
-
+        //RecommendationRequestDto newbody = new RecommendationRequestDto(body.getProjectId(),body.getMember());
         return webClient_model.post()
             .uri("/api/recommendation") //endpoint설정
             .bodyValue(body)
@@ -48,6 +48,7 @@ public class ProjectTeammateService {
                 clientResponse -> clientResponse.bodyToMono(String.class)
                         .flatMap(errorResponse -> {
                             // 클라이언트 오류 처리 (4xx)
+                            System.err.println("에러발생222");
                             return Mono.error(new RuntimeException("Client error: " + errorResponse));
                         })
             )
@@ -56,6 +57,7 @@ public class ProjectTeammateService {
                     clientResponse -> clientResponse.bodyToMono(String.class)
                         .flatMap(errorResponse -> {
                             // 서버 오류 처리 (5xx)
+                            System.err.println("에러발생222666666");
                             return Mono.error(new RuntimeException("Server error: " + errorResponse));
                         })
             )

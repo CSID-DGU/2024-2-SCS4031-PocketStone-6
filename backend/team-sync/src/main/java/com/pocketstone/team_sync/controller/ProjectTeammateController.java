@@ -28,6 +28,11 @@ public class ProjectTeammateController {
         return ResponseEntity.ok(projectTeammateService.recommendTeammate(user, request));
     }
     
+    //     //팀 추천요청
+    // @PostMapping("/recommendation")
+    // public ResponseEntity<RecommendationResponseDto> recommendTeammate(@RequestBody RecommendationRequestDto request) {
+    //     return ResponseEntity.ok(projectTeammateService.recommendTeammate(request));
+    // }
     //팀원 저장
 
     // 팀원 수정
