@@ -1,0 +1,76 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  padding: 10px;
+  background: #c0c0c0;
+}
+
+.content {
+  display: flex;
+  width: 70vw;
+  height: 80vh;
+  min-width: 768px;
+  min-height: 400px;
+  background: #f8f8f8;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.loginBox {
+  flex: 5;
+}
+
+.loginContent {
+  padding: 80px 100px;
+  text-align: center;
+
+  * {
+    width: 100%;
+    margin: 0px auto 20px auto;
+    display: block;
+  }
+
+  img {
+    width: 80px;
+    margin-bottom: 10px;
+  }
+
+  .loginTitle {
+    font-family: 'NanumGothicExtraBold';
+    font-size: xx-large;
+    margin-bottom: 10px;
+  }
+}
+
+.joinContent {
+  padding: 200px 60px;
+  text-align: center;
+
+  * {
+    width: 100%;
+    margin: 0px auto 20px auto;
+    display: block;
+  }
+
+  .joinTitle {
+    font-family: 'NanumGothicExtraBold';
+    font-size: xx-large;
+    margin-bottom: 30px;
+  }
+
+  .joinText {
+    margin-bottom: 10px;
+  }
+  
+  button {
+    margin-top: 30px;
+  }
+}
+
+.joinBox {
+  flex: 4;
+  background-color: #f1b61b;
+}

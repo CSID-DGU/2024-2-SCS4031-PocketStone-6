@@ -4,25 +4,24 @@ import { useLoginInfoQuery } from '../hooks/useLoginInfoQuery';
 import { refreshPage } from '../utils/movePage';
 import { useUserInfo } from '../hooks/useUserInfo';
 import { doLogout } from '../api/auth/authAPI';
+import MS from 'routes/Main.module.scss';
 
 export default function Test() {
   const navigate = useNavigate();
-  const [isLogin, accessToken] = useLoginInfoQuery();
+  const { isLogin, accessToken } = useLoginInfoQuery();
   const userInfoQuery = useUserInfo();
   return (
-    <div>
+    <div className={MS.container}>
       <button
         onClick={() => {
           navigate('/register');
-        }}
-      >
+        }}>
         회원가입
       </button>
       <button
         onClick={() => {
           navigate('/login');
-        }}
-      >
+        }}>
         로그인
       </button>
       <DatePickerComponent></DatePickerComponent>
@@ -34,8 +33,7 @@ export default function Test() {
         onClick={() => {
           doLogout();
           refreshPage(navigate);
-        }}
-      >
+        }}>
         로그아웃
       </button>
     </div>

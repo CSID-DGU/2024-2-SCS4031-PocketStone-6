@@ -24,9 +24,21 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+div,
+input {
+  box-sizing: border-box;
+}
+
 p,
 h1,
 h2,
 h3 {
   margin: 0;
+}
+
+button {
+  cursor: pointer;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
 }

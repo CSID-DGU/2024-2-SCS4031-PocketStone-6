@@ -1,0 +1,29 @@
+%btn {
+  cursor: pointer;
+  padding: 12px 25px;
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  border: none;
+  font-size: medium;
+  font-family: 'NanumGothicBold';
+  transition: 0.3s background;
+}
+
+.YellowBtn {
+  @extend %btn;
+  background: #F1B61B;
+}
+
+.YellowBtn:hover {
+  background: #BE8F15;
+}
+
+.WhiteBtn {
+  @extend %btn;
+  background: #FFFFFF;
+}
+
+.WhiteBtn:hover {
+  @extend %btn;
+  background: #e8e8e8;
+}

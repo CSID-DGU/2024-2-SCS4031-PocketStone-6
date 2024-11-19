@@ -7,9 +7,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'react-datepicker/dist/react-datepicker.css';
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 const queryClient = new QueryClient();
 root.render(
   <React.StrictMode>

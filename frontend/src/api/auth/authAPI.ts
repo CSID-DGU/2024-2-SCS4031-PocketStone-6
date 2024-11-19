@@ -8,6 +8,7 @@ import {
   getCookie,
   saveCookies,
 } from '../../utils/handleCookies';
+import { refreshPage } from '../../utils/movePage';
 
 export const doLogin = async (
   id: string,
@@ -26,8 +27,9 @@ export const doLogin = async (
     });
     const { accessToken, refreshToken } = response.data;
     saveCookies('access', accessToken);
-    saveCookies('refresh', refreshToken);
+    saveCookies('refresh', refreshToken); 
     navigate('/');
+    refreshPage(navigate);
   } catch (error) {
     alert(WRONG_LOGIN_INFO);
     if (axios.isAxiosError(error)) {

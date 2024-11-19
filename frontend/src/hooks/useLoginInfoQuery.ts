@@ -9,12 +9,10 @@ export const useLoginInfoQuery = () => {
     const accessTokenCookie = document.cookie
       .split(';')
       .find((cookie) => cookie.trim().startsWith('access='));
-    const accessTokenValue = accessTokenCookie
-      ? accessTokenCookie.split('=')[1]
-      : '';
+    const accessTokenValue = accessTokenCookie ? accessTokenCookie.split('=')[1] : '';
     if (accessTokenCookie) setIsLogin(true);
     setAccessToken(accessTokenValue);
   }, []);
 
-  return [isLogin, accessToken];
+  return {isLogin, accessToken};
 };

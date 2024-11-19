@@ -1,8 +1,8 @@
-import { NavigateFunction } from "react-router-dom"
+import { NavigateFunction } from 'react-router-dom';
 
 export const refreshPage = (navigateFunction: NavigateFunction) => {
-    navigateFunction(0)
-}
+  navigateFunction(0);
+};
 export const movePrevPage = (navigateFunction: NavigateFunction) => {
-    navigateFunction(-1)
-}
+  navigateFunction(-1);
+};
