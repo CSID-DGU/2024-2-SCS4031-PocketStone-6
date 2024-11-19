@@ -1,15 +1,15 @@
 package com.pocketstone.team_sync.dto.teammatedto;
 
-import java.util.List;
-
-import com.pocketstone.team_sync.entity.Employee;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class RecommendationResponseDto {
 
-    private List<Employee> employeeList;
+    private String employee;
 }
