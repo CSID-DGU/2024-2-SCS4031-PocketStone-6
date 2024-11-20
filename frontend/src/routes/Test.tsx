@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import { DatePickerComponent } from '../components/Input/DatePicker';
 import { useLoginInfoQuery } from '../hooks/useLoginInfoQuery';
 import { refreshPage } from '../utils/movePage';
 import { useUserInfo } from '../hooks/useUserInfo';
@@ -10,6 +9,7 @@ export default function Test() {
   const navigate = useNavigate();
   const { isLogin, accessToken } = useLoginInfoQuery();
   const userInfoQuery = useUserInfo();
+
   return (
     <div className={MS.container}>
       <button
@@ -24,7 +24,6 @@ export default function Test() {
         }}>
         로그인
       </button>
-      <DatePickerComponent></DatePickerComponent>
       <p>
         {isLogin ? '로그인쿠키 있음' : '로그인쿠키 없음'}, {accessToken}
       </p>

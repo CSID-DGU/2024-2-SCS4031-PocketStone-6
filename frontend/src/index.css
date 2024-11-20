@@ -42,3 +42,7 @@ button {
   border: none;
   border-radius: 10px;
 }
+
+.react-datepicker-wrapper {
+  width: 100%;
+}
