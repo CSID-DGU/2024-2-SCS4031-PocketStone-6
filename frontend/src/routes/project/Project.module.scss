@@ -1,0 +1,39 @@
+.newProjectBtn {
+  width: 100%;
+  margin: 10px 0px 20px 0px;
+}
+
+.contentTitle {
+  > * {
+    border-bottom: 1px solid #d8d8d8;
+  }
+}
+
+.contentBox {
+  max-height: 50vh;
+  overflow-y: scroll;
+
+  > * {
+    border-bottom: 1px solid #d8d8d8;
+  }
+
+  > *:last-child {
+    border-bottom: none;
+  }
+}
+
+.category {
+  padding: 5px;
+  text-align: center;
+  font-family: 'NanumGothicBold';
+}
+
+.notice {
+  width: 100%;
+  text-align: center;
+  padding: 30px;
+
+  p:nth-child(1) {
+    margin-bottom: 10px;
+  }
+}
