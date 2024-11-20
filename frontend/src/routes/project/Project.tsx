@@ -36,8 +36,7 @@ const ProjectContent = () => {
   return (
     <div className={S.contentTitle}>
       <div className={MS.displayFlex}>
-        <div className={`${S.category} ${MS.flexOne}`}>번호</div>
-        <div className={`${S.category} ${MS.flexTwo}`}>프로젝트명</div>
+        <div className={`${S.category} ${MS.flexThree}`}>프로젝트명</div>
         <div className={`${S.category} ${MS.flexTwo}`}>시작일</div>
         <div className={`${S.category} ${MS.flexTwo}`}>종료일</div>
         <div className={`${S.category} ${MS.flexOne}`}></div>
@@ -87,8 +86,7 @@ const ProjectBlock = ({ id, projectName, startDate, mvpDate }: projectInfoType) 
           onClick={() => {
             navigate(`/project/${id}`);
           }}>
-          <div className={`${S.category} ${MS.flexOne}`}>{id}</div>
-          <div className={`${S.category} ${MS.flexTwo}`}>{projectName}</div>
+          <div className={`${S.category} ${MS.flexThree}`}>{projectName}</div>
           <div className={`${S.category} ${MS.flexTwo}`}>{startDate}</div>
           <div className={`${S.category} ${MS.flexTwo}`}>{mvpDate}</div>
         </div>
