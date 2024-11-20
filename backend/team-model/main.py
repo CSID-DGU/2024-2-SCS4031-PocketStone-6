@@ -23,7 +23,7 @@ def recommendation(body: RecommendationRequestDto):
     member_id = body.member
     print("여긲까지지ㅣ지지짖")
 
-    # 임의의 로직을 통해 추천할 직원을 결정 (예제에서는 하드코딩)
+    
     if project_id == 1 and member_id == 5:
         recommended_employee = "김민형"
     else:
