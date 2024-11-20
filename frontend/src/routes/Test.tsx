@@ -4,7 +4,7 @@ import { useLoginInfoQuery } from '../hooks/useLoginInfoQuery';
 import { refreshPage } from '../utils/movePage';
 import { useUserInfo } from '../hooks/useUserInfo';
 import { doLogout } from '../api/auth/authAPI';
-import MS from 'routes/Main.module.scss';
+import MS from 'styles/Main.module.scss';
 
 export default function Test() {
   const navigate = useNavigate();

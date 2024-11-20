@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useAllProjectQuery } from '../../hooks/useAllProjectQuery';
-import MS from 'routes/Main.module.scss';
+import MS from 'styles/Main.module.scss';
 
 export default function Project() {
   const allProjectQuery = useAllProjectQuery();

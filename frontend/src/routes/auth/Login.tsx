@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { doLogin } from '../../api/auth/authAPI';
 import S from './Login.module.css';
-import IS from 'components/Input/Inputs.module.scss';
-import BS from 'components/Buttons.module.scss';
+import IS from 'styles/Inputs.module.scss';
+import BS from 'styles/Buttons.module.scss';
 
 export default function Login() {
   return (
