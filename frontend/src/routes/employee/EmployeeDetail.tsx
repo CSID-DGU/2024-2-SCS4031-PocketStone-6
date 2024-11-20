@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useOneEmployeeInfoQuery } from '../../hooks/useOneEmployeeInfoQuery';
 import { useOneEmployeeSpecQuery } from '../../hooks/useOneEmployeeSpecQuery';
-import MS from 'styles/Main.module.scss'
+import { MS } from 'styles';
 
 export default function EmployeeDetail() {
   const { id } = useParams();

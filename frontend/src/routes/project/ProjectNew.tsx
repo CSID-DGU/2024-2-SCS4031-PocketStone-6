@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { createProject } from '../../api/projects/createProject';
 import { useNavigate } from 'react-router-dom';
 import S from './ProjectNew.module.scss';
-import { MS, IS, BS } from 'styles/index';
+import { MS, IS, BS } from 'styles';
 import { parseDateToString } from 'utils/parseDate';
 import DatePicker from 'react-datepicker';
 

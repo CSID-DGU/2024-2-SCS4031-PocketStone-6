@@ -6,9 +6,8 @@ import { refreshPage } from '../../utils/movePage';
 import { deleteAllEmployInfo } from '../../api/employee/deleteAllEmployInfo';
 import S from './Employee.module.scss';
 import EmployBlockStyle from './EmployeeBlock.module.scss';
-import MS from 'styles/Main.module.scss';
-import BS from 'styles/Buttons.module.scss';
 import { UseQueryResult } from '@tanstack/react-query';
+import { BS, MS } from 'styles';
 
 export default function Employee() {
   const navigate = useNavigate();
