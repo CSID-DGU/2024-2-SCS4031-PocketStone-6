@@ -7,13 +7,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
 @Entity
-@Table
+@NoArgsConstructor
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"project_id", "employee_id"}))
 public class ProjectTeammate {
 
     @Id
@@ -27,6 +30,11 @@ public class ProjectTeammate {
     @ManyToOne(optional=false)
     @JoinColumn(name = "employee_id")
     private Employee employee;//사원
+
+    public ProjectTeammate(Project project, Employee employee) {
+        this.project = project;
+        this.employee = employee;
+    }
     
     
 }
