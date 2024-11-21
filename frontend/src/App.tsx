@@ -9,10 +9,11 @@ import { Navbar } from './components/Navbar/Navbar';
 import ProjectNew from './routes/project/ProjectNew';
 import ProjectDetail from './routes/project/ProjectDetail';
 import EmployeeDetail from './routes/employee/EmployeeDetail';
+import S from 'App.module.css'
 
 function App() {
   return (
-    <div>
+    <div className={S.appContainer}>
       <Navbar />
       <div>
         <Routes>
