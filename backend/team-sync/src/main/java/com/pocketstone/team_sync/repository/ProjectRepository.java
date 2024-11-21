@@ -16,5 +16,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     List<Project> findAllByUser (User user);
 
     Optional<Project> findByUserAndId(User user, Long projectId);//동시 조회
+    boolean existsByUserIdAndId(Long userId, Long projectId);
 
 }
