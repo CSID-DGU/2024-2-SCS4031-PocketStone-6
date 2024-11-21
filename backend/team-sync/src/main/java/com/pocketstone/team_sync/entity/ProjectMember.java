@@ -17,7 +17,7 @@ import lombok.Setter;
 @Entity
 @NoArgsConstructor
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"project_id", "employee_id"}))
-public class ProjectTeammate {
+public class ProjectMember {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +31,7 @@ public class ProjectTeammate {
     @JoinColumn(name = "employee_id")
     private Employee employee;//사원
 
-    public ProjectTeammate(Project project, Employee employee) {
+    public ProjectMember(Project project, Employee employee) {
         this.project = project;
         this.employee = employee;
     }
