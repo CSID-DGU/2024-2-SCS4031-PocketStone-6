@@ -41,7 +41,7 @@ const ProjectContent = () => {
         <div className={`${S.category} ${MS.flexOne}`}></div>
       </div>
       <div className={S.contentBox}>
-        {allProjectQuery.data.length === 0 ? (
+        {allProjectQuery.data === undefined || allProjectQuery.data.length === 0 ? (
           <NoProjectData />
         ) : (
           <ProjectData allProjectQuery={allProjectQuery} />
