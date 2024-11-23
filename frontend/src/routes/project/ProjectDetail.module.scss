@@ -1,0 +1,24 @@
+.doubleContentDiv {
+  margin: auto;
+  width: 80vw;
+  min-width: 786px;
+
+  > div {
+    width: 48%;
+    min-width: 380px;
+  }
+
+  > div:first-child {
+    float: left;
+  }
+
+  > div:nth-child(2) {
+    float: right;
+  }
+
+  &::after {
+    content: '';
+	display: block;
+	clear: both;
+  }
+}
