@@ -1,21 +1,28 @@
 package com.pocketstone.team_sync.controller;
 
-import com.pocketstone.team_sync.dto.projectdto.*;
-import com.pocketstone.team_sync.entity.User;
-import com.pocketstone.team_sync.entity.enums.ProjectStatus;
-import com.pocketstone.team_sync.service.ProjectService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.pocketstone.team_sync.dto.projectdto.ProjectDto;
+import com.pocketstone.team_sync.entity.User;
+import com.pocketstone.team_sync.entity.enums.ProjectStatus;
+import com.pocketstone.team_sync.entity.enums.Skill;
+import com.pocketstone.team_sync.service.ProjectService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
@@ -55,4 +62,12 @@ public class ProjectController {
     }
 
     //@DeleteMapping 프로젝트 삭제
+
+    //스킬목록 조회
+    @GetMapping("skills")
+    public List<String> getAllSkills() {
+        return Arrays.stream(Skill.values())
+                    .map(Skill::getLabel)
+                    .toList();
+    }
 }
