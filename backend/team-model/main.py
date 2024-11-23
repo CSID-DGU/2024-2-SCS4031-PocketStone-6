@@ -1,6 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends 
 from pydantic import BaseModel
 from typing import List
+from sqlalchemy.orm import Session
+# main.py에서 상대 경로 대신 절대 경로 사용
+from database import get_db
+
+from models import Employee
 
 app = FastAPI()
 
@@ -16,6 +21,14 @@ class RecommendationResponseDto(BaseModel):
 @app.get("/")
 def read_root():
     return {"message": "Hello, World!"}
+
+@app.get("/employees")
+def read_employees(db: Session = Depends(get_db)):
+    employees = db.query(Employee).all()
+    return employees
+
+
+
 
 @app.post("/api/recommendation")
 def recommendation(body: RecommendationRequestDto):
