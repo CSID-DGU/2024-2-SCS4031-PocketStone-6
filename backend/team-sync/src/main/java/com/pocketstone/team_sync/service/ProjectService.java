@@ -7,6 +7,7 @@ import com.pocketstone.team_sync.entity.enums.ProjectStatus;
 import com.pocketstone.team_sync.exception.ProjectNotFoundException;
 import com.pocketstone.team_sync.exception.UnauthorizedAccessException;
 import com.pocketstone.team_sync.repository.ProjectRepository;
+import com.pocketstone.team_sync.utility.ProjectValidationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,6 +55,13 @@ public class ProjectService {
                         project.getMvpDate()
                 ))
                 .orElseThrow(() -> new ProjectNotFoundException(projectName));
+    }
+
+    public ProjectDto findByProjectId(User user, Long projectId){
+        Optional<Project> project = projectRepository.findById(projectId);
+        if(project.isEmpty()) throw new ProjectNotFoundException("");
+        ProjectValidationUtils.validateProjectOwner(user, project.get());
+        return ProjectDto.toProjectDto(project.get());
     }
 
 
