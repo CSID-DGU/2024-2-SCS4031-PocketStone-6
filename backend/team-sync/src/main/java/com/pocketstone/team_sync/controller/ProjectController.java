@@ -1,7 +1,7 @@
 package com.pocketstone.team_sync.controller;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -64,10 +64,9 @@ public class ProjectController {
     //@DeleteMapping 프로젝트 삭제
 
     //스킬목록 조회
-    @GetMapping("skills")
-    public List<String> getAllSkills() {
-        return Arrays.stream(Skill.values())
-                    .map(Skill::getLabel)
-                    .toList();
+    @GetMapping("/skills")
+    public ResponseEntity<Map<String, List<String>>> getSkillsGroupedByRoleLabel() {
+        Map<String, List<String>> skillsByRoleLabel = Skill.getSkills();
+        return ResponseEntity.ok(skillsByRoleLabel);
     }
 }
