@@ -248,6 +248,7 @@ public class EmployeeService {
                                                 employee.getKpiScore(),
                                                 employee.getPeerEvaluationScore(),
                                                 employee.getPersonalType(),
+                                                employee.getRole(),
                                                 employee.getPastProjects()
                                             );
         return dto;
