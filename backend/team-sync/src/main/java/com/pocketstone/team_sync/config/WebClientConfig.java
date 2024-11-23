@@ -14,9 +14,9 @@ public class WebClientConfig {
     public WebClient webClient_model() {
         return WebClient.builder()
             //.baseUrl("http://berich-flask-app.ap-northeast-2.elasticbeanstalk.com") //모의계좌 url
-            .baseUrl("http://localhost:5000") //fastappi url
+            .baseUrl("http://localhost:8000") //fastappi url
             //.defaultHeader("Authorization", "Bearer your-token")
-            //.defaultHeader("content-type", "application/json")
+            .defaultHeader("content-type", "application/json")
             .build();
     }
 }

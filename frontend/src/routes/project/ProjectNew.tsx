@@ -1,36 +1,74 @@
 import { useState } from 'react';
 import { createProject } from '../../api/projects/createProject';
 import { useNavigate } from 'react-router-dom';
+import S from './ProjectNew.module.scss';
+import { MS, IS, BS } from 'styles';
+import { parseDateToString } from 'utils/parseDate';
+import DatePicker from 'react-datepicker';
 
 export default function ProjectNew() {
   const [projectName, setProjectName] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [mvpDate, setMvpDate] = useState('');
+  const [startDate, setStartDate] = useState<Date | null>(new Date());
+  const [mvpDate, setMvpDate] = useState<Date | null>(null);
   const navigate = useNavigate();
   return (
-    <div>
-      <h2>프로젝트 등록</h2>
-      <input
-        type="text"
-        onChange={(e) => {
-          setProjectName(e.target.value);
-        }}></input>
-      <input
-        type="text"
-        onChange={(e) => {
-          setStartDate(e.target.value);
-        }}></input>
-      <input
-        type="text"
-        onChange={(e) => {
-          setMvpDate(e.target.value);
-        }}></input>
-      <button
-        onClick={() => {
-          createProject(projectName, startDate, mvpDate, navigate);
-        }}>
-        프로젝트 등록
-      </button>
+    <div className={MS.container}>
+      <div className={MS.content}>
+        <div className={MS.contentTitle}>
+          <p>새 프로젝트 등록</p>
+        </div>
+        <div className={MS.contentBox}>
+          <input
+            className={`${IS.textInput} ${S.projectNameInput}`}
+            type="text"
+            placeholder="프로젝트의 제목을 입력해주세요."
+            onChange={(e) => {
+              setProjectName(e.target.value);
+            }}></input>
+          <div className={S.dateInputDiv}>
+            <div className={S.dateInputDiv}>
+              <DatePicker
+                className={`${IS.textInput} ${S.dateInput}`}
+                placeholderText="시작일"
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+                dateFormat="yyyy-MM-dd"
+              />
+            </div>
+            <p>~</p>
+            <div className={S.dateInputDiv}>
+              <DatePicker
+                className={`${IS.textInput} ${S.dateInput}`}
+                placeholderText="종료일"
+                selected={mvpDate}
+                onChange={(date) => setMvpDate(date)}
+                dateFormat="yyyy-MM-dd"
+              />
+            </div>
+          </div>
+          <div className={S.btnsDiv}>
+            <button
+              className={BS.WhiteBtn}
+              onClick={() => {
+                navigate('/project');
+              }}>
+              돌아가기
+            </button>
+            <button
+              className={BS.YellowBtn}
+              onClick={() => {
+                createProject(
+                  projectName,
+                  parseDateToString(startDate),
+                  parseDateToString(mvpDate),
+                  navigate
+                );
+              }}>
+              프로젝트 등록
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

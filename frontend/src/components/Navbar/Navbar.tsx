@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import S from './Navbar.module.scss';
-import BtnStyles from '../Buttons.module.scss';
+import BtnStyles from 'styles/Buttons.module.scss';
 import { useCategoryLocation } from '../../hooks/useCategoryLocation';
 import { useLoginInfoQuery } from '../../hooks/useLoginInfoQuery';
 import { doLogout } from '../../api/auth/authAPI';
