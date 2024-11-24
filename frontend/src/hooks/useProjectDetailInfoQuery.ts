@@ -8,23 +8,17 @@ import {
 export const useProjectDetailInfoQuery = (projectId: number) => {
   const basicInfoQuery = useQuery({
     queryKey: ['useProjectBasicInfoQuery', projectId],
-    queryFn: () => {
-      getProjectBasicInfo(projectId);
-    },
+    queryFn: () => getProjectBasicInfo(projectId),
   });
 
   const charterQuery = useQuery({
     queryKey: ['useProjectCharterQuery', projectId],
-    queryFn: () => {
-      getProjectCharter(projectId);
-    },
+    queryFn: () => getProjectCharter(projectId),
   });
 
   const timelinesQuery = useQuery({
     queryKey: ['useProjectTimelinesQuery', projectId],
-    queryFn: () => {
-      getProjectTimelines(projectId);
-    },
+    queryFn: () => getProjectTimelines(projectId),
   });
 
   return { basicInfoQuery, charterQuery, timelinesQuery };
