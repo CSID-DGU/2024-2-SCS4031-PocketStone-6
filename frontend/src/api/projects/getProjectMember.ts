@@ -8,7 +8,6 @@ export const getProjectMember = async (id: number) => {
     const response = await tokenAxios.get(`${API_URL}/api/member/${id}`, {
       headers: headers,
     });
-    console.log(response);
     return response.data;
   } catch (error) {
     console.error(error);

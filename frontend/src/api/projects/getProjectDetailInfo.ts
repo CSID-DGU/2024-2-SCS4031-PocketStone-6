@@ -23,7 +23,6 @@ export const getProjectCharter = async (id: number) => {
     const response = await tokenAxios.get(`${API_URL}/api/projects/charter/${id}`, {
       headers: headers,
     });
-    console.log(response);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -38,7 +37,6 @@ export const getProjectTimelines = async (id: number) => {
     const response = await tokenAxios.get(`${API_URL}/api/projects/timelines/${id}`, {
       headers: headers,
     });
-    console.log(response);
     return response.data;
   } catch (error) {
     console.error(error);

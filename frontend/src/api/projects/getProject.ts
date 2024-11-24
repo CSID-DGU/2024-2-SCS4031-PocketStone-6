@@ -8,7 +8,6 @@ export const getAllProject = async () => {
     const response = await tokenAxios.get(`${API_URL}/api/projects`, {
       headers: headers,
     });
-    console.log(response);
     return response.data;
   } catch (error) {
     console.error(error);
