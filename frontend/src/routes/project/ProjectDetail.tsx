@@ -3,8 +3,6 @@ import { BS, MS } from 'styles';
 import S from './ProjectDetail.module.scss';
 import { useProjectDetailInfoQuery } from 'hooks/useProjectDetailInfoQuery';
 import { useProjectMemberQuery } from 'hooks/useProjectMemberQuery';
-import { deleteAllProjectMembers } from 'api/projects/deleteAllProjectMembers';
-import { checkIsNoData } from 'utils/checkIsNoData';
 
 export default function ProjectDetail() {
   const { id } = useParams();
@@ -43,15 +41,6 @@ export default function ProjectDetail() {
           <button className={BS.WhiteBtn} onClick={() => navigate(`/project/${id}/member`)}>
             인원 수정
           </button>
-          {checkIsNoData(memberQuery.data) ? null : (
-            <button
-              className={BS.YellowBtn}
-              onClick={() => {
-                deleteAllProjectMembers(Number(id), navigate);
-              }}>
-              전체 인원 삭제
-            </button>
-          )}
         </div>
       </div>
     </div>

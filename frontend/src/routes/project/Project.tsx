@@ -34,13 +34,16 @@ const ProjectContent = () => {
   const allProjectQuery = useAllProjectQuery();
 
   return (
-    <div className={S.contentTitle}>
-      <div className={MS.displayFlex}>
-        <div className={`${S.category} ${MS.flexThree}`}>프로젝트명</div>
-        <div className={`${S.category} ${MS.flexTwo}`}>시작일</div>
-        <div className={`${S.category} ${MS.flexTwo}`}>종료일</div>
-        <div className={`${S.category} ${MS.flexOne}`}></div>
+    <>
+      <div className={S.contentTitle}>
+        <div className={MS.displayFlex}>
+          <div className={`${S.category} ${MS.flexThree}`}>프로젝트명</div>
+          <div className={`${S.category} ${MS.flexTwo}`}>시작일</div>
+          <div className={`${S.category} ${MS.flexTwo}`}>종료일</div>
+          <div className={`${S.category} ${MS.flexOne}`}></div>
+        </div>
       </div>
+
       <div className={S.contentBox}>
         {checkIsNoData(allProjectQuery.data) ? (
           <NoProjectData />
@@ -48,7 +51,7 @@ const ProjectContent = () => {
           <ProjectData allProjectQuery={allProjectQuery} />
         )}
       </div>
-    </div>
+    </>
   );
 };
 
