@@ -8,7 +8,6 @@ export const getEmployeeBasicInfo = async (employeeId: number) => {
     const response = await tokenAxios.get(`${API_URL}/api/employee/${employeeId}/info`, {
       headers: headers,
     });
-    console.log(response);
     return response.data;
   } catch (error) {
     console.error(error);

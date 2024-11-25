@@ -4,6 +4,7 @@ import S from './Project.module.scss';
 import ProjectBlockStyle from './ProjectBlock.module.scss';
 import { UseQueryResult } from '@tanstack/react-query';
 import { BS, MS } from 'styles';
+import { checkIsNoData } from 'utils/checkIsNoData';
 
 export default function Project() {
   const navigate = useNavigate();
@@ -33,21 +34,24 @@ const ProjectContent = () => {
   const allProjectQuery = useAllProjectQuery();
 
   return (
-    <div className={S.contentTitle}>
-      <div className={MS.displayFlex}>
-        <div className={`${S.category} ${MS.flexThree}`}>프로젝트명</div>
-        <div className={`${S.category} ${MS.flexTwo}`}>시작일</div>
-        <div className={`${S.category} ${MS.flexTwo}`}>종료일</div>
-        <div className={`${S.category} ${MS.flexOne}`}></div>
+    <>
+      <div className={S.contentTitle}>
+        <div className={MS.displayFlex}>
+          <div className={`${S.category} ${MS.flexThree}`}>프로젝트명</div>
+          <div className={`${S.category} ${MS.flexTwo}`}>시작일</div>
+          <div className={`${S.category} ${MS.flexTwo}`}>종료일</div>
+          <div className={`${S.category} ${MS.flexOne}`}></div>
+        </div>
       </div>
+
       <div className={S.contentBox}>
-        {allProjectQuery.data === undefined || allProjectQuery.data.length === 0 ? (
+        {checkIsNoData(allProjectQuery.data) ? (
           <NoProjectData />
         ) : (
           <ProjectData allProjectQuery={allProjectQuery} />
         )}
       </div>
-    </div>
+    </>
   );
 };
 

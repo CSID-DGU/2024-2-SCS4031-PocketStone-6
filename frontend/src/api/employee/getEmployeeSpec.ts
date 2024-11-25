@@ -8,7 +8,6 @@ export const getEmployeeSpec = async (employeeId: number) => {
     const response = await tokenAxios.get(`${API_URL}/api/employee/${employeeId}/spec`, {
       headers: headers,
     });
-    console.log(response);
     return response.data;
   } catch (error) {
     console.error(error);

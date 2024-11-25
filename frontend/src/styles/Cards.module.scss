@@ -1,0 +1,61 @@
+.container {
+  display: flex;
+  align-items: center;
+}
+
+.card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.canClickPart {
+  cursor: pointer;
+  flex: 7;
+  display: flex;
+  border-radius: 10px;
+  transition: 0.3s background;
+
+  &:hover {
+    background: #d8d8d8;
+  }
+}
+
+.noClickPart {
+  flex: 1;
+}
+
+.contentTitle {
+  > * {
+    border-bottom: 1px solid #d8d8d8;
+  }
+}
+
+.contentBox {
+  max-height: 50vh;
+  overflow-y: scroll;
+
+  > * {
+    border-bottom: 1px solid #d8d8d8;
+  }
+
+  > *:last-child {
+    border-bottom: none;
+  }
+}
+
+.category {
+  padding: 5px;
+  text-align: center;
+  font-family: 'NanumGothicBold';
+}
+
+.notice {
+  width: 100%;
+  text-align: center;
+  padding: 30px;
+
+  p:nth-child(1) {
+    margin-bottom: 10px;
+  }
+}

@@ -3,9 +3,9 @@ import { tokenAxios } from '../tokenAPI';
 import { API_URL } from '../../constants/envText';
 import { headers } from '../../constants/headers';
 
-export const getAllProject = async () => {
+export const getProjectMember = async (id: number) => {
   try {
-    const response = await tokenAxios.get(`${API_URL}/api/projects`, {
+    const response = await tokenAxios.get(`${API_URL}/api/member/${id}`, {
       headers: headers,
     });
     return response.data;
