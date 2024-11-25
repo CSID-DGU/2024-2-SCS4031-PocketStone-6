@@ -4,6 +4,7 @@ import S from './Project.module.scss';
 import ProjectBlockStyle from './ProjectBlock.module.scss';
 import { UseQueryResult } from '@tanstack/react-query';
 import { BS, MS } from 'styles';
+import { checkIsNoData } from 'utils/checkIsNoData';
 
 export default function Project() {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ const ProjectContent = () => {
         <div className={`${S.category} ${MS.flexOne}`}></div>
       </div>
       <div className={S.contentBox}>
-        {allProjectQuery.data === undefined || allProjectQuery.data.length === 0 ? (
+        {checkIsNoData(allProjectQuery.data) ? (
           <NoProjectData />
         ) : (
           <ProjectData allProjectQuery={allProjectQuery} />
