@@ -59,3 +59,16 @@
     margin-bottom: 10px;
   }
 }
+
+.containerSelected {
+  @extend .container;
+  background: #FFDE1C;
+}
+
+.canClickPartSelected {
+  @extend .canClickPart;
+
+  &:hover {
+    background: #F1B61B;
+  }
+}
