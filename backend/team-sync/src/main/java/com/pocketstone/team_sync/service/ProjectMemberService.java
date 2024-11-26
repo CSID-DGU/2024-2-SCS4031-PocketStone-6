@@ -38,10 +38,12 @@ public class ProjectMemberService {
 
     //팀원 추천 요청
     public RecommendationResponseDto recommendMember(User user, RecommendationRequestDto body){
-        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
-        if (company == null){
-            return null;
-        }
+        Company company  = companyRepository.findByUserId(user.getId())
+                                                .orElseThrow(() -> new RuntimeException("Company not found"));
+        //회사에 해당 프로젝트 속하는지 확인
+        Project project = projectRepository.findByUserAndId(user, body.getProjectId())
+                                    .orElseThrow(() -> new RuntimeException("Project not found"));
+        
         try {
             return requestRecommendation(body)//추천 요청
                     .block();
@@ -93,7 +95,7 @@ public class ProjectMemberService {
                                         .orElseThrow(() -> new RuntimeException("Employee not found")); // 사원 확인
             memberList.add(new ProjectMember(project,employee));
         }
-        memberRepository.deleteAllByProjectId(request.getProjectId());  
+        //memberRepository.deleteAllByProjectId(request.getProjectId());  
         memberRepository.saveAll(memberList);//저장
           
     }
