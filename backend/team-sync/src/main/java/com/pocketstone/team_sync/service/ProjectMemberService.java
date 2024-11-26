@@ -86,13 +86,14 @@ public class ProjectMemberService {
         //회사에 해당 프로젝트 속하는지 확인
         Project project = projectRepository.findByUserAndId(user, request.getProjectId())
                                     .orElseThrow(() -> new RuntimeException("Project not found"));
-        
+        memberRepository.deleteAllByProjectId(request.getProjectId());  
         List<ProjectMember> memberList = new ArrayList<>();
         for (Long employeeId : request.getEmployeeIds()) {
             Employee employee = employeeRepository.findByCompanyAndId(company, employeeId)
                                         .orElseThrow(() -> new RuntimeException("Employee not found")); // 사원 확인
             memberList.add(new ProjectMember(project,employee));
         }
+        memberRepository.deleteAllByProjectId(request.getProjectId());  
         memberRepository.saveAll(memberList);//저장
           
     }
