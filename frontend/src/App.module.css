@@ -1,3 +1,4 @@
-.contentContainer {
-  padding: 10px;
+.appContainer {
+  min-height: 100vh;
+  background: #d8d8d8;
 }

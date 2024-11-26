@@ -8,6 +8,7 @@ import S from './Employee.module.scss';
 import EmployBlockStyle from './EmployeeBlock.module.scss';
 import { UseQueryResult } from '@tanstack/react-query';
 import { BS, MS } from 'styles';
+import { checkIsNoData } from 'utils/checkIsNoData';
 
 export default function Employee() {
   const navigate = useNavigate();
@@ -42,23 +43,25 @@ const EmployeeContent = () => {
   const allEmployInfoQuery = useAllEmployeeInfoQuery();
 
   return (
-    <div className={S.contentTitle}>
-      <div style={{ display: 'flex' }}>
-        <div className={`${S.category} ${S.flexOne}`}>사원번호</div>
-        <div className={`${S.category} ${S.flexOne}`}>관리번호</div>
-        <div className={`${S.category} ${S.flexTwo}`}>이름</div>
-        <div className={`${S.category} ${S.flexTwo}`}>부서</div>
-        <div className={`${S.category} ${S.flexOne}`}>직책</div>
-        <div className={`${S.category} ${S.flexOne}`}></div>
+    <>
+      <div className={S.contentTitle}>
+        <div style={{ display: 'flex' }}>
+          <div className={`${S.category} ${S.flexOne}`}>사원번호</div>
+          <div className={`${S.category} ${S.flexOne}`}>관리번호</div>
+          <div className={`${S.category} ${S.flexTwo}`}>이름</div>
+          <div className={`${S.category} ${S.flexTwo}`}>부서</div>
+          <div className={`${S.category} ${S.flexOne}`}>직책</div>
+          <div className={`${S.category} ${S.flexOne}`}></div>
+        </div>
       </div>
       <div className={S.contentBox}>
-        {allEmployInfoQuery.data === undefined || allEmployInfoQuery.data.length === 0 ? (
+        {checkIsNoData(allEmployInfoQuery.data) ? (
           <NoEmployeeData />
         ) : (
           <EmployeeData allEmployInfoQuery={allEmployInfoQuery} />
         )}
       </div>
-    </div>
+    </>
   );
 };
 
