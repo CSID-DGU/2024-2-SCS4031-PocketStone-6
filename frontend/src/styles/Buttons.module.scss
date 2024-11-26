@@ -27,3 +27,24 @@
   @extend %btn;
   background: #e8e8e8;
 }
+
+.ModalBtn {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 60px;
+  padding: 10px;
+  font-family: 'NanumGothicBold';
+  font-size: xx-large;
+  color: #E52828;
+  border-radius: 30px;
+  background: none;
+  position: absolute;
+  right: 10px;
+
+  &:hover {
+    background: #e8e8e8;
+  }
+}

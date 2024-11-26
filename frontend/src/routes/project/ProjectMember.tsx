@@ -9,6 +9,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { BS, CS, MS } from 'styles';
 import S from './ProjectMember.module.scss';
 import { checkIsNoData } from 'utils/checkIsNoData';
+import { useScrollBlock } from 'hooks/useScrollBlock';
 
 export default function ProjectMember() {
   const { id } = useParams();
@@ -18,6 +19,8 @@ export default function ProjectMember() {
   const [currentId, setCurrentId] = useState(1);
   const { memberInfoList } = useMemberList(Number(id));
   const [selectedMemberList, setSelectedMemberList] = useState<number[]>([]);
+
+  useScrollBlock(showModal);
 
   useEffect(() => {
     setSelectedMemberList(memberInfoList);
