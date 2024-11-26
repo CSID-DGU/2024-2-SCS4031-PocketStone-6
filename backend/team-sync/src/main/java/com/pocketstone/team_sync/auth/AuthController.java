@@ -1,6 +1,5 @@
 package com.pocketstone.team_sync.auth;
 
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pocketstone.team_sync.config.jwt.TokenService;
 import com.pocketstone.team_sync.dto.MessageResponseDto;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -31,6 +31,7 @@ public class AuthController {
             authService.save(request);
             return ResponseEntity.ok(new MessageResponseDto("가입이 성공적으로 완료되었습니다."));
         } catch (Exception e) {
+            System.out.println("d여sssssssssss기기ㅣㄱsdfsdfsdfsd");
             return ResponseEntity.badRequest().body(null);
         }
         
