@@ -12,6 +12,7 @@ import { checkIsNoData } from 'utils/checkIsNoData';
 import { useScrollBlock } from 'hooks/useScrollBlock';
 import { useMemberInfoByIdList } from 'hooks/useMemberInfoByIdList';
 import { addElementAtList, deleteElementAtList } from 'utils/parseList';
+import { addProjectMembers } from 'api/member/addProjectMembers';
 
 export default function ProjectMember() {
   const { id } = useParams();
@@ -19,14 +20,14 @@ export default function ProjectMember() {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [currentId, setCurrentId] = useState(1);
-  const { memberInfoList } = useMemberList(Number(id));
+  const { memberIdList } = useMemberList(Number(id));
   const [selectedMemberList, setSelectedMemberList] = useState<number[]>([]);
 
   useScrollBlock(showModal);
 
   useEffect(() => {
-    setSelectedMemberList(memberInfoList);
-  }, [memberInfoList]);
+    setSelectedMemberList(memberIdList);
+  }, [memberIdList]);
 
   return (
     <div className={MS.container}>
@@ -66,7 +67,13 @@ export default function ProjectMember() {
           {/* 버튼부 */}
           <div className={`${MS.displayFlex} ${MS.flexRight} ${MS.Mt10}`}>
             <button className={`${BS.WhiteBtn} ${MS.Mr10}`}>인원 추천</button>
-            <button className={BS.YellowBtn}>수정사항 저장</button>
+            <button
+              className={BS.YellowBtn}
+              onClick={() => {
+                addProjectMembers(Number(id), selectedMemberList, navigate);
+              }}>
+              수정사항 저장
+            </button>
           </div>
         </div>
       </div>
