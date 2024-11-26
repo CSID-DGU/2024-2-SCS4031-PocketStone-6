@@ -1,11 +1,13 @@
 import { UseQueryResult } from '@tanstack/react-query';
 import { deleteAllProjectMembers } from 'api/projects/deleteAllProjectMembers';
 import EmployeeSpecModal from 'components/Modal/EmployeeSpecModal';
+import { useAllEmployeeInfoQuery } from 'hooks/useAllEmployeeInfoQuery';
 import { useMemberList } from 'hooks/useMemberList';
 import { useProjectMemberQuery } from 'hooks/useProjectMemberQuery';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BS, CS, MS } from 'styles';
+import S from './ProjectMember.module.scss'
 import { checkIsNoData } from 'utils/checkIsNoData';
 
 export default function ProjectMember() {
@@ -19,7 +21,7 @@ export default function ProjectMember() {
     <div className={MS.container}>
       {showModal ? <EmployeeSpecModal id={currentId} setShowModal={setShowModal} /> : null}
       <div className={MS.content}>
-        <div className={`${MS.contentTitle} ${MS.displayFlex}`}>
+        <div className={`${MS.contentTitle} ${S.contentTitle}`}>
           <p>인원 수정</p>
           {checkIsNoData(memberQuery.data) ? null : (
             <button
@@ -32,8 +34,10 @@ export default function ProjectMember() {
           )}
         </div>
         <div className={MS.contentBox}>
-          <></>
-          <p style={{ textAlign: 'center' }}>👇</p>
+          <p className={S.smallTitle}>현재 인원</p>
+          <EmployeeContent setCurrentId={setCurrentId} setShowModal={setShowModal} />
+          <p className={S.downArrow}>👇</p>
+          <p className={S.smallTitle}>프로젝트 인원</p>
           <MemberContent
             memberQuery={memberQuery}
             setCurrentId={setCurrentId}
@@ -44,6 +48,127 @@ export default function ProjectMember() {
     </div>
   );
 }
+
+const EmployeeContent = ({
+  setCurrentId,
+  setShowModal,
+}: {
+  setCurrentId: React.Dispatch<React.SetStateAction<number>>;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  const allEmployInfoQuery = useAllEmployeeInfoQuery();
+  return (
+    <>
+      <div className={CS.contentTitle}>
+        <div className={MS.displayFlex}>
+          <div className={`${CS.category} ${MS.flexOne}`}>사원번호</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>관리번호</div>
+          <div className={`${CS.category} ${MS.flexTwo}`}>이름</div>
+          <div className={`${CS.category} ${MS.flexTwo}`}>부서</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>직책</div>
+          <div className={`${CS.category} ${MS.flexOne}`}></div>
+        </div>
+      </div>
+      <div className={CS.contentBox}>
+        {checkIsNoData(allEmployInfoQuery.data) ? (
+          <NoEmployeeList />
+        ) : (
+          <EmployeeList
+            allEmployInfoQuery={allEmployInfoQuery}
+            setCurrentId={setCurrentId}
+            setShowModal={setShowModal}
+          />
+        )}
+      </div>
+    </>
+  );
+};
+
+const NoEmployeeList = () => {
+  return (
+    <div className={CS.notice}>
+      <p>사원 정보가 없어요.</p>
+      <p>사원정보 등록을 통해 정보를 등록해보세요!</p>
+    </div>
+  );
+};
+
+const EmployeeList = ({
+  allEmployInfoQuery,
+  setCurrentId,
+  setShowModal,
+}: {
+  allEmployInfoQuery: UseQueryResult<any>;
+  setCurrentId: React.Dispatch<React.SetStateAction<number>>;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  return (
+    <>
+      {allEmployInfoQuery.data?.map(
+        ({ employeeId, staffId, name, departmeent, position }: departmeentInfoType, i: number) => (
+          <EmployeeBlock
+            key={i}
+            employeeId={employeeId}
+            staffId={staffId}
+            name={name}
+            department={departmeent}
+            position={position}
+            setCurrentId={setCurrentId}
+            setShowModal={setShowModal}
+          />
+        )
+      )}
+    </>
+  );
+};
+
+interface MemberBlockProps {
+  employeeId: number;
+  staffId: string;
+  name: string;
+  department: string;
+  position: string;
+  setCurrentId: React.Dispatch<React.SetStateAction<number>>;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const EmployeeBlock = ({
+  employeeId,
+  staffId,
+  name,
+  department,
+  position,
+  setCurrentId,
+  setShowModal,
+}: MemberBlockProps) => {
+  const navigate = useNavigate();
+
+  return (
+    <div className={CS.container}>
+      <div className={CS.card}>
+        <div
+          className={CS.canClickPart}
+          onClick={() => {
+            setCurrentId(employeeId);
+            setShowModal(true);
+          }}>
+          <div className={`${CS.category} ${MS.flexOne}`}>{employeeId}</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>{staffId}</div>
+          <div className={`${CS.category} ${MS.flexTwo}`}>{name}</div>
+          <div className={`${CS.category} ${MS.flexTwo}`}>{department}</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>{position}</div>
+        </div>
+        <div className={CS.noClickPart}>
+          <div className={`${CS.category} ${MS.flexOne}`}>
+            <button className={BS.YellowBtn} onClick={() => {}}>
+              추가
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const MemberContent = ({
   memberQuery,
@@ -137,15 +262,14 @@ const MemberBlock = ({
   setCurrentId,
   setShowModal,
 }: MemberBlockProps) => {
-  const navigate = useNavigate();
-
   return (
     <div className={CS.container}>
       <div className={CS.card}>
         <div
           className={CS.canClickPart}
           onClick={() => {
-            navigate(`/employee/${employeeId}`);
+            setCurrentId(employeeId);
+            setShowModal(true);
           }}>
           <div className={`${CS.category} ${MS.flexOne}`}>{employeeId}</div>
           <div className={`${CS.category} ${MS.flexOne}`}>{staffId}</div>
@@ -155,13 +279,8 @@ const MemberBlock = ({
         </div>
         <div className={CS.noClickPart}>
           <div className={`${CS.category} ${MS.flexOne}`}>
-            <button
-              className={BS.YellowBtn}
-              onClick={async () => {
-                setCurrentId(employeeId);
-                setShowModal(true);
-              }}>
-              정보 보기
+            <button className={BS.YellowBtn} onClick={() => {}}>
+              삭제
             </button>
           </div>
         </div>
