@@ -1,5 +1,5 @@
 import { UseQueryResult } from '@tanstack/react-query';
-import { deleteAllProjectMembers } from 'api/projects/deleteAllProjectMembers';
+import { deleteAllProjectMembers } from 'api/member/deleteAllProjectMembers';
 import EmployeeSpecModal from 'components/Modal/EmployeeSpecModal';
 import { useAllEmployeeInfoQuery } from 'hooks/useAllEmployeeInfoQuery';
 import { useMemberList } from 'hooks/useMemberList';
