@@ -12,7 +12,8 @@ export const useMemberList = (id: number) => {
 
   // 멤버 id 리스트 업데이트
   useEffect(() => {
-    const idList = memberQuery.data?.map(({ employeeId }: { employeeId: number }) => employeeId) || [];
+    const idList =
+      memberQuery.data?.map(({ employeeId }: { employeeId: number }) => employeeId) || [];
     setMemberIdList(idList);
   }, [memberQuery.data]);
 
