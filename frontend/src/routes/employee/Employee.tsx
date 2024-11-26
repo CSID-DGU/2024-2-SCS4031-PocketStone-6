@@ -75,13 +75,13 @@ const NoEmployeeData = () => {
 
 const EmployeeData = ({ allEmployInfoQuery }: { allEmployInfoQuery: UseQueryResult<any> }) => {
   return allEmployInfoQuery.data?.map(
-    ({ employeeId, staffId, name, departmeent, position }: departmeentInfoType, i: number) => (
+    ({ employeeId, staffId, name, department, position }: employeeInfoType, i: number) => (
       <EmployeeBlock
         key={i}
         employeeId={employeeId}
         staffId={staffId}
         name={name}
-        department={departmeent}
+        department={department}
         position={position}
       />
     )

@@ -121,13 +121,13 @@ const EmployeeList = ({
   return (
     <>
       {allEmployInfoQuery.data?.map(
-        ({ employeeId, staffId, name, departmeent, position }: departmeentInfoType, i: number) => (
+        ({ employeeId, staffId, name, department, position }: employeeInfoType, i: number) => (
           <EmployeeBlock
             key={i}
             employeeId={employeeId}
             staffId={staffId}
             name={name}
-            department={departmeent}
+            department={department}
             position={position}
             setCurrentId={setCurrentId}
             setShowModal={setShowModal}
@@ -157,8 +157,6 @@ const EmployeeBlock = ({
   setCurrentId,
   setShowModal,
 }: MemberBlockProps) => {
-  const navigate = useNavigate();
-
   return (
     <div className={CS.container}>
       <div className={CS.card}>
