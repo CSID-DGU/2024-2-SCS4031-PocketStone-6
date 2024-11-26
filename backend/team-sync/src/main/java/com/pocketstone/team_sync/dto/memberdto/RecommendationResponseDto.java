@@ -5,11 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class RecommendationResponseDto {
 
-    private String employee;
+    private List<Long> memberIds;
+    private List<Long> employeeIds;
 }

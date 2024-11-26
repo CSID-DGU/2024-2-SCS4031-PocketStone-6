@@ -40,6 +40,7 @@ public class AuthService {
         
         // 회사 객체 생성
         Company company = new Company();
+        System.out.println("d여기기ㅣㄱ");
         company.setCompanyName(dto.getCompanyName());
         
         User user = User.builder()
@@ -49,11 +50,15 @@ public class AuthService {
                             .company(company)
                             .joinDate(LocalDate.now())
                             .build();
-
+        System.out.println("d여기기ㅣehehehehheㄱ");
         // 회사의 유저 필드도 설정
         company.setUser(user); // 회사와 유저의 양방향 연결
+        System.out.println("d여기기ㅣㄱsdfsdfsdfsd");
+        System.out.println(user.getId()+user.getEmail()+user.getLoginId()+user.getPassword()+user.getCompany().getCompanyName());
+        userRepository.save(user);
+        System.out.println("ddddddddddddddddddddd여기기ㅣㄱsdfsdfsdfsd");
+        return user.getId();
 
-        return userRepository.save(user).getId();
     }
 
     //로그인

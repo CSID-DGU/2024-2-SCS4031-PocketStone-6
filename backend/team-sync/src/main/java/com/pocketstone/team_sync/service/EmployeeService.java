@@ -44,7 +44,9 @@ public class EmployeeService {
     @Transactional
     public void enrollEmployeeList(User user, MultipartFile file) {
         Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
+        System.out.println("처음까지ssss 변환");
         List<Employee> employees = parseExcelFile(company, file);
+        System.out.println("처음까지sssssssss 변환");
         List<PastProject> pastProjects = parseExcelFileProject(company, file, employees);
         employeeRepository.saveAll(employees);
         pastProjectRepository.saveAll(pastProjects);
@@ -57,6 +59,7 @@ public class EmployeeService {
 
         try (InputStream inputStream = file.getInputStream();
             Workbook workbook = new XSSFWorkbook(inputStream)) {
+                System.out.println("처음까지asdf 변환");
             //첫번째 시트
             Sheet sheet = workbook.getSheetAt(0);
             System.out.println("처음까지 변환");
@@ -198,6 +201,7 @@ public class EmployeeService {
                             employee.getName(),
                             employee.getDepartment(),
                             employee.getPosition()
+
             );
             employeeList.add(dto);
         }

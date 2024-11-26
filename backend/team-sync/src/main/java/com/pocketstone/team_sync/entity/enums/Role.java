@@ -5,7 +5,7 @@ public enum Role {
     BACKEND_DEVELOPER("BE"),
     FRONTEND_DEVELOPER("FE"),
     PRODUCT_MANAGER("PM"),
-    UI_UX_DESIGNER("UI/UX Designer"),
+    UI_UX_DESIGNER("DE"),
     DATA_ANALYST("DA");
 
     private final String label;

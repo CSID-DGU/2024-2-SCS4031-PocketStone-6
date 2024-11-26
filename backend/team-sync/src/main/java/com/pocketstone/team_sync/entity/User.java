@@ -37,12 +37,12 @@ public class User implements UserDetails {
 
     //유저가 설정한 로그인시 아이디, unique
     @Column(name = "loginId", nullable = false, unique = true)
-    @NotEmpty (message = "아이디를 입력해주세요.")
+    //@NotEmpty (message = "아이디를 입력해주세요.")
     private String loginId;
 
     //유저 email, unique
     @Column(name = "email", nullable = false, unique = true)
-    @NotEmpty(message = "이메일 주소를 입력해주세요.")
+    //@NotEmpty(message = "이메일 주소를 입력해주세요.")
     @Email(message = "이메일 형식이 올바르지 않습니다.")
     private String email;
     
@@ -59,7 +59,7 @@ public class User implements UserDetails {
 
     //회사정보 조회를 쉽게 하기 위해
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    @NotEmpty (message = "회사를 설절 해 주세요")
+    //@NotEmpty (message = "회사를 설절 해 주세요")
     private Company company;
 
     @Builder
