@@ -11,7 +11,7 @@ import S from './ProjectMember.module.scss';
 import { checkIsNoData } from 'utils/checkIsNoData';
 import { useScrollBlock } from 'hooks/useScrollBlock';
 import { useMemberInfoByIdList } from 'hooks/useMemberInfoByIdList';
-import { addElementAtList, deleteElementAtList   } from 'utils/parseList';
+import { addElementAtList, deleteElementAtList } from 'utils/parseList';
 
 export default function ProjectMember() {
   const { id } = useParams();
@@ -20,13 +20,13 @@ export default function ProjectMember() {
   const [showModal, setShowModal] = useState(false);
   const [currentId, setCurrentId] = useState(1);
   const { memberInfoList } = useMemberList(Number(id));
-  const [selectedMemberList, setSelectedMemberList] = useState<number[]>([1, 2]);
+  const [selectedMemberList, setSelectedMemberList] = useState<number[]>([]);
 
   useScrollBlock(showModal);
 
-  // useEffect(() => {
-  //   setSelectedMemberList(memberInfoList);
-  // }, [memberInfoList]);
+  useEffect(() => {
+    setSelectedMemberList(memberInfoList);
+  }, [memberInfoList]);
 
   return (
     <div className={MS.container}>
@@ -182,10 +182,10 @@ const EmployeeBlock = ({
   setShowModal,
 }: EmployeeBlockProps) => {
   return (
-    <div className={CS.container}>
+    <div className={list.includes(employeeId) ? CS.containerSelected : CS.container}>
       <div className={CS.card}>
         <div
-          className={CS.canClickPart}
+          className={list.includes(employeeId) ? CS.canClickPartSelected : CS.canClickPart}
           onClick={() => {
             setCurrentId(employeeId);
             setShowModal(true);
@@ -197,13 +197,23 @@ const EmployeeBlock = ({
         </div>
         <div className={CS.noClickPart}>
           <div className={`${CS.category} ${MS.flexOne}`}>
-            <button
-              className={BS.YellowBtn}
-              onClick={() => {
-                setList(addElementAtList(employeeId, list));
-              }}>
-              추가
-            </button>
+            {list.includes(employeeId) ? (
+              <button
+                className={BS.YellowBtn}
+                onClick={() => {
+                  setList(deleteElementAtList(employeeId, list));
+                }}>
+                삭제
+              </button>
+            ) : (
+              <button
+                className={BS.YellowBtn}
+                onClick={() => {
+                  setList(addElementAtList(employeeId, list));
+                }}>
+                추가
+              </button>
+            )}
           </div>
         </div>
       </div>
