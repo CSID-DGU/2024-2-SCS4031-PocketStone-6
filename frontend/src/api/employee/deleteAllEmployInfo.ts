@@ -4,6 +4,7 @@ import { API_URL } from '../../constants/envText';
 import { headers } from '../../constants/headers';
 import { NavigateFunction } from 'react-router-dom';
 import { refreshPage } from '../../utils/movePage';
+import { ERROR_AT_DELETE_EMPLOYEE } from 'constants/errorMessage';
 
 export const deleteAllEmployInfo = async (navigate: NavigateFunction) => {
   try {
@@ -15,7 +16,7 @@ export const deleteAllEmployInfo = async (navigate: NavigateFunction) => {
   } catch (error) {
     console.error(error);
     if (axios.isAxiosError(error)) {
-      alert(error.response?.data);
+      alert(ERROR_AT_DELETE_EMPLOYEE);
       refreshPage(navigate);
     }
   }
