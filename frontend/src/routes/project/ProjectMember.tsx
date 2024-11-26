@@ -67,7 +67,6 @@ const EmployeeContent = ({
     <>
       <div className={CS.contentTitle}>
         <div className={MS.displayFlex}>
-          <div className={`${CS.category} ${MS.flexOne}`}>사원번호</div>
           <div className={`${CS.category} ${MS.flexOne}`}>관리번호</div>
           <div className={`${CS.category} ${MS.flexTwo}`}>이름</div>
           <div className={`${CS.category} ${MS.flexTwo}`}>부서</div>
@@ -158,7 +157,6 @@ const EmployeeBlock = ({
             setCurrentId(employeeId);
             setShowModal(true);
           }}>
-          <div className={`${CS.category} ${MS.flexOne}`}>{employeeId}</div>
           <div className={`${CS.category} ${MS.flexOne}`}>{staffId}</div>
           <div className={`${CS.category} ${MS.flexTwo}`}>{name}</div>
           <div className={`${CS.category} ${MS.flexTwo}`}>{department}</div>
@@ -189,7 +187,6 @@ const MemberContent = ({
     <>
       <div className={CS.contentTitle}>
         <div className={MS.displayFlex}>
-          <div className={`${CS.category} ${MS.flexOne}`}>사원번호</div>
           <div className={`${CS.category} ${MS.flexOne}`}>관리번호</div>
           <div className={`${CS.category} ${MS.flexTwo}`}>이름</div>
           <div className={`${CS.category} ${MS.flexTwo}`}>부서</div>
@@ -277,7 +274,6 @@ const MemberBlock = ({
             setCurrentId(employeeId);
             setShowModal(true);
           }}>
-          <div className={`${CS.category} ${MS.flexOne}`}>{employeeId}</div>
           <div className={`${CS.category} ${MS.flexOne}`}>{staffId}</div>
           <div className={`${CS.category} ${MS.flexTwo}`}>{name}</div>
           <div className={`${CS.category} ${MS.flexTwo}`}>{department}</div>
