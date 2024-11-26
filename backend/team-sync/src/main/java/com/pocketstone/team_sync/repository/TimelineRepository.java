@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -17,13 +18,17 @@ public interface TimelineRepository extends JpaRepository<Timeline,Long> {
     @Modifying
     @Transactional
     @Query("UPDATE Timeline t SET t.sprintContent = :sprintContent, " +
-            "t.sprintDurationWeek = :sprintDurationWeek, " +
+            "t.sprintStartDate = :sprintStartDate, " +
+            "t.sprintEndDate = :sprintEndDate, " +
+            "t.requiredManmonth = :requiredManmonth, " +
             "t.sprintOrder = :sprintOrder WHERE t.project.id = :projectId AND t.id = :id") //타임라인 테이블 업데이트 쿼리
     public void updateTimelineByProjectId(Long projectId,
                                           Long id,
                                           String sprintContent,
-                                          Integer sprintDurationWeek,
-                                          Integer sprintOrder);
+                                          Integer sprintOrder,
+                                          LocalDate sprintStartDate,
+                                          LocalDate sprintEndDate,
+                                          Double requiredManmonth);
 
 
 }

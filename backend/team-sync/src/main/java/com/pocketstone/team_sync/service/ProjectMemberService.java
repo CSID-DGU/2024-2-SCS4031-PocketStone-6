@@ -1,8 +1,18 @@
 package com.pocketstone.team_sync.service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.pocketstone.team_sync.entity.*;
+import com.pocketstone.team_sync.exception.ExceededWorkloadException;
+import com.pocketstone.team_sync.exception.ProjectNotFoundException;
+import com.pocketstone.team_sync.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -10,15 +20,6 @@ import com.pocketstone.team_sync.dto.memberdto.MemberListResponseDto;
 import com.pocketstone.team_sync.dto.memberdto.MemberRequestDto;
 import com.pocketstone.team_sync.dto.memberdto.RecommendationRequestDto;
 import com.pocketstone.team_sync.dto.memberdto.RecommendationResponseDto;
-import com.pocketstone.team_sync.entity.Company;
-import com.pocketstone.team_sync.entity.Employee;
-import com.pocketstone.team_sync.entity.Project;
-import com.pocketstone.team_sync.entity.ProjectMember;
-import com.pocketstone.team_sync.entity.User;
-import com.pocketstone.team_sync.repository.CompanyRepository;
-import com.pocketstone.team_sync.repository.EmployeeRepository;
-import com.pocketstone.team_sync.repository.ProjectMemberRepository;
-import com.pocketstone.team_sync.repository.ProjectRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -32,18 +33,42 @@ public class ProjectMemberService {
     private final EmployeeRepository employeeRepository;
     private final ProjectMemberRepository memberRepository;
     private final ProjectRepository projectRepository;
+    private final TimelineRepository timelineRepository;
 
+    private final ManMonthService manMonthService;
     // 외부 api 요청
     private final WebClient webClient_model;
 
     //팀원 추천 요청
     public RecommendationResponseDto recommendMember(User user, RecommendationRequestDto body){
-        Company company  = companyRepository.findByUserId(user.getId())
-                                                .orElseThrow(() -> new RuntimeException("Company not found"));
-        //회사에 해당 프로젝트 속하는지 확인
-        Project project = projectRepository.findByUserAndId(user, body.getProjectId())
-                                    .orElseThrow(() -> new RuntimeException("Project not found"));
-        
+        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
+        if (company == null){
+            return null;
+        }
+        Project project = projectRepository.findById(body.getProjectId()).orElseThrow(() -> new ProjectNotFoundException(""));
+        List<Timeline> timelines = timelineRepository.findAllByProjectId(body.getProjectId());
+        Map<LocalDate, Double> requiredManmonths = buildManmonthMapFromTimelines(timelines);
+
+        List<Employee> availableEmployees = employeeRepository.findByCompany(company).stream()
+                .filter(employee -> {
+                    Map<LocalDate, Double> availability = manMonthService.checkAvailability(
+                            employee,
+                            project.getStartDate(),
+                            project.getMvpDate()
+                    );
+
+                    return requiredManmonths.entrySet().stream()
+                            .allMatch(entry -> {
+                                Double required = entry.getValue();
+                                Double available = availability.getOrDefault(entry.getKey(), 0.25);
+                                return available >= required;
+                            });
+                })
+                .toList();
+
+        body.setAvailableEmployeeIds(availableEmployees.stream()
+                .map(Employee::getId)
+                .toList());
         try {
             return requestRecommendation(body)//추천 요청
                     .block();
@@ -87,17 +112,39 @@ public class ProjectMemberService {
                                                 .orElseThrow(() -> new RuntimeException("Company not found"));
         //회사에 해당 프로젝트 속하는지 확인
         Project project = projectRepository.findByUserAndId(user, request.getProjectId())
-                                    .orElseThrow(() -> new RuntimeException("Project not found"));
+                .orElseThrow(() -> new ProjectNotFoundException(""));
+
+        List<Timeline> timelines = timelineRepository.findAllByProjectId(request.getProjectId());
+        Map<LocalDate, Double> projectManmonths = buildManmonthMapFromTimelines(timelines);
         
         List<ProjectMember> memberList = new ArrayList<>();
         for (Long employeeId : request.getEmployeeIds()) {
             Employee employee = employeeRepository.findByCompanyAndId(company, employeeId)
                                         .orElseThrow(() -> new RuntimeException("Employee not found")); // 사원 확인
+
+            if (!checkEmployeeAvailability(employee, project, projectManmonths)) {
+                throw new ExceededWorkloadException(employee.getName(), 0.0);
+            }
+
+            for (Timeline timeline : timelines) {
+                Map<LocalDate, Double> timelineManmonths = extractManmonthsForTimeline(
+                        projectManmonths,
+                        timeline.getSprintStartDate(),
+                        timeline.getSprintEndDate()
+                );
+
+                manMonthService.allocateManmonth(
+                        user,
+                        employee,
+                        project,
+                        timeline,
+                        timeline.getSprintStartDate(),
+                        timeline.getSprintEndDate(),
+                        timelineManmonths
+                );
+            }
             memberList.add(new ProjectMember(project,employee));
         }
-         // 기존 프로젝트의 모든 팀원 삭제
-        memberRepository.deleteAllByProjectId(request.getProjectId());  
-        memberRepository.flush(); // 데이터베이스와 동기화
         memberRepository.saveAll(memberList);//저장
           
     }
@@ -152,10 +199,56 @@ public class ProjectMemberService {
         List<ProjectMember> memberList = memberRepository.findByProjectId(projectId);
         List<MemberListResponseDto> responseList = new ArrayList<>();
         for (int i=0; i < memberList.size(); i++) {
-            responseList.add(new MemberListResponseDto(memberList.get(i).getEmployee().getId()));
+            responseList.add(new MemberListResponseDto(memberList.get(i).getEmployee().getId(),memberList.get(i).getEmployee().getPosition()));
         }
 
         return responseList;
+    }
+
+    private boolean checkEmployeeAvailability(Employee employee, Project project, Map<LocalDate, Double> requiredManmonths){
+        Map<LocalDate, Double> availability = manMonthService.checkAvailability(
+                employee,
+                project.getStartDate(),
+                project.getMvpDate()
+        );
+        return requiredManmonths.entrySet().stream()
+                .allMatch(entry -> {
+                    Double required = entry.getValue();
+                    Double available = availability.getOrDefault(entry.getKey(), 0.25);
+                    return required <= available;
+                });
+    }
+
+    private Map<LocalDate, Double> buildManmonthMapFromTimelines(List<Timeline> timelines) {
+        Map<LocalDate, Double> manmonths = new HashMap<>();
+
+        for (Timeline timeline : timelines) {
+            LocalDate currentDate = timeline.getSprintStartDate();
+            while (!currentDate.isAfter(timeline.getSprintEndDate())) {
+
+                manmonths.merge(
+                        currentDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)),
+                        timeline.getRequiredManmonth(),
+                        Double::sum
+                );
+                currentDate = currentDate.plusWeeks(1);
+            }
+        }
+
+        return manmonths;
+    }
+
+    private Map<LocalDate, Double> extractManmonthsForTimeline(
+            Map<LocalDate, Double> projectManmonths,
+            LocalDate startDate,
+            LocalDate endDate
+    ) {
+        return projectManmonths.entrySet().stream()
+                .filter(entry -> !entry.getKey().isBefore(startDate) && !entry.getKey().isAfter(endDate))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue
+                ));
     }
 
 }

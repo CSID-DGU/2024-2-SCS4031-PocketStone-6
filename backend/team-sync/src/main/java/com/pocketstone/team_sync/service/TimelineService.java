@@ -51,7 +51,9 @@ public class TimelineService {
                         timeline.getId(),
                         timeline.getSprintOrder(),
                         timeline.getSprintContent(),
-                        timeline.getSprintDurationWeek()
+                        timeline.getSprintStartDate(),
+                        timeline.getSprintEndDate(),
+                        timeline.getRequiredManmonth()
                 ))
                 .collect(Collectors.toList());
     }
@@ -69,8 +71,10 @@ public class TimelineService {
                     projectId,
                     timelineDto.getId(),
                     timelineDto.getSprintContent(),
-                    timelineDto.getSprintDurationWeek(),
-                    timelineDto.getSprintOrder());
+                    timelineDto.getSprintOrder(),
+                    timelineDto.getSprintStartDate(),
+                    timelineDto.getSprintEndDate(),
+                    timelineDto.getRequiredManmonth());
         }
         return timelineDtos;
     }

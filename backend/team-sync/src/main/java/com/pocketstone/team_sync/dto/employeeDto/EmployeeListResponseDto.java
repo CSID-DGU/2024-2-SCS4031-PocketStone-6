@@ -9,6 +9,6 @@ public class EmployeeListResponseDto {
     private Long employeeId;
     private String staffId;
     private String name;
-    private String department;
+    private String departmeent;
     private String position;
 }

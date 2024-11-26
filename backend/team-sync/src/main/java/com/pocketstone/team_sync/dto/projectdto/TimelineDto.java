@@ -11,6 +11,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 public class TimelineDto {
@@ -21,28 +23,35 @@ public class TimelineDto {
     private Integer sprintOrder;
     @NotEmpty (message = "스프린트 내용을 입력해주세요.")
     private String sprintContent;
-    @Min(value = 1, message = "스프린트는 주 단위로 진행됩니다.")
-    @Max(value = 54, message = "스프린트의 기간이 1년을 넘을 수 없습니다.")
-    @NotNull (message = "스프린트 기간을 입력해주세요.")
-    private Integer sprintDurationWeek;
+    @NotNull (message = "스프린트 시작일을 입력해주세요.")
+    private LocalDate sprintStartDate;
+    @NotNull (message = "스프린트 시작일을 입력해주세요.")
+    private LocalDate sprintEndDate;
+    private Double requiredManmonth;
 
 
     //타임라인 첫 생성시 사용하는 생성자
-    public TimelineDto(Integer sprintOrder, String sprintContent, Integer sprintDurationWeek) {
+    public TimelineDto(Integer sprintOrder, String sprintContent, LocalDate sprintStartDate, LocalDate sprintEndDate, Double requiredManmonth) {
         this.sprintOrder = sprintOrder;
         this.sprintContent = sprintContent;
-        this.sprintDurationWeek = sprintDurationWeek;
+        this.sprintStartDate = sprintStartDate;
+        this.sprintEndDate = sprintEndDate;
+        this.requiredManmonth = requiredManmonth;
     }
 
     @JsonCreator //json으로 받을때 id와 함께 호출하는 생성자
     public TimelineDto(@JsonProperty("id") Long id,
                        @JsonProperty("sprintOrder") Integer sprintOrder,
                        @JsonProperty("sprintContent") String sprintContent,
-                       @JsonProperty("sprintDurationWeek") Integer sprintDurationWeek) {
+                       @JsonProperty("sprintStartDate") LocalDate sprintStartDate,
+                       @JsonProperty("sprintEndDate") LocalDate sprintEndDate,
+                       @JsonProperty("requiredManmonth") Double requiredManmonth) {
         this.id = id;
         this.sprintOrder = sprintOrder;
         this.sprintContent = sprintContent;
-        this.sprintDurationWeek = sprintDurationWeek;
+        this.sprintStartDate = sprintStartDate;
+        this.sprintEndDate = sprintEndDate;
+        this.requiredManmonth = requiredManmonth;
     }
 
     //타임라인Dto 엔티티로 변환
@@ -51,7 +60,9 @@ public class TimelineDto {
                 .project(project)
                 .sprintOrder(timelineDto.getSprintOrder())
                 .sprintContent(timelineDto.getSprintContent())
-                .sprintDurationWeek(timelineDto.getSprintDurationWeek())
+                .sprintStartDate(timelineDto.getSprintStartDate())
+                .sprintEndDate(timelineDto.getSprintEndDate())
+                .requiredManmonth(timelineDto.getRequiredManmonth())
                 .build();
     }
 

@@ -20,7 +20,7 @@ public class ManMonthController {
     @Autowired
     private ManMonthService manMonthService;
 
-
+    /*
     //맨먼스 초기 설정
     @PostMapping("/{projectId}/{timeLineId}")
     public ResponseEntity<List<ManMonthDto>> saveManMonth(@AuthenticationPrincipal User user,

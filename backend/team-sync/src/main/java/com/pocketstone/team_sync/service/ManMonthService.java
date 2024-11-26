@@ -1,100 +1,99 @@
 package com.pocketstone.team_sync.service;
 
 
-import com.pocketstone.team_sync.dto.projectdto.ManMonthDto;
-import com.pocketstone.team_sync.entity.ManMonth;
-import com.pocketstone.team_sync.entity.Project;
-import com.pocketstone.team_sync.entity.Timeline;
-import com.pocketstone.team_sync.entity.User;
+import com.pocketstone.team_sync.entity.*;
+import com.pocketstone.team_sync.exception.ExceededWorkloadException;
 import com.pocketstone.team_sync.repository.ManMonthRepository;
-import com.pocketstone.team_sync.repository.ProjectRepository;
-import com.pocketstone.team_sync.repository.TimelineRepository;
 import com.pocketstone.team_sync.utility.ProjectValidationUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class ManMonthService {
 
-    @Autowired
-    private ManMonthRepository manMonthRepository;
+    private static final Double MAX_MANMONTH = 0.25;
 
-    @Autowired
-    private ProjectRepository projectRepository;
+    private final ManMonthRepository manMonthRepository;
 
-    @Autowired
-    private TimelineRepository timelineRepository;
+    public Map<LocalDate, Double> checkAvailability(Employee employee, LocalDate startDate, LocalDate endDate) {
+        LocalDate startMonday = startDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate endSunday = endDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
 
-    //프로젝트의 타임라인 별로 맨먼스 저장
-    public void saveManMonth(User user, Long projectId, Long timeLineId, List<ManMonthDto> manMonthDtoList) {
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new RuntimeException("프로젝트 찾을 수 없음"));
-        Timeline timeline = timelineRepository.findById(timeLineId)
-                .orElseThrow(() -> new RuntimeException("타임라인 찾을 수 없음"));
-        ProjectValidationUtils.validateTimelineOwner(user, timeline);
+        List<ManMonth> existingAllocations = manMonthRepository.findByEmployeeAndDateRange(employee, startMonday, endSunday);
 
+        Map<LocalDate, Double> weeklyAvailability = new HashMap<>();
 
-        for (ManMonthDto manMonthDto : manMonthDtoList) {
-            manMonthRepository.save(manMonthDto.toManMonth(project, timeline, manMonthDto));
-
+        LocalDate currentWeek = startMonday;
+        while (!currentWeek.isAfter(endSunday)) {
+            weeklyAvailability.put(currentWeek, MAX_MANMONTH);
+            currentWeek = currentWeek.plusWeeks(1);
         }
-    }
 
-    //프로젝트의 타임라인 별로 맨먼스 조회
-    public List<ManMonthDto> findManMonthByProjectAndTimeline(User user, Long projectId, Long timelineId) {
-
-        List<ManMonth> manMonths = manMonthRepository.findManMonthByProjectAndTimeline(projectId, timelineId);
-        ProjectValidationUtils.validateTimelineOwner(user, manMonths.get(0).getTimeline());
-        return manMonths.stream()
-                .map(manMonth -> new ManMonthDto(
-                        manMonth.getId(),
-                        manMonth.getPosition(),
-                        manMonth.getManMonth()
-                ))
-                .collect(Collectors.toList());
-    }
-
-    //프로젝트의 포지션별 맨먼스 총합 조회
-    public List<ManMonthDto> findManMonthByProject(User user, Long projectId) {
-        List<ManMonth> manMonths = manMonthRepository.findManMonthByProject(projectId);
-        ProjectValidationUtils.validateManmonthOwner(user, manMonths.get(0));
-
-        //<포지션, 맨먼스>맵으로 포지션별 맨먼스 총합 계산
-        Map<String, BigDecimal> manMonthByPosition = manMonths.stream()
-                .collect(Collectors.groupingBy(ManMonth::getPosition,
-                        Collectors.reducing(BigDecimal.ZERO, ManMonth::getManMonth, BigDecimal::add)
-                ));
-
-        //맵을 맨먼스dto로 변환
-        return manMonthByPosition.entrySet().stream()
-                .map(entry -> new ManMonthDto(
-                        entry.getKey(),
-                        entry.getValue()
-                )).collect(Collectors.toList());
-
-    }
-
-    //맨먼스 지수 수정
-    public List<ManMonthDto> updateManMonth(User user, Long projectId, Long timelineId, List<ManMonthDto> manMonthDtos) {
-        for (ManMonthDto manMonthDto : manMonthDtos) {
-            manMonthRepository.updateManMonthByProjectAndTimeline(
-                    manMonthDto.getId(),
-                    projectId,
-                    timelineId,
-                    manMonthDto.getPosition(),
-                    manMonthDto.getManMonth()
+        for (ManMonth allocation : existingAllocations) {
+            weeklyAvailability.merge(
+                    allocation.getWeekStartDate(),
+                    -allocation.getManMonth(),
+                    Double::sum
             );
         }
-        return findManMonthByProjectAndTimeline(user, projectId, timelineId);
+
+        return weeklyAvailability;
+
+    }
+
+    @Transactional
+    public void allocateManmonth(User user, Employee employee, Project project, Timeline timeline, LocalDate startDate, LocalDate endDate, Map<LocalDate, Double> weeklyManmonths) {
+        ProjectValidationUtils.validateProjectOwner(user, project);
+        Map<LocalDate, Double> availability = checkAvailability(employee, startDate, endDate);
+
+        for (Map.Entry<LocalDate, Double> entry : weeklyManmonths.entrySet()) {
+            LocalDate weekStart = entry.getKey();
+            Double requiredManmonth = entry.getValue();
+            Double availableManmonth = availability.getOrDefault(weekStart, MAX_MANMONTH);
+
+            if (requiredManmonth > availableManmonth) {
+                throw new ExceededWorkloadException(employee.getName(), availableManmonth);
+            }
+
+        }
+
+        for (Map.Entry<LocalDate, Double> entry : weeklyManmonths.entrySet()) {
+            allocateWork (employee, project, timeline, entry.getKey(), entry.getValue());
+        }
+    }
+
+    private void allocateWork(Employee employee, Project project, Timeline timeline, LocalDate weekStartDate, Double manmonthValue) {
+
+        LocalDate startMonday = weekStartDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate endSunday = startMonday.plusDays(6);
+
+        ManMonth allocation = manMonthRepository
+                .findByEmployeeAndWeekStartDate(employee, startMonday)
+                .orElse(new ManMonth());
+
+        if (allocation.getId() == null) {
+            allocation.setEmployee(employee);
+            allocation.setWeekStartDate(startMonday);
+            allocation.setWeekEndDate(endSunday);
+            allocation.setProject(project);
+            allocation.setTimeline(timeline);
+            allocation.setManMonth(manmonthValue);
+        } else {
+            allocation.setManMonth(allocation.getManMonth() + manmonthValue);
+        }
+
+        manMonthRepository.save(allocation);
+
     }
 
 

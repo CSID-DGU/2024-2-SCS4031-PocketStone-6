@@ -1,31 +1,40 @@
 package com.pocketstone.team_sync.repository;
 
-import com.pocketstone.team_sync.dto.projectdto.ManMonthDto;
+import com.pocketstone.team_sync.entity.Employee;
 import com.pocketstone.team_sync.entity.ManMonth;
-import jakarta.transaction.Transactional;
+import com.pocketstone.team_sync.entity.Project;
+import com.pocketstone.team_sync.entity.Timeline;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ManMonthRepository extends JpaRepository<ManMonth, Long> {
 
+    @Query("SELECT mm FROM ManMonth mm " +
+            "WHERE mm.employee = :employee " +
+            "AND ((mm.weekStartDate BETWEEN :startDate AND :endDate) " +
+            "OR (mm.weekEndDate BETWEEN :startDate AND :endDate) " +
+            "OR (:startDate BETWEEN mm.weekStartDate AND mm.weekEndDate))")
+    List<ManMonth> findByEmployeeAndDateRange(
+            @Param("employee") Employee employee,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
+    );
 
-    @Query("SELECT m FROM ManMonth m WHERE m.project.id = :projectId AND m.timeline.id = :timelineId")
-    public List<ManMonth> findManMonthByProjectAndTimeline(Long projectId, Long timelineId);
+    Optional<ManMonth> findByEmployeeAndWeekStartDate(
+            Employee employee,
+            LocalDate weekStartDate
+    );
 
-    @Query("SELECT m FROM ManMonth m WHERE m.project.id = :projectId")
-    public List<ManMonth> findManMonthByProject(Long projectId);
+    List<ManMonth> findByProject(Project project);
 
-    @Transactional
-    @Modifying
-    @Query ("UPDATE ManMonth t SET " +
-            "t.position = :position, " +
-            "t.manMonth = :manMonth WHERE t.id = :id AND t.project.id = :projectId AND t.timeline.id = :timelineId")
-    public void updateManMonthByProjectAndTimeline(Long id, Long projectId, Long timelineId, String position, BigDecimal manMonth);
+    List<ManMonth> findByTimeline(Timeline timeline);
 
+    List<ManMonth> findByEmployeeAndProject(Employee employee, Project project);
 }
