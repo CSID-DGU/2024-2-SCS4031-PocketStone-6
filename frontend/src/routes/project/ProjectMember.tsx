@@ -39,16 +39,24 @@ export default function ProjectMember() {
             </button>
           )}
         </div>
+
         <div className={MS.contentBox}>
+          {/* 현재 인원 */}
           <p className={S.smallTitle}>현재 인원</p>
           <EmployeeContent setCurrentId={setCurrentId} setShowModal={setShowModal} />
           <p className={S.downArrow}>👇</p>
+          {/* 프로젝트 인원 */}
           <p className={S.smallTitle}>프로젝트 인원</p>
           <MemberContent
             memberQuery={memberQuery}
             setCurrentId={setCurrentId}
             setShowModal={setShowModal}
           />
+          {/* 버튼부 */}
+          <div className={`${MS.displayFlex} ${MS.flexRight} ${MS.Mt10}`}>
+            <button className={`${BS.WhiteBtn} ${MS.Mr10}`}>인원 추천</button>
+            <button className={BS.YellowBtn}>수정사항 저장</button>
+          </div>
         </div>
       </div>
     </div>
