@@ -4,10 +4,10 @@ import EmployeeSpecModal from 'components/Modal/EmployeeSpecModal';
 import { useAllEmployeeInfoQuery } from 'hooks/useAllEmployeeInfoQuery';
 import { useMemberList } from 'hooks/useMemberList';
 import { useProjectMemberQuery } from 'hooks/useProjectMemberQuery';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BS, CS, MS } from 'styles';
-import S from './ProjectMember.module.scss'
+import S from './ProjectMember.module.scss';
 import { checkIsNoData } from 'utils/checkIsNoData';
 
 export default function ProjectMember() {
@@ -16,6 +16,12 @@ export default function ProjectMember() {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [currentId, setCurrentId] = useState(1);
+  const { memberInfoList } = useMemberList(Number(id));
+  const [selectedMemberList, setSelectedMemberList] = useState<number[]>([]);
+
+  useEffect(() => {
+    setSelectedMemberList(memberInfoList);
+  }, [memberInfoList]);
 
   return (
     <div className={MS.container}>
