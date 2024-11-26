@@ -101,6 +101,7 @@ public class Employee {
     
     //사원과 회사 관계
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
