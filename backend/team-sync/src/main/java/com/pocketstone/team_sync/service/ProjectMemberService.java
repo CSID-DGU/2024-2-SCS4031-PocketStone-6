@@ -88,14 +88,16 @@ public class ProjectMemberService {
         //회사에 해당 프로젝트 속하는지 확인
         Project project = projectRepository.findByUserAndId(user, request.getProjectId())
                                     .orElseThrow(() -> new RuntimeException("Project not found"));
-        memberRepository.deleteAllByProjectId(request.getProjectId());  
+        
         List<ProjectMember> memberList = new ArrayList<>();
         for (Long employeeId : request.getEmployeeIds()) {
             Employee employee = employeeRepository.findByCompanyAndId(company, employeeId)
                                         .orElseThrow(() -> new RuntimeException("Employee not found")); // 사원 확인
             memberList.add(new ProjectMember(project,employee));
         }
-        //memberRepository.deleteAllByProjectId(request.getProjectId());  
+         // 기존 프로젝트의 모든 팀원 삭제
+        memberRepository.deleteAllByProjectId(request.getProjectId());  
+        memberRepository.flush(); // 데이터베이스와 동기화
         memberRepository.saveAll(memberList);//저장
           
     }
@@ -150,7 +152,7 @@ public class ProjectMemberService {
         List<ProjectMember> memberList = memberRepository.findByProjectId(projectId);
         List<MemberListResponseDto> responseList = new ArrayList<>();
         for (int i=0; i < memberList.size(); i++) {
-            responseList.add(new MemberListResponseDto(memberList.get(i).getEmployee().getId(),memberList.get(i).getEmployee().getPosition()));
+            responseList.add(new MemberListResponseDto(memberList.get(i).getEmployee().getId()));
         }
 
         return responseList;
