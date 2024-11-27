@@ -58,8 +58,8 @@ const ProjectContent = () => {
 const NoProjectData = () => {
   return (
     <div className={S.notice}>
-      <p>사원 정보가 없어요.</p>
-      <p>사원정보 등록을 통해 정보를 등록해보세요!</p>
+      <p>프로젝트가 없어요.</p>
+      <p>"새로운 프로젝트" 버튼을 눌러 새로 등록해주세요!</p>
     </div>
   );
 };
