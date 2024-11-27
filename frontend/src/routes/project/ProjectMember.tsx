@@ -41,7 +41,7 @@ export default function ProjectMember() {
               onClick={() => {
                 deleteAllProjectMembers(Number(id), navigate);
               }}>
-              전체 인원 삭제
+              전체 인원 삭제 및 저장
             </button>
           )}
         </div>

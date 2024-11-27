@@ -4,6 +4,7 @@ import { API_URL } from '../../constants/envText';
 import { headers } from '../../constants/headers';
 import { NavigateFunction } from 'react-router-dom';
 import { completeMessage } from '../../constants/completeMessage';
+import { ERROR_AT_PROJECT_REGISTER } from 'constants/errorMessage';
 
 export const createProject = async (
   projectName: string,
@@ -31,7 +32,7 @@ export const createProject = async (
         navigate('/project');
         return;
     }
-    alert('프로젝트 등록을 하지 못했어요. 관리자에게 문의바랍니다.')
+    alert(ERROR_AT_PROJECT_REGISTER)
   } catch (error) {
     console.error(error);
     if (axios.isAxiosError(error)) {
