@@ -6,6 +6,7 @@ import { getEmployeeBasicInfo } from 'api/employee/getEmployeeBasicInfo';
 export const useMemberInfoByIdList = (list: number[]) => {
   const [memberInfoList, setMemberInfoList] = useState<any[]>([]);
   const [memberSpecList, setMemberSpecList] = useState<any[]>([]);
+  const [memberAllInfoList, setMemberAllInfoList] = useState<any[]>([]);
 
   // 멤버 Spec 리스트 얻기
   useEffect(() => {
@@ -38,5 +39,11 @@ export const useMemberInfoByIdList = (list: number[]) => {
     fetchInfos();
   }, [list]);
 
-  return { memberSpecList, memberInfoList };
+  // 두 배열 합쳐서 제공
+  useEffect(() => {
+    const mergedList = memberInfoList.map((item, index) => ({ ...item, ...memberSpecList[index] }));
+    setMemberAllInfoList(mergedList);
+  }, [memberInfoList, memberSpecList]);
+
+  return { memberSpecList, memberInfoList, memberAllInfoList };
 };

@@ -47,9 +47,10 @@ const EmployeeContent = () => {
       <div className={S.contentTitle}>
         <div style={{ display: 'flex' }}>
           <div className={`${S.category} ${S.flexOne}`}>관리번호</div>
-          <div className={`${S.category} ${S.flexTwo}`}>이름</div>
-          <div className={`${S.category} ${S.flexTwo}`}>부서</div>
+          <div className={`${S.category} ${S.flexOne}`}>이름</div>
+          <div className={`${S.category} ${S.flexOne}`}>부서</div>
           <div className={`${S.category} ${S.flexOne}`}>직책</div>
+          <div className={`${S.category} ${S.flexTwo}`}>역할</div>
           <div className={`${S.category} ${S.flexOne}`}></div>
         </div>
       </div>
@@ -75,7 +76,7 @@ const NoEmployeeData = () => {
 
 const EmployeeData = ({ allEmployInfoQuery }: { allEmployInfoQuery: UseQueryResult<any> }) => {
   return allEmployInfoQuery.data?.map(
-    ({ employeeId, staffId, name, department, position }: employeeInfoType, i: number) => (
+    ({ employeeId, staffId, name, department, position, role }: employeeInfoType, i: number) => (
       <EmployeeBlock
         key={i}
         employeeId={employeeId}
@@ -83,12 +84,20 @@ const EmployeeData = ({ allEmployInfoQuery }: { allEmployInfoQuery: UseQueryResu
         name={name}
         department={department}
         position={position}
+        role={role}
       />
     )
   );
 };
 
-const EmployeeBlock = ({ employeeId, staffId, name, department, position }: employeeInfoType) => {
+const EmployeeBlock = ({
+  employeeId,
+  staffId,
+  name,
+  department,
+  position,
+  role,
+}: employeeInfoType) => {
   const navigate = useNavigate();
 
   return (
@@ -100,9 +109,10 @@ const EmployeeBlock = ({ employeeId, staffId, name, department, position }: empl
             navigate(`/employee/${employeeId}`);
           }}>
           <div className={`${S.category} ${S.flexOne}`}>{staffId}</div>
-          <div className={`${S.category} ${S.flexTwo}`}>{name}</div>
-          <div className={`${S.category} ${S.flexTwo}`}>{department}</div>
+          <div className={`${S.category} ${S.flexOne}`}>{name}</div>
+          <div className={`${S.category} ${S.flexOne}`}>{department}</div>
           <div className={`${S.category} ${S.flexOne}`}>{position}</div>
+          <div className={`${S.category} ${S.flexTwo}`}>{role}</div>
         </div>
         <div className={EmployBlockStyle.noClickPart}>
           <div className={`${S.category} ${S.flexOne}`}>
