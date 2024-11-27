@@ -202,7 +202,8 @@ public class EmployeeService {
                             employee.getStaffId(),
                             employee.getName(),
                             employee.getDepartment(),
-                            employee.getPosition()
+                            employee.getPosition(),
+                            employee.getRole()
            
             );
             employeeList.add(dto);
