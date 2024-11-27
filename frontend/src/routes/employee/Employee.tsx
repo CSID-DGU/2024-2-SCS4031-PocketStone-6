@@ -9,6 +9,8 @@ import EmployBlockStyle from './EmployeeBlock.module.scss';
 import { UseQueryResult } from '@tanstack/react-query';
 import { BS, MS } from 'styles';
 import { checkIsNoData } from 'utils/checkIsNoData';
+import { IoMdDownload } from 'react-icons/io';
+import { getExcelTemplate } from 'api/download/getExcelTemplate';
 
 export default function Employee() {
   const navigate = useNavigate();
@@ -16,18 +18,36 @@ export default function Employee() {
   return (
     <div className={MS.container}>
       <div className={MS.content}>
-        <div className={MS.contentTitle}>
+        <div className={`${MS.contentTitle} ${MS.displayFlex} ${MS.flexSpace}`}>
           <p>사원정보 엑셀 등록/삭제</p>
+          <div className={S.btnsDiv}>
+            <button
+              className={`${BS.WhiteBtn} ${S.iconBtn}`}
+              onClick={() => {
+                getExcelTemplate('employee');
+              }}>
+              <IoMdDownload /> 사원 정보 양식
+            </button>
+            <button
+              className={`${BS.WhiteBtn} ${S.iconBtn}`}
+              onClick={() => {
+                getExcelTemplate('applicant');
+              }}>
+              <IoMdDownload /> 지원자 정보 양식
+            </button>
+          </div>
         </div>
         <div className={MS.contentBox}>
           <ExcelUploader />
-          <button onClick={() => deleteAllEmployInfo(navigate)}>사원정보 삭제</button>
         </div>
       </div>
 
       <div className={MS.content}>
-        <div className={MS.contentTitle}>
+        <div className={`${MS.contentTitle} ${MS.displayFlex} ${MS.flexSpace}`}>
           <p>사원 목록</p>
+          <button className={BS.YellowBtn} onClick={() => deleteAllEmployInfo(navigate)}>
+            사원정보 삭제
+          </button>
         </div>
         <div className={MS.contentBox}>
           <div>
