@@ -4,6 +4,8 @@ import S from './ProjectDetail.module.scss';
 import { useProjectDetailInfoQuery } from 'hooks/useProjectDetailInfoQuery';
 import { useProjectMemberQuery } from 'hooks/useProjectMemberQuery';
 import { createProjectCharter } from 'api/projects/createProjectCharter';
+import { createProjectTimelines } from 'api/projects/createProjectTimelines';
+import { checkIsNoData } from 'utils/checkIsNoData';
 
 export default function ProjectDetail() {
   const { id } = useParams();
@@ -23,18 +25,23 @@ export default function ProjectDetail() {
 
             {/* 차터 관련 정보 */}
             <p>{JSON.stringify(charterQuery.data)}</p>
-            <button
-              className={BS.YellowBtn}
-              onClick={() => {
-                createProjectCharter(Number(id), navigate);
-              }}>
-              프로젝트 차터 생성
-            </button>
-            <button className={BS.WhiteBtn} onClick={() => {
-              navigate(`/project/${id}/charter`)
-            }}>
-              프로젝트 차터 수정
-            </button>
+            {checkIsNoData(charterQuery.data) ? (
+              <button
+                className={BS.YellowBtn}
+                onClick={() => {
+                  createProjectCharter(Number(id), navigate);
+                }}>
+                프로젝트 차터 생성
+              </button>
+            ) : (
+              <button
+                className={BS.WhiteBtn}
+                onClick={() => {
+                  navigate(`/project/${id}/charter`);
+                }}>
+                프로젝트 차터 수정
+              </button>
+            )}
           </div>
         </div>
         <div className={MS.content}>
@@ -42,8 +49,24 @@ export default function ProjectDetail() {
             <p>타임라인</p>
           </div>
           <div className={MS.contentBox}>
-            <p>ID: {id} 타임라인 정보가 들어감</p>
-            {/* <p>{JSON.stringify(timelinesQuery.data)}</p> */}
+            <p>{JSON.stringify(timelinesQuery.data)}</p>
+            {checkIsNoData(timelinesQuery.data) ? (
+              <button
+                className={BS.YellowBtn}
+                onClick={() => {
+                  createProjectTimelines(Number(id), navigate);
+                }}>
+                타임라인 생성
+              </button>
+            ) : (
+              <button
+                className={BS.WhiteBtn}
+                onClick={() => {
+                  navigate(`/project/${id}/timelines`);
+                }}>
+                타임라인 수정
+              </button>
+            )}
           </div>
         </div>
       </div>
