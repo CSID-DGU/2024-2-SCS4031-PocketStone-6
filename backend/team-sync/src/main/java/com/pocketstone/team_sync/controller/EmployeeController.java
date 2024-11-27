@@ -2,9 +2,6 @@ package com.pocketstone.team_sync.controller;
 
 import java.util.List;
 
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -88,24 +85,5 @@ public class EmployeeController {
         return ResponseEntity.ok(response);
     }
 
-    //엑셀 양식 다운로드
-    @GetMapping("/download-template")
-    public ResponseEntity<Resource> downloadTemplate() {
-        // ClassPath에서 엑셀 파일 로드
-        Resource resource = employeeService.getTemplate();
-
-        // 파일 이름 설정
-        String filename = "employee_template.xlsx";
-
-        // 응답 헤더 설정
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
-        headers.add(HttpHeaders.CONTENT_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-
-        // 파일 리소스를 ResponseEntity로 반환
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .headers(headers)
-                .body(resource);
-    }
+    
 }
