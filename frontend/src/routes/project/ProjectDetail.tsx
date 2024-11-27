@@ -30,7 +30,9 @@ export default function ProjectDetail() {
               }}>
               프로젝트 차터 생성
             </button>
-            <button className={BS.WhiteBtn} onClick={() => {}}>
+            <button className={BS.WhiteBtn} onClick={() => {
+              navigate(`/project/${id}/charter`)
+            }}>
               프로젝트 차터 수정
             </button>
           </div>
