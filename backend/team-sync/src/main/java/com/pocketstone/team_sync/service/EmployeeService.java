@@ -12,6 +12,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -200,7 +202,8 @@ public class EmployeeService {
                             employee.getStaffId(),
                             employee.getName(),
                             employee.getDepartment(),
-                            employee.getPosition()
+                            employee.getPosition(),
+                            employee.getRole()
            
             );
             employeeList.add(dto);
@@ -270,5 +273,19 @@ public class EmployeeService {
     public void deleteAllEmployee(User user) {
         Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
         employeeRepository.deleteByCompany(company);//계정삭제
+    }
+
+    //템플릿 다운로드
+    public Resource getTemplate(){
+
+        try {
+             // ClassPath에서 엑셀 파일 로드
+            return new ClassPathResource("excel/사원정보예시.xlsx");
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to load Excel template: " +  e);
+        }
+        
+                                            
+       
     }
 }
