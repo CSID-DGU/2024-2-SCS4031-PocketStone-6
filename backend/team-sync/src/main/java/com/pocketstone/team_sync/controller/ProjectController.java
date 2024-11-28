@@ -48,7 +48,7 @@ public class ProjectController {
         return new ResponseEntity<>(projectService.findByProjectName(user, projectName), HttpStatus.OK);
     }
 
-    @GetMapping("/id/{projectId}")
+    @GetMapping("/{projectId}")
     public ResponseEntity<ProjectDto> getProjectById(@AuthenticationPrincipal User user, @PathVariable Long projectId) {
         return new ResponseEntity<>(projectService.findByProjectId(user, projectId), HttpStatus.OK);
     }
