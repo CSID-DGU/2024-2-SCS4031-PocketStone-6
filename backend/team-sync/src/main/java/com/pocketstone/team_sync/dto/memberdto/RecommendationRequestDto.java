@@ -1,9 +1,6 @@
 package com.pocketstone.team_sync.dto.memberdto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,9 +8,12 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class RecommendationRequestDto {
 
     private Long projectId;
     private List<Long> memberIds;
-    private int member;
+    public void setAvailableEmployeeIds(List<Long> ids) {
+        this.memberIds = ids;
+    }
 }

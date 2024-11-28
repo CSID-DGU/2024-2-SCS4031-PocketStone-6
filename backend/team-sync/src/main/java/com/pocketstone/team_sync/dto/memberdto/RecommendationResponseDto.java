@@ -13,6 +13,13 @@ import java.util.List;
 @NoArgsConstructor
 public class RecommendationResponseDto {
 
-    private List<Long> memberIds;
-    private List<Long> employeeIds;
+    private List<Member> memberList;
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Member {
+        private Long employeeId;
+    }
 }

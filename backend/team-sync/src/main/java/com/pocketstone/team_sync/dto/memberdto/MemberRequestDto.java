@@ -15,7 +15,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberRequestDto {
-    private Long projectId;
     private List<Member> memberList;
 
     @Getter
