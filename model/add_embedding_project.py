@@ -43,4 +43,7 @@ project_reduced_embeddings_list = project_reduced_embeddings.tolist()
 
 project_reduced_embeddings_list_str = [str(inner_list) for inner_list in project_reduced_embeddings_list]
 
-print(project_reduced_embeddings_list_str)
+print(project_reduced_embeddings_list_str[0:len(project_reduced_embeddings_list_str)-1])
+
+reference_reduced_embedding_vector=project_reduced_embeddings_list_str[-1]
+print(reference_reduced_embedding_vector)
