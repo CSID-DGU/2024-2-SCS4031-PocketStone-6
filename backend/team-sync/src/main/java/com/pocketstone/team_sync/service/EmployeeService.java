@@ -245,11 +245,14 @@ public class EmployeeService {
         if(employee == null){
             return null;
         }
-
+        List<String> skillSet = new ArrayList<>();
+        for(Skill skill : employee.getSkillSet()){
+                skillSet.add(skill.getLabel());
+        }
         EmployeeSpecificationResponseDto dto = new EmployeeSpecificationResponseDto(
                                                 employee.getId(),
                                                 employee.getSkillScore(),
-                                                employee.getSkillSet(),
+                                                skillSet,
                                                 employee.getKpiScore(),
                                                 employee.getPeerEvaluationScore(),
                                                 employee.getPersonalType(),
