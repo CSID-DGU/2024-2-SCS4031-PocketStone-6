@@ -37,4 +37,8 @@ public interface ManMonthRepository extends JpaRepository<ManMonth, Long> {
     List<ManMonth> findByTimeline(Timeline timeline);
 
     List<ManMonth> findByEmployeeAndProject(Employee employee, Project project);
+
+    void deleteAllByEmployeeIdAndProjectId(Long employeeId, Long projectId);
+
+    void deleteAllByProjectId(Long projectId);
 }
