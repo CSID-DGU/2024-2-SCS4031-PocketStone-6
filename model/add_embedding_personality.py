@@ -27,7 +27,7 @@ for i in range(len(data_personality)):
 
     personality_embeddings.append(upstage_embedding_vector.data[0].embedding)
 
-pca = PCA(n_components=150)
+pca = PCA(n_components=100)
 
 personality_reduced_embeddings = pca.fit_transform(personality_embeddings)
 personality_reduced_embeddings_list = personality_reduced_embeddings.tolist()
