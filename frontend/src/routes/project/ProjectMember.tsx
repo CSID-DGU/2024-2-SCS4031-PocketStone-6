@@ -10,6 +10,9 @@ import { BS, CS, MS } from 'styles';
 import S from './ProjectMember.module.scss';
 import { checkIsNoData } from 'utils/checkIsNoData';
 import { useScrollBlock } from 'hooks/useScrollBlock';
+import { useMemberInfoByIdList } from 'hooks/useMemberInfoByIdList';
+import { addElementAtList, deleteElementAtList } from 'utils/parseList';
+import { addProjectMembers } from 'api/member/addProjectMembers';
 
 export default function ProjectMember() {
   const { id } = useParams();
@@ -17,14 +20,14 @@ export default function ProjectMember() {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [currentId, setCurrentId] = useState(1);
-  const { memberInfoList } = useMemberList(Number(id));
+  const { memberIdList } = useMemberList(Number(id));
   const [selectedMemberList, setSelectedMemberList] = useState<number[]>([]);
 
   useScrollBlock(showModal);
 
   useEffect(() => {
-    setSelectedMemberList(memberInfoList);
-  }, [memberInfoList]);
+    setSelectedMemberList(memberIdList);
+  }, [memberIdList]);
 
   return (
     <div className={MS.container}>
@@ -38,7 +41,7 @@ export default function ProjectMember() {
               onClick={() => {
                 deleteAllProjectMembers(Number(id), navigate);
               }}>
-              전체 인원 삭제
+              전체 인원 삭제 및 저장
             </button>
           )}
         </div>
@@ -46,19 +49,31 @@ export default function ProjectMember() {
         <div className={MS.contentBox}>
           {/* 현재 인원 */}
           <p className={S.smallTitle}>현재 인원</p>
-          <EmployeeContent setCurrentId={setCurrentId} setShowModal={setShowModal} />
+          <EmployeeContent
+            list={selectedMemberList}
+            setList={setSelectedMemberList}
+            setCurrentId={setCurrentId}
+            setShowModal={setShowModal}
+          />
           <p className={S.downArrow}>👇</p>
           {/* 프로젝트 인원 */}
           <p className={S.smallTitle}>프로젝트 인원</p>
           <MemberContent
-            memberQuery={memberQuery}
+            list={selectedMemberList}
+            setList={setSelectedMemberList}
             setCurrentId={setCurrentId}
             setShowModal={setShowModal}
           />
           {/* 버튼부 */}
           <div className={`${MS.displayFlex} ${MS.flexRight} ${MS.Mt10}`}>
             <button className={`${BS.WhiteBtn} ${MS.Mr10}`}>인원 추천</button>
-            <button className={BS.YellowBtn}>수정사항 저장</button>
+            <button
+              className={BS.YellowBtn}
+              onClick={() => {
+                addProjectMembers(Number(id), selectedMemberList, navigate);
+              }}>
+              수정사항 저장
+            </button>
           </div>
         </div>
       </div>
@@ -67,9 +82,13 @@ export default function ProjectMember() {
 }
 
 const EmployeeContent = ({
+  list,
+  setList,
   setCurrentId,
   setShowModal,
 }: {
+  list: number[];
+  setList: React.Dispatch<React.SetStateAction<number[]>>;
   setCurrentId: React.Dispatch<React.SetStateAction<number>>;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
@@ -90,6 +109,8 @@ const EmployeeContent = ({
           <NoEmployeeList />
         ) : (
           <EmployeeList
+            list={list}
+            setList={setList}
             allEmployInfoQuery={allEmployInfoQuery}
             setCurrentId={setCurrentId}
             setShowModal={setShowModal}
@@ -110,10 +131,14 @@ const NoEmployeeList = () => {
 };
 
 const EmployeeList = ({
+  list,
+  setList,
   allEmployInfoQuery,
   setCurrentId,
   setShowModal,
 }: {
+  list: number[];
+  setList: React.Dispatch<React.SetStateAction<number[]>>;
   allEmployInfoQuery: UseQueryResult<any>;
   setCurrentId: React.Dispatch<React.SetStateAction<number>>;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -121,13 +146,15 @@ const EmployeeList = ({
   return (
     <>
       {allEmployInfoQuery.data?.map(
-        ({ employeeId, staffId, name, departmeent, position }: departmeentInfoType, i: number) => (
+        ({ employeeId, staffId, name, department, position }: employeeInfoType, i: number) => (
           <EmployeeBlock
             key={i}
+            list={list}
+            setList={setList}
             employeeId={employeeId}
             staffId={staffId}
             name={name}
-            department={departmeent}
+            department={department}
             position={position}
             setCurrentId={setCurrentId}
             setShowModal={setShowModal}
@@ -138,7 +165,9 @@ const EmployeeList = ({
   );
 };
 
-interface MemberBlockProps {
+interface EmployeeBlockProps {
+  list: number[];
+  setList: React.Dispatch<React.SetStateAction<number[]>>;
   employeeId: number;
   staffId: string;
   name: string;
@@ -149,6 +178,8 @@ interface MemberBlockProps {
 }
 
 const EmployeeBlock = ({
+  list,
+  setList,
   employeeId,
   staffId,
   name,
@@ -156,14 +187,12 @@ const EmployeeBlock = ({
   position,
   setCurrentId,
   setShowModal,
-}: MemberBlockProps) => {
-  const navigate = useNavigate();
-
+}: EmployeeBlockProps) => {
   return (
-    <div className={CS.container}>
+    <div className={list.includes(employeeId) ? CS.containerSelected : CS.container}>
       <div className={CS.card}>
         <div
-          className={CS.canClickPart}
+          className={list.includes(employeeId) ? CS.canClickPartSelected : CS.canClickPart}
           onClick={() => {
             setCurrentId(employeeId);
             setShowModal(true);
@@ -175,9 +204,23 @@ const EmployeeBlock = ({
         </div>
         <div className={CS.noClickPart}>
           <div className={`${CS.category} ${MS.flexOne}`}>
-            <button className={BS.YellowBtn} onClick={() => {}}>
-              추가
-            </button>
+            {list.includes(employeeId) ? (
+              <button
+                className={BS.YellowBtn}
+                onClick={() => {
+                  setList(deleteElementAtList(employeeId, list));
+                }}>
+                삭제
+              </button>
+            ) : (
+              <button
+                className={BS.YellowBtn}
+                onClick={() => {
+                  setList(addElementAtList(employeeId, list));
+                }}>
+                추가
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -186,11 +229,13 @@ const EmployeeBlock = ({
 };
 
 const MemberContent = ({
-  memberQuery,
+  list,
+  setList,
   setCurrentId,
   setShowModal,
 }: {
-  memberQuery: UseQueryResult;
+  list: number[];
+  setList: React.Dispatch<React.SetStateAction<number[]>>;
   setCurrentId: React.Dispatch<React.SetStateAction<number>>;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
@@ -206,10 +251,15 @@ const MemberContent = ({
         </div>
       </div>
       <div className={CS.contentBox}>
-        {checkIsNoData(memberQuery.data) ? (
+        {checkIsNoData(list) ? (
           <NoMemberList />
         ) : (
-          <MemberList setCurrentId={setCurrentId} setShowModal={setShowModal} />
+          <MemberList
+            list={list}
+            setList={setList}
+            setCurrentId={setCurrentId}
+            setShowModal={setShowModal}
+          />
         )}
       </div>
     </>
@@ -220,20 +270,23 @@ const NoMemberList = () => {
   return (
     <div className={CS.notice}>
       <p>멤버 정보가 없어요.</p>
-      <p>사원정보에서 멤버를 새로 등록해보세요!</p>
+      <p>현재 인원에서 멤버를 추가해보세요!</p>
     </div>
   );
 };
 
 const MemberList = ({
+  list,
+  setList,
   setCurrentId,
   setShowModal,
 }: {
+  list: number[];
+  setList: React.Dispatch<React.SetStateAction<number[]>>;
   setCurrentId: React.Dispatch<React.SetStateAction<number>>;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { id } = useParams();
-  const { memberInfoList } = useMemberList(Number(id));
+  const { memberInfoList } = useMemberInfoByIdList(list);
 
   return (
     <>
@@ -242,6 +295,8 @@ const MemberList = ({
           return (
             <MemberBlock
               key={i}
+              list={list}
+              setList={setList}
               employeeId={employeeId}
               staffId={staffId}
               name={name}
@@ -258,6 +313,8 @@ const MemberList = ({
 };
 
 interface MemberBlockProps {
+  list: number[];
+  setList: React.Dispatch<React.SetStateAction<number[]>>;
   employeeId: number;
   staffId: string;
   name: string;
@@ -268,6 +325,8 @@ interface MemberBlockProps {
 }
 
 const MemberBlock = ({
+  list,
+  setList,
   employeeId,
   staffId,
   name,
@@ -292,7 +351,11 @@ const MemberBlock = ({
         </div>
         <div className={CS.noClickPart}>
           <div className={`${CS.category} ${MS.flexOne}`}>
-            <button className={BS.YellowBtn} onClick={() => {}}>
+            <button
+              className={BS.YellowBtn}
+              onClick={() => {
+                setList(deleteElementAtList(employeeId, list));
+              }}>
               삭제
             </button>
           </div>

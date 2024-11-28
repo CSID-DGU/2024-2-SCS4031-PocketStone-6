@@ -31,14 +31,6 @@ interface employeeInfoType {
   department: string;
   position: string;
 }
-interface departmeentInfoType {
-  employeeId: number;
-  staffId: string;
-  name: string;
-  departmeent: string;
-  position: string;
-}
-
 interface employeeIdObject {
   employeeId: number;
 }

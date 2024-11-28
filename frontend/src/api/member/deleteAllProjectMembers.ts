@@ -11,7 +11,7 @@ export const deleteAllProjectMembers = async (projectId: number, navigate: Navig
       headers: headers,
     });
     alert(response.data.message);
-    refreshPage(navigate);
+    navigate(`/project/${projectId}`);
   } catch (error) {
     console.error(error);
     if (axios.isAxiosError(error)) {
