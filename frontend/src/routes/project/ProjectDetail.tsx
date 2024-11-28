@@ -3,6 +3,7 @@ import { BS, MS } from 'styles';
 import S from './ProjectDetail.module.scss';
 import { useProjectDetailInfoQuery } from 'hooks/useProjectDetailInfoQuery';
 import { useProjectMemberQuery } from 'hooks/useProjectMemberQuery';
+import { createProjectCharter } from 'api/projects/createProjectCharter';
 
 export default function ProjectDetail() {
   const { id } = useParams();
@@ -19,7 +20,21 @@ export default function ProjectDetail() {
           </div>
           <div className={MS.contentBox}>
             <p>{JSON.stringify(basicInfoQuery.data)}</p>
+
+            {/* 차터 관련 정보 */}
             <p>{JSON.stringify(charterQuery.data)}</p>
+            <button
+              className={BS.YellowBtn}
+              onClick={() => {
+                createProjectCharter(Number(id), navigate);
+              }}>
+              프로젝트 차터 생성
+            </button>
+            <button className={BS.WhiteBtn} onClick={() => {
+              navigate(`/project/${id}/charter`)
+            }}>
+              프로젝트 차터 수정
+            </button>
           </div>
         </div>
         <div className={MS.content}>

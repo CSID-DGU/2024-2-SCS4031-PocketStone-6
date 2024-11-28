@@ -1,29 +1,33 @@
-import { useParams } from 'react-router-dom';
-import { useOneEmployeeInfoQuery } from '../../hooks/useOneEmployeeInfoQuery';
-import { useOneEmployeeSpecQuery } from '../../hooks/useOneEmployeeSpecQuery';
-import { MS } from 'styles';
-import S from 'styles/EmployDetail.module.scss';
-import { parsePhoneNumber } from 'utils/parsePhoneNumber';
-import { FaPhoneAlt, FaSearch, FaQuestionCircle, FaDotCircle } from 'react-icons/fa';
-import { IoIosMail } from 'react-icons/io';
+import { useOneEmployeeInfoQuery } from 'hooks/useOneEmployeeInfoQuery';
+import { useOneEmployeeSpecQuery } from 'hooks/useOneEmployeeSpecQuery';
 import { BiSolidPencil, BiSolidReport } from 'react-icons/bi';
+import { FaDotCircle, FaPhoneAlt, FaQuestionCircle, FaSearch } from 'react-icons/fa';
+import { IoIosMail } from 'react-icons/io';
 import { MdLocalLibrary, MdOutlineDateRange } from 'react-icons/md';
+import { FaXmark } from 'react-icons/fa6';
+import { BS, MS } from 'styles';
+import S from 'styles/EmployDetail.module.scss';
 import { checkIsNoData } from 'utils/checkIsNoData';
+import { parsePhoneNumber } from 'utils/parsePhoneNumber';
 
-export default function EmployeeDetail() {
-  const { id } = useParams();
+interface ModalProps {
+  id: number;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
+export default function EmployeeSpecModal({ id, setShowModal }: ModalProps) {
   return (
-    <div className={MS.container}>
-      {/* <p>ID: {id} 사원 디테일 정보임</p> */}
-      <div className={MS.content}>
-        <div className={MS.contentTitle}>
-          <p>사원 상세 정보</p>
-        </div>
-        <div className={MS.contentBox}>
-          <BasicInfo id={Number(id)} />
-          <SpecInfo id={Number(id)} />
-        </div>
+    <div className={MS.modalBackground}>
+      <div className={MS.modalBox}>
+        <button
+          className={BS.ModalBtn}
+          onClick={() => {
+            setShowModal(false);
+          }}>
+          <FaXmark />
+        </button>
+        <BasicInfo id={Number(id)} />
+        <SpecInfo id={Number(id)} />
       </div>
     </div>
   );

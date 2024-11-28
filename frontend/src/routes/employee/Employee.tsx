@@ -46,7 +46,6 @@ const EmployeeContent = () => {
     <>
       <div className={S.contentTitle}>
         <div style={{ display: 'flex' }}>
-          <div className={`${S.category} ${S.flexOne}`}>사원번호</div>
           <div className={`${S.category} ${S.flexOne}`}>관리번호</div>
           <div className={`${S.category} ${S.flexTwo}`}>이름</div>
           <div className={`${S.category} ${S.flexTwo}`}>부서</div>
@@ -76,20 +75,20 @@ const NoEmployeeData = () => {
 
 const EmployeeData = ({ allEmployInfoQuery }: { allEmployInfoQuery: UseQueryResult<any> }) => {
   return allEmployInfoQuery.data?.map(
-    ({ employeeId, staffId, name, departmeent, position }: employeeInfoType, i: number) => (
+    ({ employeeId, staffId, name, department, position }: employeeInfoType, i: number) => (
       <EmployeeBlock
         key={i}
         employeeId={employeeId}
         staffId={staffId}
         name={name}
-        departmeent={departmeent}
+        department={department}
         position={position}
       />
     )
   );
 };
 
-const EmployeeBlock = ({ employeeId, staffId, name, departmeent, position }: employeeInfoType) => {
+const EmployeeBlock = ({ employeeId, staffId, name, department, position }: employeeInfoType) => {
   const navigate = useNavigate();
 
   return (
@@ -100,10 +99,9 @@ const EmployeeBlock = ({ employeeId, staffId, name, departmeent, position }: emp
           onClick={() => {
             navigate(`/employee/${employeeId}`);
           }}>
-          <div className={`${S.category} ${S.flexOne}`}>{employeeId}</div>
           <div className={`${S.category} ${S.flexOne}`}>{staffId}</div>
           <div className={`${S.category} ${S.flexTwo}`}>{name}</div>
-          <div className={`${S.category} ${S.flexTwo}`}>{departmeent}</div>
+          <div className={`${S.category} ${S.flexTwo}`}>{department}</div>
           <div className={`${S.category} ${S.flexOne}`}>{position}</div>
         </div>
         <div className={EmployBlockStyle.noClickPart}>

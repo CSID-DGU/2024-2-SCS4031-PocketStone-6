@@ -2,6 +2,7 @@ import axios from 'axios';
 import { tokenAxios } from '../tokenAPI';
 import { API_URL } from '../../constants/envText';
 import { headers } from '../../constants/headers';
+import { ERROR_AT_DELETE_EMPLOYEE } from 'constants/errorMessage';
 
 export const deleteOneEmployee = async (employeeId: number) => {
   try {
@@ -15,7 +16,7 @@ export const deleteOneEmployee = async (employeeId: number) => {
   } catch (error) {
     console.error(error);
     if (axios.isAxiosError(error)) {
-      alert(error.response?.data);
+      alert(ERROR_AT_DELETE_EMPLOYEE);
     }
   }
 };

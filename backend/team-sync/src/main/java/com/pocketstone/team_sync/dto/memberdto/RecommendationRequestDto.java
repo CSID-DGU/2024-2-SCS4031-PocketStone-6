@@ -1,5 +1,7 @@
 package com.pocketstone.team_sync.dto.memberdto;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +13,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class RecommendationRequestDto {
 
-    private int projectId;
-    private int member;
+    private Long projectId;
+    private List<Long> memberIds;
 }

@@ -164,4 +164,17 @@ public class ApplicantService {
         return portfolio;
     }
 
+    //사원 삭제
+    //계정삭제
+    @Transactional
+    public void deleteApplicant(User user, Long employeeId) {
+        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
+        applicantRepository.deleteByCompanyAndId(company, employeeId);//계정삭제
+    }
+    @Transactional
+    public void deleteAllApplicant(User user) {
+        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
+        applicantRepository.deleteByCompany(company);//계정삭제
+    }
+
 }

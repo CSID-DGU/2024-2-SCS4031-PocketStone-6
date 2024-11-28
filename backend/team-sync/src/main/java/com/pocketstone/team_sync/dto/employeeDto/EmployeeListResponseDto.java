@@ -1,5 +1,7 @@
 package com.pocketstone.team_sync.dto.employeeDto;
 
+import com.pocketstone.team_sync.entity.enums.Role;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,6 +11,7 @@ public class EmployeeListResponseDto {
     private Long employeeId;
     private String staffId;
     private String name;
-    private String departmeent;
+    private String department;
     private String position;
+    private Role role;
 }

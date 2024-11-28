@@ -7,5 +7,4 @@ import lombok.Getter;
 @AllArgsConstructor
 public class MemberListResponseDto {
     private Long employeeId;
-    private String position;
 }

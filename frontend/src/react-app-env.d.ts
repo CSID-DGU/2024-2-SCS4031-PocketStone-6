@@ -23,10 +23,18 @@ interface projectInfoType {
   startDate: string;
   mvpDate: string;
 }
+
 interface employeeInfoType {
   employeeId: number;
   staffId: string;
   name: string;
-  departmeent: string;
+  department: string;
   position: string;
+}
+interface employeeIdObject {
+  employeeId: number;
+}
+interface RegisterContent {
+  projectId: number;
+  memberList: employeeIdObject[];
 }

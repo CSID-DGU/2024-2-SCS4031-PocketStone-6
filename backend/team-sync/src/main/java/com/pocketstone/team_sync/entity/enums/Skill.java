@@ -8,33 +8,40 @@ import java.util.Map;
 public enum Skill {
 
     // 백엔드 기술
-    SPRING_BOOT("Spring Boot", Role.BACKEND_DEVELOPER),
+    SPRING_BOOT("SpringBoot", Role.BACKEND_DEVELOPER),
     SPRING_FRAMEWORK("Spring Framework", Role.BACKEND_DEVELOPER),
-    JPA("Java Persistence API (JPA)", Role.BACKEND_DEVELOPER),
-    REST_API("RESTful API", Role.BACKEND_DEVELOPER),
-    SPRING_SECURITY("Spring Security", Role.BACKEND_DEVELOPER),
-    HIBERNATE("Hibernate", Role.BACKEND_DEVELOPER),
-    MYSQL("MySQL", Role.BACKEND_DEVELOPER),
-    POSTGRESQL("PostgreSQL", Role.BACKEND_DEVELOPER),
-    DOCKER("Docker", Role.BACKEND_DEVELOPER),
-    KUBERNETES("Kubernetes", Role.BACKEND_DEVELOPER),
-    AWS("Amazon Web Services", Role.BACKEND_DEVELOPER),
-    DEVOPS("DevOps", Role.BACKEND_DEVELOPER),
+    //JPA("Java Persistence API (JPA)", Role.BACKEND_DEVELOPER),
+    //REST_API("RESTful API", Role.BACKEND_DEVELOPER),
+    //SPRING_SECURITY("Spring Security", Role.BACKEND_DEVELOPER),
+    //HIBERNATE("Hibernate", Role.BACKEND_DEVELOPER),
+    //MYSQL("MySQL", Role.BACKEND_DEVELOPER),
+    //POSTGRESQL("PostgreSQL", Role.BACKEND_DEVELOPER),
+    //DOCKER("Docker", Role.BACKEND_DEVELOPER),
+    //KUBERNETES("Kubernetes", Role.BACKEND_DEVELOPER),
+    //AWS("Amazon Web Services", Role.BACKEND_DEVELOPER),
+    //DEVOPS("DevOps", Role.BACKEND_DEVELOPER),
+    RUBY("Ruby", Role.BACKEND_DEVELOPER),
+    NODE_JS("Node.js", Role.BACKEND_DEVELOPER),
+    DJANGO("Django",Role.BACKEND_DEVELOPER),
+    FAST_API("Fast API",Role.BACKEND_DEVELOPER),
+    FLASK("Flask",Role.BACKEND_DEVELOPER),
 
 
     // 프론트엔드 기술
     REACT("React", Role.FRONTEND_DEVELOPER),
     ANGULAR("Angular", Role.FRONTEND_DEVELOPER),
-    VUE("Vue.js", Role.FRONTEND_DEVELOPER),
+    VUE("Vue", Role.FRONTEND_DEVELOPER),
     JAVASCRIPT("JavaScript", Role.FRONTEND_DEVELOPER),
     HTML_CSS("HTML/CSS", Role.FRONTEND_DEVELOPER),
     TYPESCRIPT("TypeScript", Role.FRONTEND_DEVELOPER),
     SASS("Sass", Role.FRONTEND_DEVELOPER),
     GRAPHQL("GraphQL", Role.FRONTEND_DEVELOPER),
+    J_QUERY("jQuery", Role.FRONTEND_DEVELOPER),
 
     // 데이터 분석 기술
-    PYTHON("Python", Role.DATA_ANALYST),
-    R("R Programming", Role.DATA_ANALYST),
+    PYTHON("python", Role.DATA_ANALYST),
+    R("R", Role.DATA_ANALYST),
+    SAS("SAS", Role.DATA_ANALYST),
 
     // 제품 관리 기술
     AGILE("Agile Methodology", Role.PRODUCT_MANAGER),
@@ -46,13 +53,14 @@ public enum Skill {
     SWOT_ANALYSIS("SWOT Analysis", Role.PRODUCT_MANAGER),
 
     // UI/UX 디자인 기술
-    WIREFRAMING("Wireframing", Role.UI_UX_DESIGNER),
-    PROTOTYPING("Prototyping", Role.UI_UX_DESIGNER),
+    //WIREFRAMING("Wireframing", Role.UI_UX_DESIGNER),
+    //PROTOTYPING("Prototyping", Role.UI_UX_DESIGNER),
     ADOBE_XD("Adobe XD", Role.UI_UX_DESIGNER),
     FIGMA("Figma", Role.UI_UX_DESIGNER),
-    USER_RESEARCH("User Research", Role.UI_UX_DESIGNER),
-    A_B_TESTING("A/B Testing", Role.UI_UX_DESIGNER),
-    UX_WRITING("UX Writing", Role.UI_UX_DESIGNER),
+    //USER_RESEARCH("User Research", Role.UI_UX_DESIGNER),
+    //A_B_TESTING("A/B Testing", Role.UI_UX_DESIGNER),
+    //UX_WRITING("UX Writing", Role.UI_UX_DESIGNER),
+    IN_VISION("InVision", Role.UI_UX_DESIGNER),
     SKETCH("Sketch", Role.UI_UX_DESIGNER);
 
 
