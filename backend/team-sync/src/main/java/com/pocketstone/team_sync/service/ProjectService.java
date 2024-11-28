@@ -5,11 +5,9 @@ import com.pocketstone.team_sync.entity.Project;
 import com.pocketstone.team_sync.entity.User;
 import com.pocketstone.team_sync.entity.enums.ProjectStatus;
 import com.pocketstone.team_sync.exception.ProjectNotFoundException;
-import com.pocketstone.team_sync.exception.UnauthorizedAccessException;
 import com.pocketstone.team_sync.repository.ProjectRepository;
 import com.pocketstone.team_sync.utility.ProjectValidationUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +30,6 @@ public class ProjectService {
         statusToFunctionMap.put(ProjectStatus.ONGOING, this::findOngoingProjects);
         statusToFunctionMap.put(ProjectStatus.COMPLETED, this::findCompletedProjects);
         statusToFunctionMap.put(ProjectStatus.ALL, this::findAllProjects);}
-
 
 
     public ProjectDto save(User user, ProjectDto dto){
@@ -124,5 +121,12 @@ public class ProjectService {
                         project.getMvpDate()
                 ))
                 .collect(Collectors.toList()); // 모든 결과값들 dto리스트로 콜렉트
+    }
+
+    public void deleteProject(User user, Long projectId) {
+        Optional<Project> project = projectRepository.findById(projectId);
+        if(project.isEmpty()) throw new ProjectNotFoundException("");
+        ProjectValidationUtils.validateProjectOwner(user, project.get());
+        projectRepository.delete(project.get());
     }
 }
