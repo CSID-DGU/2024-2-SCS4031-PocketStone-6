@@ -129,6 +129,13 @@ public class ProjectCharterService {
     }
 
 
+    public void deleteProjectCharter(User user, Long projectId) {
+        ProjectCharter projectCharter = projectCharterRepository.findByProjectId(projectId)
+                .orElseThrow(CharterNotFoundException::new);
+        ProjectValidationUtils.validateCharterOwner(user, projectCharter);
+
+        projectCharterRepository.delete(projectCharter);
+    }
 }
 
 
