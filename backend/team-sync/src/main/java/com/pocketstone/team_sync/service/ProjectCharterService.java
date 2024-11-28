@@ -94,7 +94,7 @@ public class ProjectCharterService {
 
     private void updatePositions(Long projectId, ProjectCharter projectCharter) {
         for (Position position : projectCharter.getPositions()) {
-            positionRepository.updatePositionByProjectId(projectId, position.getId(), position.getPositionName(), position.getPositionContent());
+                positionRepository.updatePositionByProjectId(projectId, position.getId(), position.getPositionName(), position.getPositionContent(), position.getPositionCount());
         }
     }
 
