@@ -31,27 +31,27 @@ public class ProjectMemberController {
     private final ProjectMemberService projectMemberService;
 
     //팀 추천요청
-    @PostMapping("/recommendation")
-    public ResponseEntity<RecommendationResponseDto> recommendMember(@AuthenticationPrincipal User user, @RequestBody RecommendationRequestDto request) {
-        return ResponseEntity.ok(projectMemberService.recommendMember(user, request));
+    @GetMapping("/{projectId}/recommendation")
+    public ResponseEntity<RecommendationResponseDto> recommendMember(@AuthenticationPrincipal User user, @PathVariable("projectId") Long projectId) {
+        return ResponseEntity.ok(projectMemberService.recommendMember(user, projectId));
     }
     
     //팀원 저장
-    @PostMapping("/register")
-    public ResponseEntity<MessageResponseDto> registerMember(@AuthenticationPrincipal User user, @RequestBody MemberRequestDto request) {
-        projectMemberService.registerMember(user, request);
+    @PostMapping("/{projectId}/register")
+    public ResponseEntity<MessageResponseDto> registerMember(@AuthenticationPrincipal User user, @RequestBody MemberRequestDto request, @PathVariable("projectId") Long projectId) {
+        projectMemberService.registerMember(user, request, projectId);
         return ResponseEntity.ok(new MessageResponseDto("팀원저장 완료"));
     }
 
     // 팀원 삭제(여러명 가능)
-    @PostMapping("/delete")
-    public ResponseEntity<MessageResponseDto> deleteMember(@AuthenticationPrincipal User user, @RequestBody MemberRequestDto request){
-        projectMemberService.deleteMember(user, request);
+    @DeleteMapping("/{projectId}")
+    public ResponseEntity<MessageResponseDto> deleteMember(@AuthenticationPrincipal User user, @RequestBody MemberRequestDto request, @PathVariable("projectId") Long projectId) {
+        projectMemberService.deleteMember(user, request, projectId);
         return ResponseEntity.ok(new MessageResponseDto("팀원삭제 완료"));
     }
 
     // 팀원 전체 삭제
-    @DeleteMapping("/{projectId}")
+    @DeleteMapping("/{projectId}/all")
     public ResponseEntity<MessageResponseDto> deleteAllMembers(@AuthenticationPrincipal User user, @PathVariable("projectId") Long projectId){
         projectMemberService.deleteAllMembers(user, projectId);
         return ResponseEntity.ok(new MessageResponseDto("팀원 전체 삭제 완료"));

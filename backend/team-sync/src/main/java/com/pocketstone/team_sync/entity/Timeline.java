@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Table
 @NoArgsConstructor //(access = AccessLevel.PROTECTED)
 @Getter
@@ -27,15 +29,24 @@ public class Timeline {
     @Column (name = "sprint_content", nullable = false)
     private String sprintContent;
 
-    @Column (name = "sprint_duration_week", nullable = false)
-    private Integer sprintDurationWeek;
+    @Column (name = "sprint_startdate", nullable = false)
+    private LocalDate sprintStartDate;
+
+    @Column (name = "sprint_enddate", nullable = false)
+    private LocalDate sprintEndDate;
+
+
+    @Column (name = "requiredManmonth", scale = 2, nullable = false)
+    private Double requiredManmonth;
 
 
     @Builder
-    public Timeline(Project project, Integer sprintOrder, String sprintContent, Integer sprintDurationWeek) {
+    public Timeline(Project project, Integer sprintOrder, String sprintContent, LocalDate sprintStartDate, LocalDate sprintEndDate, Double requiredManmonth) {
         this.project = project;
         this.sprintOrder = sprintOrder;
         this.sprintContent = sprintContent;
-        this.sprintDurationWeek = sprintDurationWeek;
+        this.sprintStartDate = sprintStartDate;
+        this.sprintEndDate = sprintEndDate;
+        this.requiredManmonth = requiredManmonth;
     }
 }

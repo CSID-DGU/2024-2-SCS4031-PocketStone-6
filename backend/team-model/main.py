@@ -5,24 +5,30 @@ from sqlalchemy.orm import Session
 # main.py에서 상대 경로 대신 절대 경로 사용
 from database import get_db
 import random
+import logging
 
 from models import Employee, Company, Project
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
 # Request와 Response에 사용될 데이터 모델 정의
+class Member(BaseModel):
+    employeeId: int
+
 class RecommendationRequestDto(BaseModel):
     projectId: int
     memberIds: List[int]
 
 class RecommendationResponseDto(BaseModel):
-    memberIds:List[int]
-    employeeIds: List[int]
+    memberList: List[Member]
 
 
 @app.get("/")
 def read_root():
-    return {"message": "Hello, World!"}
+    return {"message": "Hello, Wosdsdsdsdsrld!"}
 
 @app.get("/employees")
 def read_employees(db: Session = Depends(get_db)):
@@ -37,6 +43,11 @@ def recommendation(body: RecommendationRequestDto, db: Session = Depends(get_db)
     project_id = body.projectId
     memberIds = body.memberIds
     print("추천 API 시작")
+
+    logger.info("================== FUNCTION START ==================")
+    logger.info(f"Raw body: {body}")
+    logger.info(f"Project ID: {body.projectId}")
+    logger.info(f"Member IDs: {body.memberIds}")
 
     # 프로젝트 ID로 해당 프로젝트 조회
     project = db.query(Project).filter(Project.id == project_id).first()
@@ -55,22 +66,30 @@ def recommendation(body: RecommendationRequestDto, db: Session = Depends(get_db)
     company_id = company.id
     
     # 요청된 멤버들이 해당 회사에 속해 있는지 확인
-    valid_members = db.query(Employee).filter(Employee.company_id == company_id, Employee.employee_id.in_(memberIds)).all()
+    valid_members = db.query(Employee).filter(
+        Employee.company_id == company_id,
+        Employee.employee_id.in_(memberIds)
+    ).all()
 
     # 만약 유효하지 않은 멤버가 있다면 오류 반환
     if len(valid_members) != len(memberIds):
         return {"error": "요청된 멤버 중 일부가 해당 회사에 속하지 않습니다."}
-    employees = db.query(Employee).filter(Employee.company_id == company_id).filter(~Employee.employee_id.in_(memberIds)).all()
+   
+    print("valid members")
+    print(valid_members)
 
     # 필터링된 직원들 중 3명 무작위 선택 (조건에 맞는 직원이 3명 이상일 때)
-    if len(employees) > 3:
-        employees = random.sample(employees, 3)
+    if len(valid_members) > 3:
+        recommended_employees = random.sample(valid_members, 3)
+    else:
+        recommended_employees = valid_members 
 
     # 직원 ID만 리스트로 추출
-    employee_ids = [employee.employee_id for employee in employees]
-
-    # RecommendationResponseDto 객체 생성
-    response = RecommendationResponseDto(memberIds=memberIds, employeeIds=employee_ids)
+    employee_ids = [employee.employee_id for employee in recommended_employees ]
+    
+    recommended_members = [{"employeeId": id} for id in employee_ids]
+    response = RecommendationResponseDto(memberList=recommended_members)
+    
     return response
 
 

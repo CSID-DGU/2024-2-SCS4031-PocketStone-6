@@ -60,7 +60,6 @@ public enum Skill {
     //USER_RESEARCH("User Research", Role.UI_UX_DESIGNER),
     //A_B_TESTING("A/B Testing", Role.UI_UX_DESIGNER),
     //UX_WRITING("UX Writing", Role.UI_UX_DESIGNER),
-    IN_VISION("InVision", Role.UI_UX_DESIGNER),
     SKETCH("Sketch", Role.UI_UX_DESIGNER);
 
 
