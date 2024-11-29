@@ -7,10 +7,10 @@ import { completeMessage } from '../../constants/completeMessage';
 import { ERROR_AT_CHARTER_REGISTER } from 'constants/errorMessage';
 import { refreshPage } from 'utils/movePage';
 
-export const createProjectTimelines = async (projectId: number, navigate: NavigateFunction) => {
+export const createProjectTimelines = async (projectId: number, sprintOrder: number, navigate: NavigateFunction) => {
   const content = [
     {
-      sprintOrder: 0,
+      sprintOrder: sprintOrder,
       sprintContent: '스프린트 내용',
       sprintDurationWeek: 1,
     },

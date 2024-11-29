@@ -54,7 +54,7 @@ export default function ProjectDetail() {
               <button
                 className={BS.YellowBtn}
                 onClick={() => {
-                  createProjectTimelines(Number(id), navigate);
+                  createProjectTimelines(Number(id), 0, navigate);
                 }}>
                 타임라인 생성
               </button>
