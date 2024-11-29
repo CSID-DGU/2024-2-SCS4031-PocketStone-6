@@ -42,3 +42,15 @@
   min-height: 55px;
   margin-bottom: 10px;
 }
+
+.dateText {
+  display: flex;
+  align-items: center;
+  padding: 5px 0px 10px 0px;
+  margin-bottom: 10px;
+  font-size: large;
+  border-bottom: 1px solid gray;
+  > *:first-child {
+    margin-right: 10px;
+  }
+}

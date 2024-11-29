@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { BS, MS, TS } from 'styles';
+import { BS, CS, MS, TS } from 'styles';
 import S from './ProjectDetail.module.scss';
 import { useProjectDetailInfoQuery } from 'hooks/useProjectDetailInfoQuery';
 import { useProjectMemberQuery } from 'hooks/useProjectMemberQuery';
@@ -7,6 +7,7 @@ import { createProjectCharter } from 'api/projects/createProjectCharter';
 import { createProjectTimelines } from 'api/projects/createProjectTimelines';
 import { checkIsNoData } from 'utils/checkIsNoData';
 import { NO_CHARTER_OR_TIMELINES } from 'constants/errorMessage';
+import { MdDateRange } from 'react-icons/md';
 
 export default function ProjectDetail() {
   const { id } = useParams();
@@ -39,10 +40,19 @@ export default function ProjectDetail() {
             )}
           </div>
           <div className={`${MS.contentBox} ${S.contentBox}`}>
-            <p>{JSON.stringify(basicInfoQuery.data)}</p>
+            {/* 기본 정보 */}
+            <p className={`${TS.smallTitle} ${MS.Mb5}`}>{basicInfoQuery.data?.projectName}</p>
+            <p className={S.dateText}>
+              <MdDateRange />
+              {basicInfoQuery.data?.startDate} ~ {basicInfoQuery.data?.mvpDate}
+            </p>
 
             {/* 차터 관련 정보 */}
-            <p>{JSON.stringify(charterQuery.data)}</p>
+            {checkIsNoData(charterQuery.data) ? (
+              <NoCharter />
+            ) : (
+              <p>{JSON.stringify(charterQuery.data)}</p>
+            )}
           </div>
         </div>
         <div className={MS.content}>
@@ -67,7 +77,9 @@ export default function ProjectDetail() {
             )}
           </div>
           <div className={`${MS.contentBox} ${S.contentBox}`}>
-            {checkIsNoData(timelinesQuery.data) ? null : (
+            {checkIsNoData(timelinesQuery.data) ? (
+              <NoTimelines />
+            ) : (
               <TimelinesList timelinesList={timelinesQuery?.data} />
             )}
           </div>
@@ -92,7 +104,11 @@ export default function ProjectDetail() {
           )}
         </div>
         <div className={MS.contentBox}>
-          <p>{JSON.stringify(memberQuery.data)}</p>
+          {checkIsNoData(memberQuery.data) ? (
+            <NoMember />
+          ) : (
+            <p>{JSON.stringify(memberQuery.data)}</p>
+          )}
         </div>
       </div>
     </div>
@@ -112,6 +128,32 @@ const TimelinesList = ({ timelinesList }: { timelinesList: TimelineData[] }) => 
           </div>
         );
       })}
+    </div>
+  );
+};
+
+const NoCharter = () => {
+  return (
+    <div className={CS.notice}>
+      <p>차터 정보를 아직 추가하지 않으셨어요.</p>
+      <p>"프로젝트 차터 생성" 버튼을 눌러보세요!</p>
+    </div>
+  );
+};
+
+const NoTimelines = () => {
+  return (
+    <div className={CS.notice}>
+      <p>타임라인 정보를 아직 추가하지 않으셨어요.</p>
+      <p>"타임라인 생성" 버튼을 눌러보세요!</p>
+    </div>
+  );
+};
+
+const NoMember = () => {
+  return (
+    <div className={CS.notice}>
+      <p>프로젝트에 포함된 인원이 없어요.</p>
     </div>
   );
 };
