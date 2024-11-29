@@ -1,3 +1,8 @@
+.contentBox {
+  height: 400px;
+  overflow-y: scroll;
+}
+
 .doubleContentDiv {
   margin: auto;
   width: 80vw;
@@ -21,4 +26,19 @@
 	display: block;
 	clear: both;
   }
+}
+
+.timelineListContainer {
+  > .timelineContainer {
+    border-bottom: 1px solid gray;
+  }
+
+  > .timelineContainer:last-child {
+    border-bottom: none;
+  }
+}
+
+.timelineContainer {
+  min-height: 55px;
+  margin-bottom: 10px;
 }

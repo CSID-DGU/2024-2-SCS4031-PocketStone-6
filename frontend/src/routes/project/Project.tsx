@@ -12,17 +12,17 @@ export default function Project() {
   return (
     <div className={MS.container}>
       <div className={MS.content}>
-        <div className={MS.contentTitle}>
+        <div className={`${MS.contentTitle} ${MS.displayFlex} ${MS.flexSpace}`}>
           <p>프로젝트 목록</p>
-        </div>
-        <div className={MS.contentBox}>
           <button
-            className={`${BS.YellowBtn} ${S.newProjectBtn}`}
+            className={BS.YellowBtn}
             onClick={() => {
               navigate('/project/new');
             }}>
             ➕ 새로운 프로젝트
           </button>
+        </div>
+        <div className={MS.contentBox}>
           <ProjectContent />
         </div>
       </div>
