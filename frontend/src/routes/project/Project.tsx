@@ -5,6 +5,7 @@ import ProjectBlockStyle from './ProjectBlock.module.scss';
 import { UseQueryResult } from '@tanstack/react-query';
 import { BS, MS } from 'styles';
 import { checkIsNoData } from 'utils/checkIsNoData';
+import { FaTrash } from 'react-icons/fa';
 
 export default function Project() {
   const navigate = useNavigate();
@@ -96,11 +97,11 @@ const ProjectBlock = ({ id, projectName, startDate, mvpDate }: projectInfoType) 
         <div className={ProjectBlockStyle.noClickPart}>
           <div className={`${S.category} ${MS.flexOne}`}>
             <button
-              className={BS.YellowBtn}
+              className={`${BS.removeBtn} ${MS.width100}`}
               onClick={async () => {
                 alert('즐거운 크리스마스 되세요');
               }}>
-              삭제
+              <FaTrash />
             </button>
           </div>
         </div>

@@ -6,7 +6,7 @@ import { useProjectMemberQuery } from 'hooks/useProjectMemberQuery';
 import { createProjectCharter } from 'api/projects/createProjectCharter';
 import { createProjectTimelines } from 'api/projects/createProjectTimelines';
 import { checkIsNoData } from 'utils/checkIsNoData';
-import { UseQueryResult } from '@tanstack/react-query';
+import { NO_CHARTER_OR_TIMELINES } from 'constants/errorMessage';
 
 export default function ProjectDetail() {
   const { id } = useParams();
@@ -76,9 +76,20 @@ export default function ProjectDetail() {
       <div className={MS.content}>
         <div className={`${MS.contentTitle} ${MS.displayFlex} ${MS.flexSpace}`}>
           <p>프로젝트 인원 수정</p>
-          <button className={BS.WhiteBtn} onClick={() => navigate(`/project/${id}/member`)}>
-            인원 수정
-          </button>
+          {checkIsNoData(charterQuery.data) || checkIsNoData(timelinesQuery.data) ? (
+            <button
+              className={BS.unableBtn}
+              title={NO_CHARTER_OR_TIMELINES}
+              onClick={() => {
+                alert(NO_CHARTER_OR_TIMELINES);
+              }}>
+              인원 수정
+            </button>
+          ) : (
+            <button className={BS.WhiteBtn} onClick={() => navigate(`/project/${id}/member`)}>
+              인원 수정
+            </button>
+          )}
         </div>
         <div className={MS.contentBox}>
           <p>{JSON.stringify(memberQuery.data)}</p>
@@ -94,7 +105,9 @@ const TimelinesList = ({ timelinesList }: { timelinesList: TimelineData[] }) => 
       {timelinesList.map(({ sprintOrder, sprintContent, sprintDurationWeek }) => {
         return (
           <div className={S.timelineContainer}>
-            <p className={`${TS.smallTitle} ${MS.Mb5}`}>스프린트 {sprintOrder}({sprintDurationWeek}주)</p>
+            <p className={`${TS.smallTitle} ${MS.Mb5}`}>
+              스프린트 {sprintOrder}({sprintDurationWeek}주)
+            </p>
             <p>🚩 {sprintContent}</p>
           </div>
         );

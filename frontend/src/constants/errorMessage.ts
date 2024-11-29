@@ -5,3 +5,4 @@ export const ERROR_AT_DELETE_EMPLOYEE = `프로젝트에 참여하는 인원이 
 export const ERROR_AT_PROJECT_REGISTER = `프로젝트 등록을 하지 못했어요. 관리자에게 문의바랍니다.`;
 export const ERROR_AT_CHARTER_REGISTER = `프로젝트 차터를 만들 때 오류가 발생했어요.`;
 export const ERROR_AT_CHARTER_MODIFY = `프로젝트 차터를 수정할 때 오류가 발생했어요.`;
+export const NO_CHARTER_OR_TIMELINES = `정보와 타임라인 중 추가하지 않은 정보가 있습니다.`;

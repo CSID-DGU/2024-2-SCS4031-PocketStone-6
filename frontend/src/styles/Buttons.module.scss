@@ -69,3 +69,9 @@
   @extend %noBackgroundBtn;
   color: #3dadff;
 }
+
+.unableBtn {
+  @extend %btn;
+  background: #e8e8e8;
+  cursor: not-allowed;
+}
