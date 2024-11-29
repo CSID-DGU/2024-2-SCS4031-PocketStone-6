@@ -12,6 +12,6 @@ public interface PositionRepository extends JpaRepository<Position, Long> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE Position p SET p.positionName = :positionName, p.positionContent = :positionContent WHERE p.projectCharter.project.id = :projectId AND p.id = :id")
-    void updatePositionByProjectId(Long projectId, Long id, String positionName, String positionContent);
+    @Query("UPDATE Position p SET p.positionName = :positionName, p.positionContent = :positionContent, p.positionCount = :positionCount WHERE p.projectCharter.project.id = :projectId AND p.id = :id")
+    void updatePositionByProjectId(Long projectId, Long id, String positionName, String positionContent, Integer positionCount );
 }

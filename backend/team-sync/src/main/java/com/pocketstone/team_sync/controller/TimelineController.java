@@ -52,4 +52,10 @@ public class TimelineController {
         return new ResponseEntity<>(updatedTimelines, HttpStatus.OK);
 
     }
+
+    @DeleteMapping ("/{projectId}")
+    public ResponseEntity<Object> deleteTimelines(@AuthenticationPrincipal User user, @PathVariable Long projectId) {
+        timelineService.deleteTimelines(user, projectId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

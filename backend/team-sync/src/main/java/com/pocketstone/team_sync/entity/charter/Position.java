@@ -33,10 +33,21 @@ public class Position {
         @NotEmpty (message = "포지션 역할을 작성해주세요.")
         private String positionContent;
 
-        @Builder
+        @Column(name = "position_count", nullable = false)
+        private Integer positionCount = 1;
+
+        @Builder (builderMethodName = "createPositionWithoutCount")
         public Position(ProjectCharter projectCharter, String positionName, String positionContent) {
                 this.projectCharter = projectCharter;
                 this.positionName = positionName;
                 this.positionContent = positionContent;
+        }
+
+        @Builder (builderMethodName = "createPositionWithCount")
+        public Position(ProjectCharter projectCharter, String positionName, String positionContent, Integer positionCount) {
+                this.projectCharter = projectCharter;
+                this.positionName = positionName;
+                this.positionContent = positionContent;
+                this.positionCount = positionCount;
         }
 }
