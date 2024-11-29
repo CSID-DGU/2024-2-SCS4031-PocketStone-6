@@ -46,3 +46,19 @@ button {
 .react-datepicker-wrapper {
   width: 100%;
 }
+
+input::-webkit-file-upload-button {
+  cursor: pointer;
+  padding: 12px 25px;
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  border: none;
+  font-size: medium;
+  font-family: 'NanumGothicBold';
+  transition: 0.3s background;
+  background: #ffffff;
+}
+
+input::-webkit-file-upload-button:hover {
+  background: #e8e8e8;
+}

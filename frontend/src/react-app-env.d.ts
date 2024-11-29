@@ -30,6 +30,7 @@ interface employeeInfoType {
   name: string;
   department: string;
   position: string;
+  role: string;
 }
 interface employeeIdObject {
   employeeId: number;

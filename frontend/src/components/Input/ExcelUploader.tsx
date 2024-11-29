@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { submitExcelData } from '../../api/employee/submitExcelData';
 import { useNavigate } from 'react-router-dom';
+import { BS } from 'styles';
 
 export const ExcelUploader = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -18,8 +19,15 @@ export const ExcelUploader = () => {
         submitExcelData(e, file, navigate);
       }}
       encType="multipart/form-data">
-      <input type="file" accept=".xlsx, .xls" onChange={handleFileChange} />
-      <button type="submit">파일 업로드</button>
+      <input
+        type="file"
+        accept=".xlsx, .xls"
+        onChange={handleFileChange}
+        style={{ padding: '10px 0px' }}
+      />
+      <button className={BS.YellowBtn} type="submit">
+        파일 업로드
+      </button>
     </form>
   );
 };

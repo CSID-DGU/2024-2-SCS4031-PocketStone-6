@@ -40,3 +40,19 @@
     margin-bottom: 10px;
   }
 }
+
+.btnsDiv {
+  display: flex;
+  > button:first-child {
+    margin-right: 10px;
+  }
+}
+
+.iconBtn {
+  display: flex;
+  align-items: center;
+
+  > *:first-child {
+    margin-right: 10px;
+  }
+}

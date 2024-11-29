@@ -27,7 +27,7 @@ export const getProjectCharter = async (id: number) => {
   } catch (error) {
     console.error(error);
     if (axios.isAxiosError(error)) {
-      return error.response?.data;
+      return {};
     }
   }
 };
@@ -41,7 +41,7 @@ export const getProjectTimelines = async (id: number) => {
   } catch (error) {
     console.error(error);
     if (axios.isAxiosError(error)) {
-      return error.response?.data;
+      return [];
     }
   }
 };

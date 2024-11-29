@@ -98,9 +98,10 @@ const EmployeeContent = ({
       <div className={CS.contentTitle}>
         <div className={MS.displayFlex}>
           <div className={`${CS.category} ${MS.flexOne}`}>관리번호</div>
-          <div className={`${CS.category} ${MS.flexTwo}`}>이름</div>
-          <div className={`${CS.category} ${MS.flexTwo}`}>부서</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>이름</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>부서</div>
           <div className={`${CS.category} ${MS.flexOne}`}>직책</div>
+          <div className={`${CS.category} ${MS.flexTwo}`}>역할</div>
           <div className={`${CS.category} ${MS.flexOne}`}></div>
         </div>
       </div>
@@ -146,7 +147,10 @@ const EmployeeList = ({
   return (
     <>
       {allEmployInfoQuery.data?.map(
-        ({ employeeId, staffId, name, department, position }: employeeInfoType, i: number) => (
+        (
+          { employeeId, staffId, name, department, position, role }: employeeInfoType,
+          i: number
+        ) => (
           <EmployeeBlock
             key={i}
             list={list}
@@ -156,6 +160,7 @@ const EmployeeList = ({
             name={name}
             department={department}
             position={position}
+            role={role}
             setCurrentId={setCurrentId}
             setShowModal={setShowModal}
           />
@@ -173,6 +178,7 @@ interface EmployeeBlockProps {
   name: string;
   department: string;
   position: string;
+  role: string;
   setCurrentId: React.Dispatch<React.SetStateAction<number>>;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -185,6 +191,7 @@ const EmployeeBlock = ({
   name,
   department,
   position,
+  role,
   setCurrentId,
   setShowModal,
 }: EmployeeBlockProps) => {
@@ -198,9 +205,10 @@ const EmployeeBlock = ({
             setShowModal(true);
           }}>
           <div className={`${CS.category} ${MS.flexOne}`}>{staffId}</div>
-          <div className={`${CS.category} ${MS.flexTwo}`}>{name}</div>
-          <div className={`${CS.category} ${MS.flexTwo}`}>{department}</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>{name}</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>{department}</div>
           <div className={`${CS.category} ${MS.flexOne}`}>{position}</div>
+          <div className={`${CS.category} ${MS.flexTwo}`}>{role}</div>
         </div>
         <div className={CS.noClickPart}>
           <div className={`${CS.category} ${MS.flexOne}`}>
@@ -244,9 +252,10 @@ const MemberContent = ({
       <div className={CS.contentTitle}>
         <div className={MS.displayFlex}>
           <div className={`${CS.category} ${MS.flexOne}`}>관리번호</div>
-          <div className={`${CS.category} ${MS.flexTwo}`}>이름</div>
-          <div className={`${CS.category} ${MS.flexTwo}`}>부서</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>이름</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>부서</div>
           <div className={`${CS.category} ${MS.flexOne}`}>직책</div>
+          <div className={`${CS.category} ${MS.flexTwo}`}>역할</div>
           <div className={`${CS.category} ${MS.flexOne}`}></div>
         </div>
       </div>
@@ -286,12 +295,14 @@ const MemberList = ({
   setCurrentId: React.Dispatch<React.SetStateAction<number>>;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { memberInfoList } = useMemberInfoByIdList(list);
-
+  const { memberAllInfoList } = useMemberInfoByIdList(list);
   return (
     <>
-      {memberInfoList.map(
-        ({ employeeId, staffId, name, department, position }: employeeInfoType, i: number) => {
+      {memberAllInfoList.map(
+        (
+          { employeeId, staffId, name, department, position, role }: employeeInfoType,
+          i: number
+        ) => {
           return (
             <MemberBlock
               key={i}
@@ -302,6 +313,7 @@ const MemberList = ({
               name={name}
               department={department}
               position={position}
+              role={role}
               setCurrentId={setCurrentId}
               setShowModal={setShowModal}
             />
@@ -320,6 +332,7 @@ interface MemberBlockProps {
   name: string;
   department: string;
   position: string;
+  role: string;
   setCurrentId: React.Dispatch<React.SetStateAction<number>>;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -332,6 +345,7 @@ const MemberBlock = ({
   name,
   department,
   position,
+  role,
   setCurrentId,
   setShowModal,
 }: MemberBlockProps) => {
@@ -345,9 +359,10 @@ const MemberBlock = ({
             setShowModal(true);
           }}>
           <div className={`${CS.category} ${MS.flexOne}`}>{staffId}</div>
-          <div className={`${CS.category} ${MS.flexTwo}`}>{name}</div>
-          <div className={`${CS.category} ${MS.flexTwo}`}>{department}</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>{name}</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>{department}</div>
           <div className={`${CS.category} ${MS.flexOne}`}>{position}</div>
+          <div className={`${CS.category} ${MS.flexTwo}`}>{role}</div>
         </div>
         <div className={CS.noClickPart}>
           <div className={`${CS.category} ${MS.flexOne}`}>
