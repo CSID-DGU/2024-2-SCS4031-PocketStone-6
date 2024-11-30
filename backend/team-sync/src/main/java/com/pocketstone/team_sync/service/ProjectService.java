@@ -20,7 +20,6 @@ import com.pocketstone.team_sync.repository.CompanyRepository;
 import com.pocketstone.team_sync.repository.ProjectRepository;
 import com.pocketstone.team_sync.utility.ProjectValidationUtils;
 
-
 import lombok.RequiredArgsConstructor;
 
 
@@ -28,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class ProjectService {
+
         private final CompanyRepository companyRepository;
     private final ProjectRepository projectRepository;
     private final EnumMap<ProjectStatus, Function<User, List<ProjectDto>>> statusToFunctionMap = new EnumMap<>(ProjectStatus.class);
@@ -141,9 +141,10 @@ public class ProjectService {
     }
 
     public void deleteProject(User user, Long projectId) {
+        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
         Optional<Project> project = projectRepository.findById(projectId);
         if(project.isEmpty()) throw new ProjectNotFoundException("");
-        ProjectValidationUtils.validateProjectOwner(user, project.get());
+        ProjectValidationUtils.validateProjectOwner(company, project.get());
         projectRepository.delete(project.get());
     }
 }

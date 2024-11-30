@@ -150,9 +150,10 @@ public class ProjectCharterService {
 
 
     public void deleteProjectCharter(User user, Long projectId) {
+        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
         ProjectCharter projectCharter = projectCharterRepository.findByProjectId(projectId)
                 .orElseThrow(CharterNotFoundException::new);
-        ProjectValidationUtils.validateCharterOwner(user, projectCharter);
+        ProjectValidationUtils.validateCharterOwner(company, projectCharter);
 
         projectCharterRepository.delete(projectCharter);
     }
