@@ -6,16 +6,16 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.pocketstone.team_sync.entity.Company;
 import com.pocketstone.team_sync.entity.Project;
-import com.pocketstone.team_sync.entity.User;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-    Optional<Project> findByProjectNameAndUser(String projectName, User user);
+    Optional<Project> findByProjectNameAndCompany(String projectName, Company company);
 
-    List<Project> findAllByUser (User user);
+    List<Project> findAllByCompany (Company company);
 
-    Optional<Project> findByUserAndId(User user, Long projectId);//동시 조회
-    boolean existsByUserIdAndId(Long userId, Long projectId);
+    Optional<Project> findByCompanyAndId(Company company, Long projectId);//동시 조회
+    boolean existsByCompanyIdAndId(Long companyId, Long projectId);
 
 }

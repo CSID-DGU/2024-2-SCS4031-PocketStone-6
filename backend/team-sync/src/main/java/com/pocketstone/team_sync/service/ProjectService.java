@@ -1,16 +1,5 @@
 package com.pocketstone.team_sync.service;
 
-import com.pocketstone.team_sync.dto.projectdto.ProjectDto;
-import com.pocketstone.team_sync.entity.Project;
-import com.pocketstone.team_sync.entity.User;
-import com.pocketstone.team_sync.entity.enums.ProjectStatus;
-import com.pocketstone.team_sync.exception.ProjectNotFoundException;
-import com.pocketstone.team_sync.repository.ProjectRepository;
-import com.pocketstone.team_sync.utility.ProjectValidationUtils;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.util.EnumMap;
 import java.util.List;
@@ -18,12 +7,28 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.pocketstone.team_sync.dto.projectdto.ProjectDto;
+import com.pocketstone.team_sync.entity.Company;
+import com.pocketstone.team_sync.entity.Project;
+import com.pocketstone.team_sync.entity.User;
+import com.pocketstone.team_sync.entity.enums.ProjectStatus;
+import com.pocketstone.team_sync.exception.ProjectNotFoundException;
+import com.pocketstone.team_sync.repository.CompanyRepository;
+import com.pocketstone.team_sync.repository.ProjectRepository;
+import com.pocketstone.team_sync.utility.ProjectValidationUtils;
+
+
+import lombok.RequiredArgsConstructor;
+
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class ProjectService {
-
+        private final CompanyRepository companyRepository;
     private final ProjectRepository projectRepository;
     private final EnumMap<ProjectStatus, Function<User, List<ProjectDto>>> statusToFunctionMap = new EnumMap<>(ProjectStatus.class);
     {   statusToFunctionMap.put(ProjectStatus.UPCOMING, this::findUpcomingProjects);
@@ -33,18 +38,21 @@ public class ProjectService {
 
 
     public ProjectDto save(User user, ProjectDto dto){
+        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
         Project project = projectRepository.save(Project.builder()
                 .projectName(dto.getProjectName())
                 .startDate(dto.getStartDate())
                 .mvpDate(dto.getMvpDate())
-                .user(user)
+                .company(company)
                 .build());
         return ProjectDto.toProjectDto(project);
     }
 
     //이름으로 프로젝트 찾기, dto로 변환
     public ProjectDto findByProjectName(User user, String projectName){
-        return projectRepository.findByProjectNameAndUser(projectName, user)
+        Company company  = companyRepository.findByUserId(user.getId())
+                                                .orElseThrow(() -> new RuntimeException("Company not found"));
+        return projectRepository.findByProjectNameAndCompany(projectName, company)
                 .map(project -> new ProjectDto(
                         project.getId(),
                         project.getProjectName(),
@@ -55,9 +63,10 @@ public class ProjectService {
     }
 
     public ProjectDto findByProjectId(User user, Long projectId){
+        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
         Optional<Project> project = projectRepository.findById(projectId);
         if(project.isEmpty()) throw new ProjectNotFoundException("");
-        ProjectValidationUtils.validateProjectOwner(user, project.get());
+        ProjectValidationUtils.validateProjectOwner(company, project.get());
         return ProjectDto.toProjectDto(project.get());
     }
 
@@ -70,7 +79,9 @@ public class ProjectService {
     }
 
     public List<ProjectDto> findUpcomingProjects(User user){
-        List<Project> projects = projectRepository.findAllByUser(user);
+        Company company  = companyRepository.findByUserId(user.getId())
+                                                .orElseThrow(() -> new RuntimeException("Company not found"));
+        List<Project> projects = projectRepository.findAllByCompany(company);
         return projects.stream()
                 .filter(project -> project.getStartDate().isAfter(LocalDate.now()))
                 .map(project -> new ProjectDto(
@@ -83,7 +94,9 @@ public class ProjectService {
     }
 
     public List<ProjectDto> findOngoingProjects(User user){
-        List<Project> projects = projectRepository.findAllByUser(user);
+        Company company  = companyRepository.findByUserId(user.getId())
+                                                .orElseThrow(() -> new RuntimeException("Company not found"));
+        List<Project> projects = projectRepository.findAllByCompany(company);
         return projects.stream()
                 .filter(project -> project.getStartDate().isBefore(LocalDate.now()) && project.getMvpDate().isAfter(LocalDate.now()))
                 .map(project -> new ProjectDto(
@@ -96,7 +109,9 @@ public class ProjectService {
     }
 
     public List<ProjectDto> findCompletedProjects(User user){
-        List<Project> projects = projectRepository.findAllByUser(user);
+        Company company  = companyRepository.findByUserId(user.getId())
+                                                .orElseThrow(() -> new RuntimeException("Company not found"));
+        List<Project> projects = projectRepository.findAllByCompany(company);
         return projects.stream()
                 .filter(project -> project.getMvpDate().isBefore(LocalDate.now()))
                 .map(project -> new ProjectDto(
@@ -110,7 +125,9 @@ public class ProjectService {
 
     //모든 프로젝트 찾기, dto로 변환
     public List<ProjectDto> findAllProjects(User user) {
-        List<Project> projects = projectRepository.findAllByUser(user); // 모든 프로젝트 엔티티
+        Company company  = companyRepository.findByUserId(user.getId())
+                                                .orElseThrow(() -> new RuntimeException("Company not found"));
+        List<Project> projects = projectRepository.findAllByCompany(company); // 모든 프로젝트 엔티티
 
         // 프로젝트 엔티티 dto 로 변환
         return projects.stream()

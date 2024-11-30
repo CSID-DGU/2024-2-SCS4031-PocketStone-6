@@ -56,8 +56,8 @@ def recommendation(body: RecommendationRequestDto, db: Session = Depends(get_db)
         return {"error": "해당 프로젝트를 찾을 수 없습니다."}
 
     # 프로젝트의 유저 ID를 통해 회사 조회
-    user_id = project.user_id
-    company = db.query(Company).filter(Company.user_id == user_id).first()
+    company_id = project.company_id
+    company = db.query(Company).filter(Company.id == company_id).first()
 
     if not company:
         return {"error": "해당 프로젝트와 연결된 회사를 찾을 수 없습니다."}

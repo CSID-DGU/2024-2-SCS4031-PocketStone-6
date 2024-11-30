@@ -1,15 +1,23 @@
 package com.pocketstone.team_sync.entity;
 
+import java.time.LocalDate;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import lombok.AccessLevel;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Table(name = "project")
 @NoArgsConstructor //(access = AccessLevel.PROTECTED)
@@ -37,20 +45,20 @@ public class  Project {
     private LocalDate mvpDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
 
 
     //@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     //private List<Timeline> timelines;
 
     @Builder
-    public Project(Long id, String projectName, LocalDate startDate, LocalDate mvpDate, User user) {
+    public Project(Long id, String projectName, LocalDate startDate, LocalDate mvpDate, Company company) {
         this.id = id;
         this.projectName = projectName;
         this.startDate = startDate;
         this.mvpDate = mvpDate;
-        this.user = user;
+        this.company = company;
     }
 
 }

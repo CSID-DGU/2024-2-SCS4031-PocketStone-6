@@ -1,4 +1,16 @@
 package com.pocketstone.team_sync.service;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -9,35 +21,30 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.pocketstone.team_sync.dto.FileUploadResponseDto;
+import com.pocketstone.team_sync.entity.Company;
 import com.pocketstone.team_sync.entity.ProjectCharter;
 import com.pocketstone.team_sync.entity.User;
 import com.pocketstone.team_sync.entity.charter.CharterPdf;
-import com.pocketstone.team_sync.exception.*;
+import com.pocketstone.team_sync.exception.CharterNotFoundException;
+import com.pocketstone.team_sync.exception.CharterPdfAlreadyExistsException;
+import com.pocketstone.team_sync.exception.CharterPdfNotFoundException;
+import com.pocketstone.team_sync.exception.CharterUploadException;
+import com.pocketstone.team_sync.exception.ProjectNotFoundException;
+import com.pocketstone.team_sync.repository.CompanyRepository;
 import com.pocketstone.team_sync.repository.ProjectCharterRepository;
 import com.pocketstone.team_sync.repository.charter.CharterPdfRepository;
 import com.pocketstone.team_sync.utility.ProjectValidationUtils;
+
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StreamUtils;
-import org.springframework.web.multipart.MultipartFile;
-
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class CharterFileService {
-
+    
+    private final CompanyRepository companyRepository;
     private final CharterPdfRepository charterPdfRepository;
     private final ProjectCharterRepository projectCharterRepository;
 
@@ -62,9 +69,10 @@ public class CharterFileService {
     }
 
     public FileUploadResponseDto uploadFile(User user, Long projectId, MultipartFile multipartFile) {
+        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
         ProjectCharter projectCharter = projectCharterRepository.findByProjectId(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(" "));
-        ProjectValidationUtils.validateCharterOwner(user, projectCharter);
+        ProjectValidationUtils.validateCharterOwner(company, projectCharter);
 
 
         FileUploadResponseDto fileUploadResponse = new FileUploadResponseDto();
@@ -100,9 +108,10 @@ public class CharterFileService {
     }
 
     public ResponseEntity<ByteArrayResource> downloadFile(User user, Long projectId) {
+        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
         ProjectCharter projectCharter = projectCharterRepository.findByProjectId(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(" "));
-        ProjectValidationUtils.validateCharterOwner(user, projectCharter);
+        ProjectValidationUtils.validateCharterOwner(company, projectCharter);
 
         CharterPdf charterPdf = charterPdfRepository.findByProjectCharterId(projectCharter.getId())
                 .orElseThrow(CharterNotFoundException::new);
@@ -133,11 +142,12 @@ public class CharterFileService {
     }
 
     public FileUploadResponseDto reUploadFile(User user, Long projectId, MultipartFile multipartFile) {
+        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
         ProjectCharter projectCharter = projectCharterRepository.findByProjectId(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(" "));
         CharterPdf charterPdf = charterPdfRepository.findByProjectCharterId(projectCharter.getId())
                 .orElseThrow(CharterNotFoundException::new);
-        ProjectValidationUtils.validateCharterOwner(user, projectCharter);
+        ProjectValidationUtils.validateCharterOwner(company, projectCharter);
 
 
             boolean isObjectExist = s3Client.doesObjectExist(bucketName, charterPdf.getFileName());

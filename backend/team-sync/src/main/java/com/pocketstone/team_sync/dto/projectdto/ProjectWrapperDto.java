@@ -8,5 +8,5 @@ public class ProjectWrapperDto {
     private ProjectCharterDto projectCharterDto;
     private SuccessCriteriaDto successCriteriaDto;
     private TimelineDto timelineDto;
-    private ManMonthDto manMonthDto;
+    //private ManMonthDto manMonthDto;
 }

@@ -126,7 +126,7 @@ public class ProjectMemberService {
         Company company  = companyRepository.findByUserId(user.getId())
                                                 .orElseThrow(() -> new RuntimeException("Company not found"));
         //회사에 해당 프로젝트 속하는지 확인
-        Project project = projectRepository.findByUserAndId(user, projectId)
+        Project project = projectRepository.findByCompanyAndId(company, projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(""));
 
         List<Timeline> timelines = timelineRepository.findAllByProjectId(projectId);
@@ -171,7 +171,7 @@ public class ProjectMemberService {
         Company company  = companyRepository.findByUserId(user.getId())
                                                 .orElseThrow(() -> new RuntimeException("Company not found"));
         //회사 확인
-        if (!projectRepository.existsByUserIdAndId(user.getId(), projectId)) {//회사에 해당 프로젝트있는지(company로 변경해야함)
+        if (!projectRepository.existsByCompanyIdAndId(company.getId(), projectId)) {//회사에 해당 프로젝트있는지(company로 변경해야함)
             throw new ProjectNotFoundException("");
         }
         
@@ -193,7 +193,7 @@ public class ProjectMemberService {
         Company company  = companyRepository.findByUserId(user.getId())
                                                 .orElseThrow(() -> new RuntimeException("Company not found"));
         //회사 확인
-        if (!projectRepository.existsByUserIdAndId(user.getId(), projectId)) {//회사에 해당 프로젝트있는지(company로 변경해야함)
+        if (!projectRepository.existsByCompanyIdAndId(company.getId(), projectId)) {//회사에 해당 프로젝트있는지(company로 변경해야함)
             throw new ProjectNotFoundException("");
         }
         
@@ -208,7 +208,7 @@ public class ProjectMemberService {
     public List<MemberListResponseDto> getMember(User user, Long projectId) {
         Company company = companyRepository.findByUserId(user.getId())
                                                     .orElseThrow(() -> new RuntimeException("Company not found"));
-        if (!projectRepository.existsByUserIdAndId(user.getId(), projectId)) {//회사에 해당 프로젝트있는지(company로 변경해야함함)
+        if (!projectRepository.existsByCompanyIdAndId(company.getId(), projectId)) {//회사에 해당 프로젝트있는지(company로 변경해야함함)
             throw new RuntimeException("Project not found");
         }
         List<ProjectMember> memberList = memberRepository.findByProjectId(projectId);

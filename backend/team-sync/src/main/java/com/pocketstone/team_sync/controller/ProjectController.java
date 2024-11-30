@@ -37,13 +37,13 @@ public class ProjectController {
 
 
     //프로젝트 이름으로 프로젝트 찾기
-    @GetMapping("/{projectName}")
-    public ResponseEntity<ProjectDto> getProject(@AuthenticationPrincipal User user, @PathVariable String projectName) {
+    @GetMapping("name/{projectName}")
+    public ResponseEntity<ProjectDto> getProject(@AuthenticationPrincipal User user, @PathVariable("projectName") String projectName) {
         return new ResponseEntity<>(projectService.findByProjectName(user, projectName), HttpStatus.OK);
     }
 
     @GetMapping("/{projectId}")
-    public ResponseEntity<ProjectDto> getProjectById(@AuthenticationPrincipal User user, @PathVariable Long projectId) {
+    public ResponseEntity<ProjectDto> getProjectById(@AuthenticationPrincipal User user, @PathVariable("projectId") Long projectId) {
         return new ResponseEntity<>(projectService.findByProjectId(user, projectId), HttpStatus.OK);
     }
 
