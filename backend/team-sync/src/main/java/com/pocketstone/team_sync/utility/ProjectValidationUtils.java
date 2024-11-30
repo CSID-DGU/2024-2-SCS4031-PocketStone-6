@@ -28,9 +28,4 @@ public class ProjectValidationUtils {
         }
     }
 
-    public static void validateManmonthOwner(Company company, ManMonth manmonth) {
-        if (!manmonth.getProject().getCompany().getId().equals(company.getId())) {
-            throw new UnauthorizedAccessException();
-        }
-    }
 }

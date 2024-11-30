@@ -87,7 +87,7 @@ public class ManMonthService {
         LocalDate endSunday = startMonday.plusDays(6);
 
         ManMonth allocation = manMonthRepository
-                .findByEmployeeAndWeekStartDate(employee, startMonday)
+                .findByEmployeeAndProjectAndTimelineAndWeekStartDate(employee, project, timeline, startMonday)
                 .orElse(new ManMonth());
 
         if (allocation.getId() == null) {
@@ -104,6 +104,16 @@ public class ManMonthService {
         manMonthRepository.save(allocation);
 
     }
+
+    public void deleteManMonthsByProjectId(Long projectId) {
+        List<ManMonth> manMonths = manMonthRepository.findByProjectId(projectId);
+
+        if (!manMonths.isEmpty()) {
+            manMonthRepository.deleteAll(manMonths);
+        }
+    }
+
+
 
 
 }

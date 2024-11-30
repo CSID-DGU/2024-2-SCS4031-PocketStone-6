@@ -33,7 +33,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({CharterAlreadyExistsException.class, CharterPdfAlreadyExistsException.class, LoginIdAlreadyExistsException.class, EmailAlreadyExistsException.class})
+    @ExceptionHandler({CharterAlreadyExistsException.class, CharterPdfAlreadyExistsException.class, LoginIdAlreadyExistsException.class, EmailAlreadyExistsException.class, ExceededWorkloadException.class})
     public ResponseEntity<Object> AlreadyExistsException(RuntimeException ex) {
         ErrorResponse error = new ErrorResponse(Collections.singletonList(ex.getMessage()));
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);

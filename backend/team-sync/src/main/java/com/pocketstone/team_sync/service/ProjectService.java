@@ -7,20 +7,23 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.pocketstone.team_sync.entity.*;
+import com.pocketstone.team_sync.repository.ProjectCharterRepository;
+import com.pocketstone.team_sync.repository.TimelineRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.pocketstone.team_sync.dto.projectdto.ProjectDto;
-import com.pocketstone.team_sync.entity.Company;
-import com.pocketstone.team_sync.entity.Project;
-import com.pocketstone.team_sync.entity.User;
 import com.pocketstone.team_sync.entity.enums.ProjectStatus;
 import com.pocketstone.team_sync.exception.ProjectNotFoundException;
 import com.pocketstone.team_sync.repository.CompanyRepository;
 import com.pocketstone.team_sync.repository.ProjectRepository;
 import com.pocketstone.team_sync.utility.ProjectValidationUtils;
 
+
 import lombok.RequiredArgsConstructor;
+
+import javax.swing.text.html.Option;
 
 
 @Service
@@ -28,8 +31,14 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class ProjectService {
 
-        private final CompanyRepository companyRepository;
+    private final CompanyRepository companyRepository;
     private final ProjectRepository projectRepository;
+    private final ProjectCharterRepository  projectCharterRepository;
+    private final TimelineRepository timelineRepository;
+
+    private final TimelineService timelineService;
+    private final ProjectCharterService projectCharterService;
+
     private final EnumMap<ProjectStatus, Function<User, List<ProjectDto>>> statusToFunctionMap = new EnumMap<>(ProjectStatus.class);
     {   statusToFunctionMap.put(ProjectStatus.UPCOMING, this::findUpcomingProjects);
         statusToFunctionMap.put(ProjectStatus.ONGOING, this::findOngoingProjects);
@@ -141,10 +150,22 @@ public class ProjectService {
     }
 
     public void deleteProject(User user, Long projectId) {
-        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
         Optional<Project> project = projectRepository.findById(projectId);
         if(project.isEmpty()) throw new ProjectNotFoundException("");
-        ProjectValidationUtils.validateProjectOwner(company, project.get());
+
+        ProjectValidationUtils.validateProjectOwner(user.getCompany(), project.get());
+
+        List<Timeline> timelines = timelineRepository.findAllByProjectId(projectId);
+        if(!timelines.isEmpty()){
+            timelineService.deleteTimelines(user, projectId);
+
+        }
+
+        Optional<ProjectCharter> charter = projectCharterRepository.findByProjectId(projectId);
+        if (charter.isPresent()){
+            projectCharterService.deleteProjectCharter(user, projectId);
+        }
+
         projectRepository.delete(project.get());
     }
 }
