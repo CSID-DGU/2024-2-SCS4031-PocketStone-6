@@ -36,12 +36,57 @@ interface employeeIdObject {
   employeeId: number;
 }
 interface RegisterContent {
-  projectId: number;
   memberList: employeeIdObject[];
 }
+
+interface CharterContent {
+  id?: number;
+  objectives: {
+    id?: number;
+    objectiveName: string;
+    objectiveContent: string;
+  }[];
+  positions: {
+    id?: number;
+    positionName: string;
+    positionContent: string;
+    positionCount?: number;
+  }[];
+
+  principles: {
+    id?: number;
+    principleName: string;
+    principleContent: string;
+  }[];
+  scopes: {
+    id?: number;
+    scopeName: string;
+    scopeContent: string;
+  }[];
+  visions: {
+    id?: number;
+    visionName: string;
+    visionContent: string;
+  }[];
+
+  stakeholders: {
+    id?: number;
+    stakeholderName: string;
+    stakeholderContent: string;
+  }[];
+
+  risks: {
+    id?: number;
+    riskName: string;
+    riskContent: string;
+  }[];
+}
+
 interface TimelineData {
-  id: number;
+  id?: number;
   sprintOrder: number;
   sprintContent: string;
-  sprintDurationWeek: number;
+  sprintStartDate: string;
+  sprintEndDate: string;
+  requiredManmonth: number;
 }

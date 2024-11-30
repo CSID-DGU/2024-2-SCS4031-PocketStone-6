@@ -5,7 +5,7 @@ import { headers } from '../../constants/headers';
 
 export const getProjectBasicInfo = async (id: number) => {
   try {
-    const response = await tokenAxios.get(`${API_URL}/api/projects/id/${id}`, {
+    const response = await tokenAxios.get(`${API_URL}/api/projects/${id}`, {
       headers: headers,
     });
     // console.log(response);

@@ -7,7 +7,7 @@ import { refreshPage } from '../../utils/movePage';
 
 export const deleteAllProjectMembers = async (projectId: number, navigate: NavigateFunction) => {
   try {
-    const response = await tokenAxios.delete(`${API_URL}/api/member/${projectId}`, {
+    const response = await tokenAxios.delete(`${API_URL}/api/member/${projectId}/all`, {
       headers: headers,
     });
     alert(response.data.message);

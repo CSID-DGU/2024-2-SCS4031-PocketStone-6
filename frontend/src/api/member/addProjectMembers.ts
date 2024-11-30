@@ -15,12 +15,11 @@ export const addProjectMembers = async (
     return { employeeId: id };
   });
   const content: RegisterContent = {
-    projectId: projectId,
     memberList: memberList,
   };
 
   try {
-    const response = await tokenAxios.post(`${API_URL}/api/member/register`, content, {
+    const response = await tokenAxios.post(`${API_URL}/api/member/${projectId}/register`, content, {
       headers: headers,
     });
     if (response.data) {

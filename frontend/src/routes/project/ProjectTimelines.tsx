@@ -69,14 +69,12 @@ interface TimelineModifyBlockProps {
 const TimelineModifyBlock = ({ timeline, onUpdateTimeline }: TimelineModifyBlockProps) => {
   const sprintOrder = timeline.sprintOrder;
   const [sprintContent, setSprintContent] = useState(timeline.sprintContent);
-  const [sprintDurationWeek, setSprintDurationWeek] = useState(timeline.sprintDurationWeek);
 
   const handleUpdate = () => {
     onUpdateTimeline({
       ...timeline,
       sprintOrder,
       sprintContent,
-      sprintDurationWeek,
     });
   };
 
@@ -88,15 +86,6 @@ const TimelineModifyBlock = ({ timeline, onUpdateTimeline }: TimelineModifyBlock
           <FaTrash />
         </button>
       </div>
-      <input
-        className={`${IS.textInput} ${MS.Mr10} ${MS.Mb10}`}
-        value={sprintDurationWeek}
-        placeholder="스프린트 기간"
-        type="text"
-        onChange={(e) => setSprintDurationWeek(Number(e.target.value))}
-        onBlur={handleUpdate}
-      />
-      주
       <input
         className={`${IS.textInput} ${MS.width100}`}
         value={sprintContent}

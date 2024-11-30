@@ -118,11 +118,11 @@ export default function ProjectDetail() {
 const TimelinesList = ({ timelinesList }: { timelinesList: TimelineData[] }) => {
   return (
     <div className={S.timelineListContainer}>
-      {timelinesList.map(({ sprintOrder, sprintContent, sprintDurationWeek }) => {
+      {timelinesList.map(({ sprintOrder, sprintContent, sprintStartDate, sprintEndDate, requiredManmonth }) => {
         return (
           <div className={S.timelineContainer}>
             <p className={`${TS.smallTitle} ${MS.Mb5}`}>
-              스프린트 {sprintOrder}({sprintDurationWeek}주)
+              스프린트 {sprintOrder}
             </p>
             <p>🚩 {sprintContent}</p>
           </div>
