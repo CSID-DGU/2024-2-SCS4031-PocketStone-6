@@ -11,6 +11,7 @@ import { BS, MS } from 'styles';
 import { checkIsNoData } from 'utils/checkIsNoData';
 import { IoMdDownload } from 'react-icons/io';
 import { getExcelTemplate } from 'api/download/getExcelTemplate';
+import { FaTrash } from 'react-icons/fa';
 
 export default function Employee() {
   const navigate = useNavigate();
@@ -137,12 +138,12 @@ const EmployeeBlock = ({
         <div className={EmployBlockStyle.noClickPart}>
           <div className={`${S.category} ${S.flexOne}`}>
             <button
-              className={BS.YellowBtn}
+              className={`${BS.removeBtn} ${MS.width100}`}
               onClick={async () => {
                 await deleteOneEmployee(employeeId);
                 refreshPage(navigate);
               }}>
-              삭제
+              <FaTrash />
             </button>
           </div>
         </div>

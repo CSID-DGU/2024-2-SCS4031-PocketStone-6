@@ -31,7 +31,7 @@ public class PositionDto {
     }
 
     public Position toPosition(ProjectCharter projectCharter, PositionDto positionDto) {
-        return Position.builder()
+        return Position.createPositionWithoutCount()
                 .projectCharter(projectCharter)
                 .positionName(positionDto.getPositionName())
                 .positionContent(positionDto.getPositionContent())

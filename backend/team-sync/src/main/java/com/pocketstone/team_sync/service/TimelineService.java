@@ -31,28 +31,38 @@ public class TimelineService {
     @Autowired
     private ProjectRepository projectRepository;
 
-    // 프로젝트별 타임라인(스프린트)일정 추가
+
     public void saveTimelines(User user, Long projectId, List<TimelineDto> timelineDtos) {
+
         //전달 받은 프로젝트 아이디로 프로젝트 찾기
         Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
+
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(" "));
         ProjectValidationUtils.validateProjectOwner(company, project);
 
-        //각 타임라인dto를 타임라인 엔티티로 저장
+
         for (TimelineDto timelineDto : timelineDtos) {
             timelineRepository.save(timelineDto.toTimeline(project, timelineDto));
         }
     }
 
-    //프로젝트 타임라인 프로젝트 id로 조회
+
     public List<TimelineDto> findAllByProjectId(User user, Long projectId) {
+
         //해당 프로젝트의 모든 타임라인 엔티티에서 조회
         Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
         List<Timeline> timelines = timelineRepository.findAllByProjectId(projectId);
         ProjectValidationUtils.validateTimelineOwner(company, timelines.get(0));
 
-        //dto로 반환
+        if (timelines.isEmpty()) {
+            throw new ProjectNotFoundException(" ");
+        }
+        for (Timeline timeline : timelines) {
+            ProjectValidationUtils.validateTimelineOwner(company, timeline);
+        }
+
+
         return timelines.stream()
                 .map(timeline -> new TimelineDto(
                         timeline.getId(),
@@ -65,10 +75,12 @@ public class TimelineService {
                 .collect(Collectors.toList());
     }
 
-    //프로젝트 타임라인 업데이트
+
     public List<TimelineDto> updateTimelines(User user, Long projectId, List<TimelineDto> timelineDtos) {
+
         //타임라인Dto 리스트에 변동 된 타임라인 업데이트
         Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
+
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(" "));
         TimelineDto validateTimeline = timelineDtos.get(0);
@@ -85,5 +97,13 @@ public class TimelineService {
                     timelineDto.getRequiredManmonth());
         }
         return timelineDtos;
+    }
+
+    public void deleteTimelines(User user, Long projectId) {
+        List<Timeline> timelines = timelineRepository.findAllByProjectId(projectId);
+        for (Timeline timeline : timelines) {
+            ProjectValidationUtils.validateTimelineOwner(user, timeline);
+        }
+        timelineRepository.deleteAllByProjectId(projectId);
     }
 }

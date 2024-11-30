@@ -9,22 +9,33 @@
   transition: 0.3s background;
 }
 
+%noBackgroundBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  transition: 0.3s background;
+}
+
+%noBackgroundBtn:hover {
+  background: #e8e8e8;
+}
+
 .YellowBtn {
   @extend %btn;
-  background: #F1B61B;
+  background: #f1b61b;
 }
 
 .YellowBtn:hover {
-  background: #BE8F15;
+  background: #be8f15;
 }
 
 .WhiteBtn {
   @extend %btn;
-  background: #FFFFFF;
+  background: #ffffff;
 }
 
 .WhiteBtn:hover {
-  @extend %btn;
   background: #e8e8e8;
 }
 
@@ -38,7 +49,7 @@
   padding: 10px;
   font-family: 'NanumGothicBold';
   font-size: xx-large;
-  color: #E52828;
+  color: #e52828;
   border-radius: 30px;
   background: none;
   position: absolute;
@@ -47,4 +58,19 @@
   &:hover {
     background: #e8e8e8;
   }
+}
+.removeBtn {
+  @extend %noBackgroundBtn;
+  color: #e52828;
+}
+
+.addBtn {
+  @extend %noBackgroundBtn;
+  color: #3dadff;
+}
+
+.unableBtn {
+  @extend %btn;
+  background: #e8e8e8;
+  cursor: not-allowed;
 }

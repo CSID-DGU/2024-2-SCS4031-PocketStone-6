@@ -31,4 +31,5 @@ public interface TimelineRepository extends JpaRepository<Timeline,Long> {
                                           Double requiredManmonth);
 
 
+    void deleteAllByProjectId(Long projectId);
 }

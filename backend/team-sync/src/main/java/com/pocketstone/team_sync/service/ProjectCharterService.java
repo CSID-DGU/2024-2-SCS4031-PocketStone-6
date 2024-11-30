@@ -114,7 +114,7 @@ public class ProjectCharterService {
 
     private void updatePositions(Long projectId, ProjectCharter projectCharter) {
         for (Position position : projectCharter.getPositions()) {
-            positionRepository.updatePositionByProjectId(projectId, position.getId(), position.getPositionName(), position.getPositionContent());
+                positionRepository.updatePositionByProjectId(projectId, position.getId(), position.getPositionName(), position.getPositionContent(), position.getPositionCount());
         }
     }
 
@@ -149,6 +149,13 @@ public class ProjectCharterService {
     }
 
 
+    public void deleteProjectCharter(User user, Long projectId) {
+        ProjectCharter projectCharter = projectCharterRepository.findByProjectId(projectId)
+                .orElseThrow(CharterNotFoundException::new);
+        ProjectValidationUtils.validateCharterOwner(user, projectCharter);
+
+        projectCharterRepository.delete(projectCharter);
+    }
 }
 
 

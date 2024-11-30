@@ -13,6 +13,7 @@ import { useScrollBlock } from 'hooks/useScrollBlock';
 import { useMemberInfoByIdList } from 'hooks/useMemberInfoByIdList';
 import { addElementAtList, deleteElementAtList } from 'utils/parseList';
 import { addProjectMembers } from 'api/member/addProjectMembers';
+import { FaPlus, FaTrash } from 'react-icons/fa';
 
 export default function ProjectMember() {
   const { id } = useParams();
@@ -214,19 +215,19 @@ const EmployeeBlock = ({
           <div className={`${CS.category} ${MS.flexOne}`}>
             {list.includes(employeeId) ? (
               <button
-                className={BS.YellowBtn}
+                className={`${BS.removeBtn} ${MS.width100}`}
                 onClick={() => {
                   setList(deleteElementAtList(employeeId, list));
                 }}>
-                삭제
+                <FaTrash />
               </button>
             ) : (
               <button
-                className={BS.YellowBtn}
+                className={`${BS.addBtn} ${MS.width100}`}
                 onClick={() => {
                   setList(addElementAtList(employeeId, list));
                 }}>
-                추가
+                <FaPlus />
               </button>
             )}
           </div>
@@ -367,11 +368,11 @@ const MemberBlock = ({
         <div className={CS.noClickPart}>
           <div className={`${CS.category} ${MS.flexOne}`}>
             <button
-              className={BS.YellowBtn}
+              className={`${BS.removeBtn} ${MS.width100}`}
               onClick={() => {
                 setList(deleteElementAtList(employeeId, list));
               }}>
-              삭제
+              <FaTrash />
             </button>
           </div>
         </div>

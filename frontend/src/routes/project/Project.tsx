@@ -5,6 +5,7 @@ import ProjectBlockStyle from './ProjectBlock.module.scss';
 import { UseQueryResult } from '@tanstack/react-query';
 import { BS, MS } from 'styles';
 import { checkIsNoData } from 'utils/checkIsNoData';
+import { FaTrash } from 'react-icons/fa';
 
 export default function Project() {
   const navigate = useNavigate();
@@ -12,17 +13,17 @@ export default function Project() {
   return (
     <div className={MS.container}>
       <div className={MS.content}>
-        <div className={MS.contentTitle}>
+        <div className={`${MS.contentTitle} ${MS.displayFlex} ${MS.flexSpace}`}>
           <p>프로젝트 목록</p>
-        </div>
-        <div className={MS.contentBox}>
           <button
-            className={`${BS.YellowBtn} ${S.newProjectBtn}`}
+            className={BS.YellowBtn}
             onClick={() => {
               navigate('/project/new');
             }}>
             ➕ 새로운 프로젝트
           </button>
+        </div>
+        <div className={MS.contentBox}>
           <ProjectContent />
         </div>
       </div>
@@ -96,11 +97,11 @@ const ProjectBlock = ({ id, projectName, startDate, mvpDate }: projectInfoType) 
         <div className={ProjectBlockStyle.noClickPart}>
           <div className={`${S.category} ${MS.flexOne}`}>
             <button
-              className={BS.YellowBtn}
+              className={`${BS.removeBtn} ${MS.width100}`}
               onClick={async () => {
                 alert('즐거운 크리스마스 되세요');
               }}>
-              삭제
+              <FaTrash />
             </button>
           </div>
         </div>

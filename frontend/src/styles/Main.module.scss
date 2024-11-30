@@ -50,6 +50,14 @@
   position: relative;
 }
 
+.loadingBox {
+  background: white;
+  min-height: 100px;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
 .displayFlex {
   display: flex;
 }
@@ -68,6 +76,10 @@
 
 .Mr10 {
   margin-right: 10px;
+}
+
+.Mb5 {
+  margin-bottom: 5px;
 }
 
 .Mb10 {
@@ -92,4 +104,12 @@
 
 .flexThree {
   flex: 3;
+}
+
+.width100 {
+  width: 100%;
+}
+
+.displayBlock {
+  display: block;
 }

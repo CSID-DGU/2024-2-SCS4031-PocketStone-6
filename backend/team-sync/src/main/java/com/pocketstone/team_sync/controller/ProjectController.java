@@ -7,13 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.pocketstone.team_sync.dto.projectdto.ProjectDto;
 import com.pocketstone.team_sync.entity.User;
@@ -61,7 +55,11 @@ public class ProjectController {
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
-    //@DeleteMapping 프로젝트 삭제
+    @DeleteMapping("/{projectId}")
+    public ResponseEntity<Object> deleteProject(@AuthenticationPrincipal User user, @PathVariable(value = "projectId") Long projectId) {
+        projectService.deleteProject(user, projectId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     //스킬목록 조회
     @GetMapping("/skills")
