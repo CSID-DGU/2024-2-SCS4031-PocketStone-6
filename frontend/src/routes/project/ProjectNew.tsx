@@ -5,10 +5,11 @@ import S from './ProjectNew.module.scss';
 import { MS, IS, BS } from 'styles';
 import { parseDateToString } from 'utils/parseDate';
 import DatePicker from 'react-datepicker';
+import { isMonday, isSunday } from 'utils/filterDate';
 
 export default function ProjectNew() {
   const [projectName, setProjectName] = useState('');
-  const [startDate, setStartDate] = useState<Date | null>(new Date());
+  const [startDate, setStartDate] = useState<Date | null>(null);
   const [mvpDate, setMvpDate] = useState<Date | null>(null);
   const navigate = useNavigate();
   return (
@@ -29,6 +30,7 @@ export default function ProjectNew() {
             <div className={S.dateInputDiv}>
               <DatePicker
                 className={`${IS.textInput} ${S.dateInput}`}
+                filterDate={(date)=>isMonday(date, mvpDate)}
                 placeholderText="시작일"
                 selected={startDate}
                 onChange={(date) => setStartDate(date)}
@@ -39,6 +41,7 @@ export default function ProjectNew() {
             <div className={S.dateInputDiv}>
               <DatePicker
                 className={`${IS.textInput} ${S.dateInput}`}
+                filterDate={(date)=>isSunday(date, startDate)}
                 placeholderText="종료일"
                 selected={mvpDate}
                 onChange={(date) => setMvpDate(date)}
