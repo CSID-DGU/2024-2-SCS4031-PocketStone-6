@@ -100,9 +100,10 @@ public class TimelineService {
     }
 
     public void deleteTimelines(User user, Long projectId) {
+        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
         List<Timeline> timelines = timelineRepository.findAllByProjectId(projectId);
         for (Timeline timeline : timelines) {
-            ProjectValidationUtils.validateTimelineOwner(user, timeline);
+            ProjectValidationUtils.validateTimelineOwner(company, timeline);
         }
         timelineRepository.deleteAllByProjectId(projectId);
     }
