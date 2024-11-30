@@ -138,7 +138,10 @@ public class ProjectMemberService {
         //회사에 해당 프로젝트 속하는지 확인
         Project project = projectRepository.findByCompanyAndId(company, projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(""));
-
+        deleteAllMembers(user,projectId);
+        manMonthRepository.flush();
+        memberRepository.flush();
+        
         List<Timeline> timelines = timelineRepository.findAllByProjectId(projectId);
         Map<LocalDate, Double> projectManmonths = buildManmonthMapFromTimelines(timelines);
         
@@ -170,9 +173,7 @@ public class ProjectMemberService {
             }
             memberList.add(new ProjectMember(project,employee));
         }
-        deleteAllMembers(user,projectId);
-        manMonthRepository.flush();
-        memberRepository.flush();
+        
         
         memberRepository.saveAll(memberList);//저장
           
