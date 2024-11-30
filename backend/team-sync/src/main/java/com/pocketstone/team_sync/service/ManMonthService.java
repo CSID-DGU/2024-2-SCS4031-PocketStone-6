@@ -105,5 +105,15 @@ public class ManMonthService {
 
     }
 
+    public void deleteManMonthsByProjectId(Long projectId) {
+        List<ManMonth> manMonths = manMonthRepository.findByProjectId(projectId);
+
+        if (!manMonths.isEmpty()) {
+            manMonthRepository.deleteAll(manMonths);
+        }
+    }
+
+
+
 
 }

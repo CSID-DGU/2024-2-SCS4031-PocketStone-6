@@ -43,4 +43,6 @@ public interface ManMonthRepository extends JpaRepository<ManMonth, Long> {
     void deleteAllByEmployeeIdAndProjectId(Long employeeId, Long projectId);
 
     void deleteAllByProjectId(Long projectId);
+
+    List<ManMonth> findByProjectId(Long projectId);
 }

@@ -3,7 +3,8 @@ package com.pocketstone.team_sync.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.pocketstone.team_sync.exception.CompanyNotFoundException;
+import com.pocketstone.team_sync.repository.ProjectMemberRepository;
 import org.springframework.stereotype.Service;
 
 import com.pocketstone.team_sync.dto.projectdto.TimelineDto;
@@ -24,18 +25,19 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class TimelineService {
-    @Autowired
-    private TimelineRepository timelineRepository;
-    @Autowired
-    private CompanyRepository companyRepository;
-    @Autowired
-    private ProjectRepository projectRepository;
 
+    private final TimelineRepository timelineRepository;
+    private final CompanyRepository companyRepository;
+    private final ProjectRepository projectRepository;
+    private final ProjectMemberRepository projectMemberRepository;
+
+    private final ManMonthService manMonthService;
 
     public void saveTimelines(User user, Long projectId, List<TimelineDto> timelineDtos) {
 
         //전달 받은 프로젝트 아이디로 프로젝트 찾기
-        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
+        Company company  = companyRepository.findByUserId(user.getId()).orElseThrow(
+                () ->new CompanyNotFoundException(user.getUsername()));
 
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(" "));
@@ -51,7 +53,8 @@ public class TimelineService {
     public List<TimelineDto> findAllByProjectId(User user, Long projectId) {
 
         //해당 프로젝트의 모든 타임라인 엔티티에서 조회
-        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
+        Company company  = companyRepository.findByUserId(user.getId()).orElseThrow(
+                () ->new CompanyNotFoundException(user.getUsername()));
         List<Timeline> timelines = timelineRepository.findAllByProjectId(projectId);
         ProjectValidationUtils.validateTimelineOwner(company, timelines.get(0));
 
@@ -79,7 +82,9 @@ public class TimelineService {
     public List<TimelineDto> updateTimelines(User user, Long projectId, List<TimelineDto> timelineDtos) {
 
         //타임라인Dto 리스트에 변동 된 타임라인 업데이트
-        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
+        Company company  = companyRepository.findByUserId(user.getId()).orElseThrow(
+                () ->new CompanyNotFoundException(user.getUsername()));
+
 
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(" "));
@@ -100,11 +105,14 @@ public class TimelineService {
     }
 
     public void deleteTimelines(User user, Long projectId) {
-        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
+        Company company  = companyRepository.findByUserId(user.getId()).orElseThrow(
+                () ->new CompanyNotFoundException(user.getUsername()));
         List<Timeline> timelines = timelineRepository.findAllByProjectId(projectId);
         for (Timeline timeline : timelines) {
             ProjectValidationUtils.validateTimelineOwner(company, timeline);
         }
+        manMonthService.deleteManMonthsByProjectId(projectId);
+        projectMemberRepository.deleteAllByProjectId(projectId);
         timelineRepository.deleteAllByProjectId(projectId);
     }
 }
