@@ -2,3 +2,8 @@
   min-height: 100vh;
   background: #d8d8d8;
 }
+
+.beforeContainer {
+  min-height: 100vh;
+  background: #F1B61B;
+}

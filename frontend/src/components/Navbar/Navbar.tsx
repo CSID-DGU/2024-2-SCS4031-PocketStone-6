@@ -19,7 +19,7 @@ export const Navbar = () => {
           onClick={() => {
             navigate('/');
           }}>
-          <img src="./images/icon.png" alt="메인아이콘" className={S.navLogo} />
+          <img src="/images/icon.png" alt="메인아이콘" className={S.navLogo} />
           <p className={S.navTitle}>Team-Sync</p>
         </div>
         <button

@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import Main from './routes/Main';
-import Register from './routes/auth/Register';
+import Register from 'routes/auth/Register';
 import Login from './routes/auth/Login';
 import Test from './routes/Test';
 import Project from './routes/project/Project';
@@ -13,8 +13,31 @@ import S from 'App.module.css';
 import ProjectMember from 'routes/project/ProjectMember';
 import ProjectCharter from 'routes/project/ProjectCharter';
 import ProjectTimelines from 'routes/project/ProjectTimelines';
+import { useLoginInfoQuery } from 'hooks/useLoginInfoQuery';
+import BeforeLogin from 'routes/BeforeLogin';
 
 function App() {
+  const { isLogin } = useLoginInfoQuery();
+
+  return <>{isLogin ? <AfterLoginApp /> : <BeforeLoginApp />}</>;
+}
+
+const BeforeLoginApp = () => {
+  return (
+    <div className={S.beforeContainer}>
+      <div>
+        <Routes>
+          <Route path="*" element={<BeforeLogin />} />
+          {/* 회원가입/로그인 */}
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </div>
+    </div>
+  );
+};
+
+const AfterLoginApp = () => {
   return (
     <div className={S.appContainer}>
       <Navbar />
@@ -45,6 +68,6 @@ function App() {
       </div>
     </div>
   );
-}
+};
 
 export default App;

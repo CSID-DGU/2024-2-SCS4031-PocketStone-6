@@ -39,3 +39,9 @@ interface RegisterContent {
   projectId: number;
   memberList: employeeIdObject[];
 }
+interface TimelineData {
+  id: number;
+  sprintOrder: number;
+  sprintContent: string;
+  sprintDurationWeek: number;
+}

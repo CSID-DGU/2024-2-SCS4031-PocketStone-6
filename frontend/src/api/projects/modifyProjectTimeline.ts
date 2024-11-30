@@ -5,19 +5,18 @@ import { headers } from '../../constants/headers';
 import { NavigateFunction } from 'react-router-dom';
 import { completeMessage } from '../../constants/completeMessage';
 import { ERROR_AT_CHARTER_REGISTER } from 'constants/errorMessage';
-import { refreshPage } from 'utils/movePage';
 
-export const createProjectTimelines = async (projectId: number, sprintOrder: number, navigate: NavigateFunction) => {
-  const content = [
-    {
-      sprintOrder: sprintOrder,
-      sprintContent: '스프린트 내용',
-      sprintDurationWeek: 1,
-    },
-  ];
+export const modifyProjectTimelines = async (
+  projectId: number,
+  timelinesData: TimelineData[],
+  navigate: NavigateFunction
+) => {
+  timelinesData.sort((a, b) => a.sprintOrder - b.sprintOrder);
+  const content = timelinesData;
+  console.log(content)
 
   try {
-    const response = await tokenAxios.post(
+    const response = await tokenAxios.put(
       `${API_URL}/api/projects/timelines/${projectId}`,
       content,
       {
@@ -25,8 +24,8 @@ export const createProjectTimelines = async (projectId: number, sprintOrder: num
       }
     );
     if (response.data) {
-      alert(completeMessage.CREATE_CHARTER);
-      refreshPage(navigate);
+      alert(completeMessage.MODIFY_CHARTER);
+      navigate(`/project/${projectId}`);
       return;
     }
   } catch (error) {
