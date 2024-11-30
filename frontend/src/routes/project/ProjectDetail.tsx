@@ -3,8 +3,6 @@ import { BS, CS, MS, TS } from 'styles';
 import S from './ProjectDetail.module.scss';
 import { useProjectDetailInfoQuery } from 'hooks/useProjectDetailInfoQuery';
 import { useProjectMemberQuery } from 'hooks/useProjectMemberQuery';
-import { createProjectCharter } from 'api/projects/createProjectCharter';
-import { createProjectTimelines } from 'api/projects/createProjectTimelines';
 import { checkIsNoData } from 'utils/checkIsNoData';
 import { NO_CHARTER_OR_TIMELINES } from 'constants/errorMessage';
 import { MdDateRange } from 'react-icons/md';
@@ -21,23 +19,7 @@ export default function ProjectDetail() {
         <div className={MS.content}>
           <div className={`${MS.contentTitle} ${MS.displayFlex} ${MS.flexSpace}`}>
             <p>프로젝트 정보</p>
-            {checkIsNoData(charterQuery.data) ? (
-              <button
-                className={BS.YellowBtn}
-                onClick={() => {
-                  createProjectCharter(Number(id), navigate);
-                }}>
-                프로젝트 차터 생성
-              </button>
-            ) : (
-              <button
-                className={BS.WhiteBtn}
-                onClick={() => {
-                  navigate(`/project/${id}/charter`);
-                }}>
-                프로젝트 차터 수정
-              </button>
-            )}
+            <button className={BS.YellowBtn}>차터 버튼</button>
           </div>
           <div className={`${MS.contentBox} ${S.contentBox}`}>
             {/* 기본 정보 */}
@@ -58,23 +40,7 @@ export default function ProjectDetail() {
         <div className={MS.content}>
           <div className={`${MS.contentTitle} ${MS.displayFlex} ${MS.flexSpace}`}>
             <p>타임라인</p>
-            {checkIsNoData(timelinesQuery.data) ? (
-              <button
-                className={BS.YellowBtn}
-                onClick={() => {
-                  createProjectTimelines(Number(id), 0, navigate);
-                }}>
-                타임라인 생성
-              </button>
-            ) : (
-              <button
-                className={BS.WhiteBtn}
-                onClick={() => {
-                  navigate(`/project/${id}/timelines`);
-                }}>
-                타임라인 수정
-              </button>
-            )}
+            <button className={BS.YellowBtn}>타임라인 버튼</button>
           </div>
           <div className={`${MS.contentBox} ${S.contentBox}`}>
             {checkIsNoData(timelinesQuery.data) ? (
@@ -118,16 +84,19 @@ export default function ProjectDetail() {
 const TimelinesList = ({ timelinesList }: { timelinesList: TimelineData[] }) => {
   return (
     <div className={S.timelineListContainer}>
-      {timelinesList.map(({ sprintOrder, sprintContent, sprintStartDate, sprintEndDate, requiredManmonth }) => {
-        return (
-          <div className={S.timelineContainer}>
-            <p className={`${TS.smallTitle} ${MS.Mb5}`}>
-              스프린트 {sprintOrder}
-            </p>
-            <p>🚩 {sprintContent}</p>
-          </div>
-        );
-      })}
+
+      <p>{JSON.stringify(timelinesList)}</p>
+
+      {timelinesList.map(
+        ({ sprintOrder, sprintContent, sprintStartDate, sprintEndDate, requiredManmonth }) => {
+          return (
+            <div className={S.timelineContainer}>
+              <p className={`${TS.smallTitle} ${MS.Mb5}`}>스프린트 {sprintOrder}</p>
+              <p>🚩 {sprintContent}</p>
+            </div>
+          );
+        }
+      )}
     </div>
   );
 };

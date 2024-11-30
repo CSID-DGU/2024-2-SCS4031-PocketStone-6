@@ -7,9 +7,7 @@ import { completeMessage } from '../../constants/completeMessage';
 import { ERROR_AT_CHARTER_REGISTER } from 'constants/errorMessage';
 import { refreshPage } from 'utils/movePage';
 
-export const postProjectCharter = async (projectId: number, navigate: NavigateFunction) => {
-  const content = {};
-
+export const postProjectCharter = async (projectId: number, content: CharterContent, navigate: NavigateFunction) => {
   try {
     const response = await tokenAxios.post(
       `${API_URL}/api/projects/charter/${projectId}`,
