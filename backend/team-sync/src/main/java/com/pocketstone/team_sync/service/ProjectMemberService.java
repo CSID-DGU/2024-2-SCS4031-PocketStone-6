@@ -211,11 +211,11 @@ public class ProjectMemberService {
             throw new ProjectNotFoundException("");
         }
         
-        if (!memberRepository.existsByProjectId(projectId)){
-            throw new RuntimeException("Any member not found");
+        if (memberRepository.existsByProjectId(projectId)){
+            manMonthRepository.deleteAllByProjectId(projectId);
+            memberRepository.deleteAllByProjectId(projectId); 
         }
-        manMonthRepository.deleteAllByProjectId(projectId);
-        memberRepository.deleteAllByProjectId(projectId);  
+         
     }
 
     //팀원 조회
