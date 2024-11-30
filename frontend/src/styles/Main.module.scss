@@ -50,6 +50,14 @@
   position: relative;
 }
 
+.loadingBox {
+  background: white;
+  min-height: 100px;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
 .displayFlex {
   display: flex;
 }

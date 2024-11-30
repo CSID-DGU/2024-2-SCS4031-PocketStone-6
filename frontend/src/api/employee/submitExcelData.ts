@@ -6,7 +6,7 @@ import { refreshPage } from '../../utils/movePage';
 
 // FormData 생성 및 서버로 전송
 export const submitExcelData = async (
-  e: React.FormEvent<HTMLFormElement>,
+  e: React.FormEvent<Element>,
   file: File | null,
   navigate: NavigateFunction
 ) => {
