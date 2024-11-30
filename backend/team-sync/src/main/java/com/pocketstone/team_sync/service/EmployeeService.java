@@ -48,6 +48,7 @@ public class EmployeeService {
         List<Employee> employees = parseExcelFile(company, file);
         System.out.println("처음까지sssssssss 변환");
         List<PastProject> pastProjects = parseExcelFileProject(company, file, employees);
+        System.out.println("프로젝트까지! 변환");
         employeeRepository.saveAll(employees);
         pastProjectRepository.saveAll(pastProjects);
         
@@ -202,7 +203,7 @@ public class EmployeeService {
                             employee.getDepartment(),
                             employee.getPosition(),
                             employee.getRole()
-
+           
             );
             employeeList.add(dto);
         }
