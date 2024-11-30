@@ -87,7 +87,7 @@ public class ManMonthService {
         LocalDate endSunday = startMonday.plusDays(6);
 
         ManMonth allocation = manMonthRepository
-                .findByEmployeeAndWeekStartDate(employee, startMonday)
+                .findByEmployeeAndProjectAndTimelineAndWeekStartDate(employee, project, timeline, startMonday)
                 .orElse(new ManMonth());
 
         if (allocation.getId() == null) {

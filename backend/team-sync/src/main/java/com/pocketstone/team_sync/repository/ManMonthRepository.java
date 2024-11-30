@@ -27,8 +27,10 @@ public interface ManMonthRepository extends JpaRepository<ManMonth, Long> {
             @Param("endDate") LocalDate endDate
     );
 
-    Optional<ManMonth> findByEmployeeAndWeekStartDate(
+    Optional<ManMonth> findByEmployeeAndProjectAndTimelineAndWeekStartDate(
             Employee employee,
+            Project project,
+            Timeline timeline,
             LocalDate weekStartDate
     );
 
