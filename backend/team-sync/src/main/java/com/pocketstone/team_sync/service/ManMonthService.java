@@ -1,14 +1,6 @@
 package com.pocketstone.team_sync.service;
 
 
-import com.pocketstone.team_sync.entity.*;
-import com.pocketstone.team_sync.exception.ExceededWorkloadException;
-import com.pocketstone.team_sync.repository.ManMonthRepository;
-import com.pocketstone.team_sync.utility.ProjectValidationUtils;
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
@@ -16,13 +8,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
+import com.pocketstone.team_sync.entity.Company;
+import com.pocketstone.team_sync.entity.Employee;
+import com.pocketstone.team_sync.entity.ManMonth;
+import com.pocketstone.team_sync.entity.Project;
+import com.pocketstone.team_sync.entity.Timeline;
+import com.pocketstone.team_sync.entity.User;
+import com.pocketstone.team_sync.exception.ExceededWorkloadException;
+import com.pocketstone.team_sync.repository.CompanyRepository;
+import com.pocketstone.team_sync.repository.ManMonthRepository;
+import com.pocketstone.team_sync.utility.ProjectValidationUtils;
+
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class ManMonthService {
 
     private static final Double MAX_MANMONTH = 0.25;
-
+    private final CompanyRepository companyRepository;
     private final ManMonthRepository manMonthRepository;
 
     public Map<LocalDate, Double> checkAvailability(Employee employee, LocalDate startDate, LocalDate endDate) {
@@ -53,7 +61,8 @@ public class ManMonthService {
 
     @Transactional
     public void allocateManmonth(User user, Employee employee, Project project, Timeline timeline, LocalDate startDate, LocalDate endDate, Map<LocalDate, Double> weeklyManmonths) {
-        ProjectValidationUtils.validateProjectOwner(user, project);
+        Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
+        ProjectValidationUtils.validateProjectOwner(company, project);
         Map<LocalDate, Double> availability = checkAvailability(employee, startDate, endDate);
 
         for (Map.Entry<LocalDate, Double> entry : weeklyManmonths.entrySet()) {
