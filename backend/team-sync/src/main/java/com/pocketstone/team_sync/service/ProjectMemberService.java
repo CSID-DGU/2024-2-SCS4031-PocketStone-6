@@ -10,10 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.pocketstone.team_sync.entity.*;
-import com.pocketstone.team_sync.exception.ExceededWorkloadException;
-import com.pocketstone.team_sync.exception.ProjectNotFoundException;
-import com.pocketstone.team_sync.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -21,6 +17,20 @@ import com.pocketstone.team_sync.dto.memberdto.MemberListResponseDto;
 import com.pocketstone.team_sync.dto.memberdto.MemberRequestDto;
 import com.pocketstone.team_sync.dto.memberdto.RecommendationRequestDto;
 import com.pocketstone.team_sync.dto.memberdto.RecommendationResponseDto;
+import com.pocketstone.team_sync.entity.Company;
+import com.pocketstone.team_sync.entity.Employee;
+import com.pocketstone.team_sync.entity.Project;
+import com.pocketstone.team_sync.entity.ProjectMember;
+import com.pocketstone.team_sync.entity.Timeline;
+import com.pocketstone.team_sync.entity.User;
+import com.pocketstone.team_sync.exception.ExceededWorkloadException;
+import com.pocketstone.team_sync.exception.ProjectNotFoundException;
+import com.pocketstone.team_sync.repository.CompanyRepository;
+import com.pocketstone.team_sync.repository.EmployeeRepository;
+import com.pocketstone.team_sync.repository.ManMonthRepository;
+import com.pocketstone.team_sync.repository.ProjectMemberRepository;
+import com.pocketstone.team_sync.repository.ProjectRepository;
+import com.pocketstone.team_sync.repository.TimelineRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -160,6 +170,10 @@ public class ProjectMemberService {
             }
             memberList.add(new ProjectMember(project,employee));
         }
+        deleteAllMembers(user,projectId);
+        manMonthRepository.flush();
+        memberRepository.flush();
+        
         memberRepository.saveAll(memberList);//저장
           
     }
