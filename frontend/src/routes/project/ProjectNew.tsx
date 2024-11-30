@@ -29,7 +29,7 @@ export default function ProjectNew() {
           <div className={S.dateInputDiv}>
             <div className={S.dateInputDiv}>
               <DatePicker
-                className={`${IS.textInput} ${S.dateInput}`}
+                className={`${IS.textInput} ${MS.width100}`}
                 filterDate={(date)=>isMonday(date, mvpDate)}
                 placeholderText="시작일"
                 selected={startDate}
@@ -40,7 +40,7 @@ export default function ProjectNew() {
             <p>~</p>
             <div className={S.dateInputDiv}>
               <DatePicker
-                className={`${IS.textInput} ${S.dateInput}`}
+                className={`${IS.textInput} ${MS.width100}`}
                 filterDate={(date)=>isSunday(date, startDate)}
                 placeholderText="종료일"
                 selected={mvpDate}

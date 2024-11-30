@@ -19,7 +19,13 @@ export default function ProjectDetail() {
         <div className={MS.content}>
           <div className={`${MS.contentTitle} ${MS.displayFlex} ${MS.flexSpace}`}>
             <p>프로젝트 정보</p>
-            <button className={BS.YellowBtn}>차터 버튼</button>
+            <button
+              className={BS.YellowBtn}
+              onClick={() => {
+                navigate(`/project/${id}/charter`);
+              }}>
+              차터 버튼
+            </button>
           </div>
           <div className={`${MS.contentBox} ${S.contentBox}`}>
             {/* 기본 정보 */}
@@ -40,7 +46,13 @@ export default function ProjectDetail() {
         <div className={MS.content}>
           <div className={`${MS.contentTitle} ${MS.displayFlex} ${MS.flexSpace}`}>
             <p>타임라인</p>
-            <button className={BS.YellowBtn}>타임라인 버튼</button>
+            <button
+              className={BS.YellowBtn}
+              onClick={() => {
+                navigate(`/project/${id}/timelines`);
+              }}>
+              타임라인 버튼
+            </button>
           </div>
           <div className={`${MS.contentBox} ${S.contentBox}`}>
             {checkIsNoData(timelinesQuery.data) ? (
@@ -84,7 +96,6 @@ export default function ProjectDetail() {
 const TimelinesList = ({ timelinesList }: { timelinesList: TimelineData[] }) => {
   return (
     <div className={S.timelineListContainer}>
-
       <p>{JSON.stringify(timelinesList)}</p>
 
       {timelinesList.map(

@@ -13,6 +13,8 @@ import S from 'App.module.css';
 import ProjectMember from 'routes/project/ProjectMember';
 import { useLoginInfoQuery } from 'hooks/useLoginInfoQuery';
 import BeforeLogin from 'routes/BeforeLogin';
+import ProjectCharter from 'routes/project/ProjectCharter';
+import ProjectTimelines from 'routes/project/ProjectTimelines';
 
 function App() {
   const { isLogin } = useLoginInfoQuery();
@@ -55,6 +57,8 @@ const AfterLoginApp = () => {
           <Route path="/project" element={<Project />} />
           <Route path="/project/new" element={<ProjectNew />} />
           <Route path="/project/:id" element={<ProjectDetail />} />
+          <Route path="/project/:id/charter" element={<ProjectCharter />} />
+          <Route path="/project/:id/timelines" element={<ProjectTimelines />} />
           <Route path="/project/:id/member" element={<ProjectMember />} />
 
           {/* 인원 관리 */}
