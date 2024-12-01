@@ -23,8 +23,33 @@
 
   &::after {
     content: '';
-	display: block;
-	clear: both;
+    display: block;
+    clear: both;
+  }
+}
+
+.charterContainer {
+  > * {
+    border-bottom: 1px solid gray;
+  }
+
+  > *:last-child {
+    border-bottom: none;
+  }
+}
+
+.charterSection {
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.charterBlock {
+  > p:first-child {
+    font-family: 'NanumGothicBold';
+  }
+
+  > p:last-child {
+    margin-left: 10px;
   }
 }
 
