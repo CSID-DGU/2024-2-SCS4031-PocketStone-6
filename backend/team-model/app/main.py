@@ -1,9 +1,9 @@
 from fastapi import FastAPI, Depends 
 from sqlalchemy.orm import Session
-from database import get_db
+from database import get_db, Base_scaled, scaled_engine
 import random
 import logging
-
+from employee_service import scale_employee_data  # scale_employee_data 함수 임포트
 from schemas import Member, RecommendationRequestDto, RecommendationResponseDto
 from models import Employee, Company, Project
 
@@ -12,8 +12,8 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
-
-
+# 테이블 생성 (애플리케이션 실행 시 자동으로 테이블이 생성됩니다)
+Base_scaled.metadata.create_all(bind=scaled_engine)
 
 @app.get("/")
 def read_root():
@@ -24,8 +24,11 @@ def read_employees(db: Session = Depends(get_db)):
     employees = db.query(Employee).all()
     return employees
 
-
-
+# 특정 회사 사원 점수 정규화 하기 
+@app.post("/scale-employee-score/") #쿼리파라미터로 회사아이디 보내기?company_id=1
+def scale_employee_data_endpoint(company_id:int, db: Session = Depends(get_db)):
+    result = scale_employee_data(db,company_id)
+    return {"message": result}
 
 @app.post("/api/recommendation")
 def recommendation(body: RecommendationRequestDto, db: Session = Depends(get_db)):
