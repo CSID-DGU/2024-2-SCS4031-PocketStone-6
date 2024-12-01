@@ -56,7 +56,7 @@ export const TimelinesInput = ({
                 <p>~</p>
                 <DatePicker
                   className={`${S.textInput}`}
-                  filterDate={(date) => isCanPickSunday(date, new Date(sprintStartDate))}
+                  filterDate={(date) => isCanPickSunday(date, new Date(sprintStartDate), new Date(sprintEndDate))}
                   placeholderText="종료일"
                   selected={new Date(sprintEndDate)}
                   onChange={(date) =>

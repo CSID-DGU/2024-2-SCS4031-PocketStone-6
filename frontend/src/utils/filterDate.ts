@@ -19,8 +19,8 @@ export const isCanPickMonday = (date: Date, sprintEndDate: Date) => {
   return day === 1 && today <= date && sprintEndDate > date;
 };
 
-export const isCanPickSunday = (date: Date, sprintStartDate: Date) => {
+export const isCanPickSunday = (date: Date, sprintStartDate: Date, mvpDate: Date) => {
   const day = date.getDay();
 
-  return day === 0 && sprintStartDate < date;
+  return day === 0 && sprintStartDate < date && date <= mvpDate;
 };

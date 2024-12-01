@@ -20,10 +20,10 @@ export default function ProjectTimelines() {
     <div className={MS.container}>
       <div className={MS.content}>
         <div className={`${MS.contentTitle} ${MS.displayFlex} ${MS.flexSpace}`}>
-          <p>{id} 프로젝트 타임라인</p>
+          <p>프로젝트 타임라인 수정</p>
           <div className={MS.displayFlex}>
             <button
-              className={BS.addBtn}
+              className={`${BS.addBtn} ${MS.Mr10}`}
               onClick={() => {
                 setTimelinesContent(
                   addTimelines(
@@ -34,13 +34,6 @@ export default function ProjectTimelines() {
                 );
               }}>
               <FaPlus />
-            </button>
-            <button
-              className={BS.YellowBtn}
-              onClick={() => {
-                console.log(timelinesContent);
-              }}>
-              값 확인
             </button>
             {checkIsNoData(timelinesQuery?.data) ? (
               <button
