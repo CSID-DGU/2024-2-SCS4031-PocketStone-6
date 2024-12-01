@@ -1,0 +1,10 @@
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  > p {
+    font-family: 'NanumGothicBold';
+    font-size: x-large;
+    margin-right: 5px;
+  }
+}
