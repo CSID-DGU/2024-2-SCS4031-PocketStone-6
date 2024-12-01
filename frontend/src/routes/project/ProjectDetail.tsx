@@ -96,13 +96,17 @@ export default function ProjectDetail() {
 const TimelinesList = ({ timelinesList }: { timelinesList: TimelineData[] }) => {
   return (
     <div className={S.timelineListContainer}>
-      <p>{JSON.stringify(timelinesList)}</p>
-
       {timelinesList.map(
         ({ sprintOrder, sprintContent, sprintStartDate, sprintEndDate, requiredManmonth }) => {
           return (
             <div className={S.timelineContainer}>
-              <p className={`${TS.smallTitle} ${MS.Mb5}`}>스프린트 {sprintOrder}</p>
+              <div className={S.timelineTitle}>
+                <p className={`${TS.smallTitle} ${MS.Mr10}`}>스프린트 {sprintOrder}</p>
+                <p className={`${TS.smallText}`}>Man-Month: {requiredManmonth}</p>
+              </div>
+              <p className={`${TS.smallText} ${MS.Mb5}`}>
+                ({sprintStartDate} ~ {sprintEndDate})
+              </p>
               <p>🚩 {sprintContent}</p>
             </div>
           );

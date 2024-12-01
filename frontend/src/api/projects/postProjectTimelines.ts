@@ -5,7 +5,6 @@ import { headers } from '../../constants/headers';
 import { NavigateFunction } from 'react-router-dom';
 import { completeMessage } from '../../constants/completeMessage';
 import { ERROR_AT_CHARTER_REGISTER } from 'constants/errorMessage';
-import { refreshPage } from 'utils/movePage';
 
 export const postProjectTimelines = async (
   projectId: number,
@@ -21,8 +20,8 @@ export const postProjectTimelines = async (
       }
     );
     if (response.data) {
-      alert(completeMessage.CREATE_CHARTER);
-      refreshPage(navigate);
+      alert(completeMessage.MODIFY_TIMELINES);
+      navigate(`/project/${projectId}`);
       return;
     }
   } catch (error) {

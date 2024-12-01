@@ -5,20 +5,23 @@ import { headers } from '../../constants/headers';
 import { NavigateFunction } from 'react-router-dom';
 import { completeMessage } from '../../constants/completeMessage';
 import { ERROR_AT_CHARTER_REGISTER } from 'constants/errorMessage';
-import { refreshPage } from 'utils/movePage';
 
-export const postProjectCharter = async (projectId: number, content: CharterContent, navigate: NavigateFunction) => {
+export const putProjectTimelines = async (
+  projectId: number,
+  content: TimelineData[],
+  navigate: NavigateFunction
+) => {
   try {
-    const response = await tokenAxios.post(
-      `${API_URL}/api/projects/charter/${projectId}`,
+    const response = await tokenAxios.put(
+      `${API_URL}/api/projects/timelines/${projectId}`,
       content,
       {
         headers: headers,
       }
     );
     if (response.data) {
-      alert(completeMessage.MODIFY_CHARTER);
-      refreshPage(navigate);
+      alert(completeMessage.MODIFY_TIMELINES);
+      navigate(`/project/${projectId}`);
       return;
     }
   } catch (error) {
