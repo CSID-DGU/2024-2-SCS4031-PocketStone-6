@@ -3,9 +3,30 @@ import { useParams } from 'react-router-dom';
 import { BS, MS } from 'styles';
 import S from './ProjectCharter.module.scss';
 import { FaPlus } from 'react-icons/fa';
-import { addObjectives, addPrinciples, addRisks, addScopes, addStakeholders, addVisions } from 'utils/addCharterData';
-import { ObjectivesInput, PrinciplesInput, RisksInput, ScopesInput, StakeholdersInput, VisionsInput } from 'components/Input/CharterInput';
-import { handleObjectiveChange, handlePrinciplesChange, handleRisksChange, handleScopesChange, handleStakeholdersChange, handleVisionsChange } from 'utils/handleCharterContent';
+import {
+  addObjectives,
+  addPrinciples,
+  addRisks,
+  addScopes,
+  addStakeholders,
+  addVisions,
+} from 'utils/addCharterData';
+import {
+  ObjectivesInput,
+  PrinciplesInput,
+  RisksInput,
+  ScopesInput,
+  StakeholdersInput,
+  VisionsInput,
+} from 'components/Input/CharterInput';
+import {
+  handleObjectiveChange,
+  handlePrinciplesChange,
+  handleRisksChange,
+  handleScopesChange,
+  handleStakeholdersChange,
+  handleVisionsChange,
+} from 'utils/handleCharterContent';
 
 export default function ProjectCharter() {
   const { id } = useParams();
@@ -27,10 +48,16 @@ export default function ProjectCharter() {
 
         <div className={MS.contentBox}>
           <div className={S.section}>
-            <p>목표</p>
-            <button className={BS.addBtn} onClick={() => {setCharterContent(addObjectives(charterContent))}}>
-              <FaPlus />
-            </button>
+            <div className={S.sectionTitle}>
+              <p>목표</p>
+              <button
+                className={BS.addBtn}
+                onClick={() => {
+                  setCharterContent(addObjectives(charterContent));
+                }}>
+                <FaPlus />
+              </button>
+            </div>
             {charterContent?.objectives === undefined ? null : (
               <ObjectivesInput
                 objectivesList={charterContent?.objectives}
@@ -41,10 +68,16 @@ export default function ProjectCharter() {
             )}
           </div>
           <div className={S.section}>
-            <p>원칙</p>
-            <button className={BS.addBtn} onClick={() => {setCharterContent(addPrinciples(charterContent))}}>
-              <FaPlus />
-            </button>
+            <div className={S.sectionTitle}>
+              <p>원칙</p>
+              <button
+                className={BS.addBtn}
+                onClick={() => {
+                  setCharterContent(addPrinciples(charterContent));
+                }}>
+                <FaPlus />
+              </button>
+            </div>
             {charterContent?.principles === undefined ? null : (
               <PrinciplesInput
                 principlesList={charterContent?.principles}
@@ -55,10 +88,16 @@ export default function ProjectCharter() {
             )}
           </div>
           <div className={S.section}>
-            <p>범위</p>
-            <button className={BS.addBtn} onClick={() => {setCharterContent(addScopes(charterContent))}}>
-              <FaPlus />
-            </button>
+            <div className={S.sectionTitle}>
+              <p>범위</p>
+              <button
+                className={BS.addBtn}
+                onClick={() => {
+                  setCharterContent(addScopes(charterContent));
+                }}>
+                <FaPlus />
+              </button>
+            </div>
             {charterContent?.scopes === undefined ? null : (
               <ScopesInput
                 scopesList={charterContent?.scopes}
@@ -69,10 +108,16 @@ export default function ProjectCharter() {
             )}
           </div>
           <div className={S.section}>
-            <p>비전</p>
-            <button className={BS.addBtn} onClick={() => {setCharterContent(addVisions(charterContent))}}>
-              <FaPlus />
-            </button>
+            <div className={S.sectionTitle}>
+              <p>비전</p>
+              <button
+                className={BS.addBtn}
+                onClick={() => {
+                  setCharterContent(addVisions(charterContent));
+                }}>
+                <FaPlus />
+              </button>
+            </div>
             {charterContent?.visions === undefined ? null : (
               <VisionsInput
                 visionsList={charterContent?.visions}
@@ -83,10 +128,16 @@ export default function ProjectCharter() {
             )}
           </div>
           <div className={S.section}>
-            <p>이해 관계자</p>
-            <button className={BS.addBtn} onClick={() => {setCharterContent(addStakeholders(charterContent))}}>
-              <FaPlus />
-            </button>
+            <div className={S.sectionTitle}>
+              <p>이해 관계자</p>
+              <button
+                className={BS.addBtn}
+                onClick={() => {
+                  setCharterContent(addStakeholders(charterContent));
+                }}>
+                <FaPlus />
+              </button>
+            </div>
             {charterContent?.stakeholders === undefined ? null : (
               <StakeholdersInput
                 stakeholdersList={charterContent?.stakeholders}
@@ -97,10 +148,16 @@ export default function ProjectCharter() {
             )}
           </div>
           <div className={S.section}>
-            <p>위험 요소</p>
-            <button className={BS.addBtn} onClick={() => {setCharterContent(addRisks(charterContent))}}>
-              <FaPlus />
-            </button>
+            <div className={S.sectionTitle}>
+              <p>위험 요소</p>
+              <button
+                className={BS.addBtn}
+                onClick={() => {
+                  setCharterContent(addRisks(charterContent));
+                }}>
+                <FaPlus />
+              </button>
+            </div>
             {charterContent?.risks === undefined ? null : (
               <RisksInput
                 risksList={charterContent?.risks}

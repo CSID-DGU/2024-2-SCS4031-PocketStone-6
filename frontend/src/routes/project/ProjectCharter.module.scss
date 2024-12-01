@@ -1,5 +1,16 @@
 .section {
-    padding: 10px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid gray;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid gray;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  > p {
+    font-family: 'NanumGothicBold';
+    font-size: x-large;
+    margin-right: 5px;
+  }
 }
