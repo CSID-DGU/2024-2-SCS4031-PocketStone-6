@@ -1,30 +1,21 @@
 from fastapi import FastAPI, Depends 
-from pydantic import BaseModel
-from typing import List
 from sqlalchemy.orm import Session
-# main.py에서 상대 경로 대신 절대 경로 사용
-from database import get_db
+from database import get_db, Base_scaled, scaled_engine
 import random
 import logging
-
+from employee_service import scale_employee_data  # scale_employee_data 함수 임포트
+from schemas import Member, RecommendationRequestDto, RecommendationResponseDto
 from models import Employee, Company, Project
+from personality_service import embedding_employee_personality
+from project_service  import embedding_project
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
-# Request와 Response에 사용될 데이터 모델 정의
-class Member(BaseModel):
-    employeeId: int
-
-class RecommendationRequestDto(BaseModel):
-    projectId: int
-    memberIds: List[int]
-
-class RecommendationResponseDto(BaseModel):
-    memberList: List[Member]
-
+# 테이블 생성 (애플리케이션 실행 시 자동으로 테이블이 생성됩니다)
+Base_scaled.metadata.create_all(bind=scaled_engine)
 
 @app.get("/")
 def read_root():
@@ -35,7 +26,23 @@ def read_employees(db: Session = Depends(get_db)):
     employees = db.query(Employee).all()
     return employees
 
+# 특정 회사 사원 점수 정규화 하기 
+@app.post("/scale-employee-score/") #쿼리파라미터로 회사아이디 보내기?company_id=1
+def scale_employee_data_endpoint(company_id:int, db: Session = Depends(get_db)):
+    result = scale_employee_data(db,company_id)
+    return {"message": result}
 
+# 성향 임베딩 저장하기
+@app.post("/embedding-employee-personality/") #쿼리파라미터로 회사아이디 보내기?company_id=1
+def embedding_personality_data_endpoint(company_id:int, db: Session = Depends(get_db)):
+    result = embedding_employee_personality(db,company_id)
+    return {"message": result}
+
+# 과거 프로젝트 적합도 임베딩하기
+@app.post("/embedding-project/") #쿼리파라미터로 회사아이디 보내기?company_id=1
+def embedding_project_data_endpoint(company_id:int,project_id:int, db: Session = Depends(get_db)):
+    result = embedding_project(db,company_id=company_id, project_id=project_id)
+    return {"message": result}
 
 
 @app.post("/api/recommendation")

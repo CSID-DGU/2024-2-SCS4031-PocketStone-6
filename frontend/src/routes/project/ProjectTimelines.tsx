@@ -1,110 +1,74 @@
+import { postProjectTimelines } from 'api/projects/postProjectTimelines';
+import { putProjectTimelines } from 'api/projects/putProjectTimelines';
+import { TimelinesInput } from 'components/Input/TimelinesInput';
 import { useProjectDetailInfoQuery } from 'hooks/useProjectDetailInfoQuery';
+import { useTimelinesState } from 'hooks/useTimelinesState';
+import { FaPlus } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
-import { BS, IS, MS, TS } from 'styles';
-import S from './ProjectTimelines.module.scss';
-import { useEffect, useState } from 'react';
-import { modifyProjectTimelines } from 'api/projects/modifyProjectTimeline';
-import { createProjectTimelines } from 'api/projects/createProjectTimelines';
-import { FaTrash } from 'react-icons/fa';
+import { BS, MS } from 'styles';
+import { addTimelines } from 'utils/addTimelines';
+import { checkIsNoData } from 'utils/checkIsNoData';
+import { handleTimelinesChange } from 'utils/handleTimelinesContent';
 
 export default function ProjectTimelines() {
   const { id } = useParams();
-  const { timelinesQuery } = useProjectDetailInfoQuery(Number(id));
-  const [timelines, setTimelines] = useState<TimelineData[]>([]);
+  const { timelinesContent, setTimelinesContent } = useTimelinesState(Number(id));
+  const { timelinesQuery, basicInfoQuery } = useProjectDetailInfoQuery(Number(id));
   const navigate = useNavigate();
-
-  useEffect(() => {
-    setTimelines(timelinesQuery?.data || []);
-  }, [timelinesQuery.data]);
-
-  const handleUpdateTimeline = (updatedTimeline: TimelineData) => {
-    setTimelines((prevTimelines) =>
-      prevTimelines.map((timeline) =>
-        timeline.id === updatedTimeline.id ? updatedTimeline : timeline
-      )
-    );
-  };
-
-  const handleSaveChanges = () => {
-    modifyProjectTimelines(Number(id), timelines, navigate);
-  };
 
   return (
     <div className={MS.container}>
       <div className={MS.content}>
-        <div className={MS.contentTitle}>
+        <div className={`${MS.contentTitle} ${MS.displayFlex} ${MS.flexSpace}`}>
           <p>프로젝트 타임라인 수정</p>
-        </div>
-        <div className={MS.contentBox}>
-          {timelines.map((timeline) => (
-            <TimelineModifyBlock
-              key={timeline.id}
-              timeline={timeline}
-              onUpdateTimeline={handleUpdateTimeline}
-            />
-          ))}
-          <div className={S.btnContainer}>
+          <div className={MS.displayFlex}>
             <button
-              className={BS.YellowBtn}
+              className={`${BS.addBtn} ${MS.Mr10}`}
               onClick={() => {
-                createProjectTimelines(Number(id), timelines.length, navigate);
+                setTimelinesContent(
+                  addTimelines(
+                    timelinesContent,
+                    basicInfoQuery.data?.startDate,
+                    basicInfoQuery.data?.mvpDate
+                  )
+                );
               }}>
-              새 스프린트 생성
+              <FaPlus />
             </button>
-            <button className={BS.YellowBtn} onClick={handleSaveChanges}>
-              수정완료 및 저장
-            </button>
+            {checkIsNoData(timelinesQuery?.data) ? (
+              <button
+                className={BS.YellowBtn}
+                onClick={() => {
+                  if (checkIsNoData(timelinesContent)) {
+                    alert('추가된 값이 아무것도 없습니다.');
+                    return;
+                  }
+                  postProjectTimelines(Number(id), timelinesContent, navigate);
+                }}>
+                수정완료 및 저장
+              </button>
+            ) : (
+              <button
+                className={BS.YellowBtn}
+                onClick={() => {
+                  putProjectTimelines(Number(id), timelinesContent, navigate);
+                }}>
+                수정완료 및 저장
+              </button>
+            )}
           </div>
         </div>
+        <div className={MS.contentBox}>
+          {timelinesContent === undefined ? null : (
+            <TimelinesInput
+              timelinesList={[...timelinesContent.slice()]}
+              onChange={handleTimelinesChange}
+              content={timelinesContent}
+              setContent={setTimelinesContent}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
 }
-
-interface TimelineModifyBlockProps {
-  timeline: TimelineData;
-  onUpdateTimeline: (updatedTimeline: TimelineData) => void;
-}
-
-const TimelineModifyBlock = ({ timeline, onUpdateTimeline }: TimelineModifyBlockProps) => {
-  const sprintOrder = timeline.sprintOrder;
-  const [sprintContent, setSprintContent] = useState(timeline.sprintContent);
-  const [sprintDurationWeek, setSprintDurationWeek] = useState(timeline.sprintDurationWeek);
-
-  const handleUpdate = () => {
-    onUpdateTimeline({
-      ...timeline,
-      sprintOrder,
-      sprintContent,
-      sprintDurationWeek,
-    });
-  };
-
-  return (
-    <div className={S.blockContainer}>
-      <div className={`${MS.displayFlex} ${MS.flexSpace}`}>
-        <p className={TS.title}>스프린트 {sprintOrder}</p>
-        <button className={BS.removeBtn}>
-          <FaTrash />
-        </button>
-      </div>
-      <input
-        className={`${IS.textInput} ${MS.Mr10} ${MS.Mb10}`}
-        value={sprintDurationWeek}
-        placeholder="스프린트 기간"
-        type="text"
-        onChange={(e) => setSprintDurationWeek(Number(e.target.value))}
-        onBlur={handleUpdate}
-      />
-      주
-      <input
-        className={`${IS.textInput} ${MS.width100}`}
-        value={sprintContent}
-        placeholder="스프린트 내용"
-        type="text"
-        onChange={(e) => setSprintContent(e.target.value)}
-        onBlur={handleUpdate}
-      />
-    </div>
-  );
-};

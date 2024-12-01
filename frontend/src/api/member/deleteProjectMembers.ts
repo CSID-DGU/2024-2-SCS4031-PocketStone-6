@@ -2,7 +2,6 @@ import { tokenAxios } from 'api/tokenAPI';
 import axios from 'axios';
 import { completeMessage } from 'constants/completeMessage';
 import { API_URL } from 'constants/envText';
-import { headers } from 'constants/headers';
 import { NavigateFunction } from 'react-router-dom';
 
 export const deleteProjectMembers = async (
@@ -15,14 +14,11 @@ export const deleteProjectMembers = async (
     return { employeeId: id };
   });
   const content: RegisterContent = {
-    projectId: projectId,
     memberList: memberList,
   };
 
   try {
-    const response = await tokenAxios.post(`${API_URL}/api/member/delete`, content, {
-      headers: headers,
-    });
+    const response = await tokenAxios.delete(`${API_URL}/api/member/${projectId}`, {data: content});
     if (response.data) {
       alert(completeMessage.REGISTER_MEMBER);
       navigate(`/project/${projectId}`);

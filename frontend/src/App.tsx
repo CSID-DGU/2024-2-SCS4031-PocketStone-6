@@ -11,10 +11,10 @@ import ProjectDetail from './routes/project/ProjectDetail';
 import EmployeeDetail from './routes/employee/EmployeeDetail';
 import S from 'App.module.css';
 import ProjectMember from 'routes/project/ProjectMember';
-import ProjectCharter from 'routes/project/ProjectCharter';
-import ProjectTimelines from 'routes/project/ProjectTimelines';
 import { useLoginInfoQuery } from 'hooks/useLoginInfoQuery';
 import BeforeLogin from 'routes/BeforeLogin';
+import ProjectCharter from 'routes/project/ProjectCharter';
+import ProjectTimelines from 'routes/project/ProjectTimelines';
 
 function App() {
   const { isLogin } = useLoginInfoQuery();

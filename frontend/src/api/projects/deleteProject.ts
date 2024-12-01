@@ -2,21 +2,21 @@ import axios from 'axios';
 import { tokenAxios } from '../tokenAPI';
 import { API_URL } from '../../constants/envText';
 import { headers } from '../../constants/headers';
+import { completeMessage } from 'constants/completeMessage';
+import { refreshPage } from 'utils/movePage';
 import { NavigateFunction } from 'react-router-dom';
-import { refreshPage } from '../../utils/movePage';
 
-export const deleteAllProjectMembers = async (projectId: number, navigate: NavigateFunction) => {
+export const deleteProject = async (id: number, navigate: NavigateFunction) => {
   try {
-    const response = await tokenAxios.delete(`${API_URL}/api/member/${projectId}/all`, {
+    await tokenAxios.delete(`${API_URL}/api/projects/${id}`, {
       headers: headers,
     });
-    alert(response.data.message);
-    navigate(`/project/${projectId}`);
+    alert(completeMessage.DELETE_PROJECT)
+    refreshPage(navigate)
   } catch (error) {
     console.error(error);
     if (axios.isAxiosError(error)) {
       alert(error.response?.data);
-      refreshPage(navigate);
     }
   }
 };

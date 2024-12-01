@@ -81,7 +81,7 @@ public class Employee {
 
     //성향
     @Lob
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String personalType;
 
     //kpi평가점수
