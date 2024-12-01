@@ -6,6 +6,7 @@ import { useProjectMemberQuery } from 'hooks/useProjectMemberQuery';
 import { checkIsNoData } from 'utils/checkIsNoData';
 import { NO_CHARTER_OR_TIMELINES } from 'constants/errorMessage';
 import { MdDateRange } from 'react-icons/md';
+import { useMemberInfoById } from 'hooks/useMemberInfoById';
 
 export default function ProjectDetail() {
   const { id } = useParams();
@@ -85,7 +86,8 @@ export default function ProjectDetail() {
           {checkIsNoData(memberQuery.data) ? (
             <NoMember />
           ) : (
-            <p>{JSON.stringify(memberQuery.data)}</p>
+            // JSON.stringify(memberQuery.data)
+            <MemberList list={memberQuery.data} />
           )}
         </div>
       </div>
@@ -138,6 +140,50 @@ const NoMember = () => {
   return (
     <div className={CS.notice}>
       <p>프로젝트에 포함된 인원이 없어요.</p>
+    </div>
+  );
+};
+
+const MemberList = ({ list }: { list: { employeeId: number; position: string }[] }) => {
+  return (
+    <div>
+      <div className={CS.contentTitle}>
+        <div className={MS.displayFlex}>
+          <div className={`${CS.category} ${MS.flexOne}`}>관리번호</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>이름</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>부서</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>직책</div>
+          <div className={`${CS.category} ${MS.flexTwo}`}>역할</div>
+        </div>
+      </div>
+      <div className={CS.contentBox}>
+        {list.map(({ employeeId }) => (
+          <MemberBlock employeeId={employeeId} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const MemberBlock = ({ employeeId }: { employeeId: number }) => {
+  const { memberAllInfo } = useMemberInfoById(employeeId);
+  const navigate = useNavigate();
+
+  return (
+    <div className={CS.container}>
+      <div className={CS.card}>
+        <div
+          className={CS.canClickPart}
+          onClick={() => {
+            navigate(`/employee/${employeeId}`);
+          }}>
+          <div className={`${CS.category} ${MS.flexOne}`}>{memberAllInfo.staffId}</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>{memberAllInfo.name}</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>{memberAllInfo.department}</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>{memberAllInfo.position}</div>
+          <div className={`${CS.category} ${MS.flexTwo}`}>{memberAllInfo.role}</div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -49,6 +49,19 @@ export default function ProjectCharter() {
         <div className={MS.contentBox}>
           <div className={S.section}>
             <div className={S.sectionTitle}>
+              <p>필요 포지션</p>
+            </div>
+            {charterContent?.positions === undefined ? null : (
+              <ObjectivesInput
+                objectivesList={charterContent?.objectives}
+                onChange={handleObjectiveChange}
+                content={charterContent}
+                setContent={setCharterContent}
+              />
+            )}
+          </div>
+          <div className={S.section}>
+            <div className={S.sectionTitle}>
               <p>목표</p>
               <button
                 className={BS.addBtn}

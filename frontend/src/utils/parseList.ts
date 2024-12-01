@@ -6,3 +6,7 @@ export const deleteElementAtList = (element: any, list: any[]) => {
   if (!list.includes(element)) return list;
   return list.filter((data) => data !== element);
 };
+
+export const getMemberIdList = (list: { employeeId: number; position: string }[]) => {
+  return list.map((data) => data.employeeId);
+};
