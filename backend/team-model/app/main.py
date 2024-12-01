@@ -7,6 +7,7 @@ from employee_service import scale_employee_data  # scale_employee_data 함수 �
 from schemas import Member, RecommendationRequestDto, RecommendationResponseDto
 from models import Employee, Company, Project
 from personality_service import embedding_employee_personality
+from project_service  import embedding_project
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -35,6 +36,12 @@ def scale_employee_data_endpoint(company_id:int, db: Session = Depends(get_db)):
 @app.post("/embedding-employee-personality/") #쿼리파라미터로 회사아이디 보내기?company_id=1
 def embedding_personality_data_endpoint(company_id:int, db: Session = Depends(get_db)):
     result = embedding_employee_personality(db,company_id)
+    return {"message": result}
+
+# 과거 프로젝트 적합도 임베딩하기
+@app.post("/embedding-project/") #쿼리파라미터로 회사아이디 보내기?company_id=1
+def embedding_project_data_endpoint(company_id:int,project_id:int, db: Session = Depends(get_db)):
+    result = embedding_project(db,company_id=company_id, project_id=project_id)
     return {"message": result}
 
 
