@@ -45,6 +45,10 @@ def scale_employee_data(db: Session, company_id:int):
     db_scaled = get_db_scaled()  
         
     try:
+        # 기존 회사 사원데이이 삭제
+        db_scaled.query(ScaledEmployee).filter(ScaledEmployee.company_id == company_id).delete()
+        db_scaled.commit()  # 삭제한 내용을 즉시 반영
+        
         for index, row in data.iterrows():
             # 새로운 ScaledEmployee 객체 생성
             scaled_employee = ScaledEmployee(
@@ -55,7 +59,7 @@ def scale_employee_data(db: Session, company_id:int):
                 role=row['role'],
                 #personality_embedding=personality_embedding
             )
-            # 새로운 데이터베이스(혹은 스키마)에 삽입
+            # 새로운 데이터베이스에 삽입
             db_scaled.add(scaled_employee)
 
         db_scaled.commit()  # 커밋을 통해 저장
