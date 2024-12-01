@@ -3,11 +3,10 @@ import { BS, CS, MS, TS } from 'styles';
 import S from './ProjectDetail.module.scss';
 import { useProjectDetailInfoQuery } from 'hooks/useProjectDetailInfoQuery';
 import { useProjectMemberQuery } from 'hooks/useProjectMemberQuery';
-import { createProjectCharter } from 'api/projects/createProjectCharter';
-import { createProjectTimelines } from 'api/projects/createProjectTimelines';
 import { checkIsNoData } from 'utils/checkIsNoData';
 import { NO_CHARTER_OR_TIMELINES } from 'constants/errorMessage';
 import { MdDateRange } from 'react-icons/md';
+import { useMemberInfoById } from 'hooks/useMemberInfoById';
 
 export default function ProjectDetail() {
   const { id } = useParams();
@@ -21,23 +20,13 @@ export default function ProjectDetail() {
         <div className={MS.content}>
           <div className={`${MS.contentTitle} ${MS.displayFlex} ${MS.flexSpace}`}>
             <p>프로젝트 정보</p>
-            {checkIsNoData(charterQuery.data) ? (
-              <button
-                className={BS.YellowBtn}
-                onClick={() => {
-                  createProjectCharter(Number(id), navigate);
-                }}>
-                프로젝트 차터 생성
-              </button>
-            ) : (
-              <button
-                className={BS.WhiteBtn}
-                onClick={() => {
-                  navigate(`/project/${id}/charter`);
-                }}>
-                프로젝트 차터 수정
-              </button>
-            )}
+            <button
+              className={BS.YellowBtn}
+              onClick={() => {
+                navigate(`/project/${id}/charter`);
+              }}>
+              차터 버튼
+            </button>
           </div>
           <div className={`${MS.contentBox} ${S.contentBox}`}>
             {/* 기본 정보 */}
@@ -58,23 +47,13 @@ export default function ProjectDetail() {
         <div className={MS.content}>
           <div className={`${MS.contentTitle} ${MS.displayFlex} ${MS.flexSpace}`}>
             <p>타임라인</p>
-            {checkIsNoData(timelinesQuery.data) ? (
-              <button
-                className={BS.YellowBtn}
-                onClick={() => {
-                  createProjectTimelines(Number(id), 0, navigate);
-                }}>
-                타임라인 생성
-              </button>
-            ) : (
-              <button
-                className={BS.WhiteBtn}
-                onClick={() => {
-                  navigate(`/project/${id}/timelines`);
-                }}>
-                타임라인 수정
-              </button>
-            )}
+            <button
+              className={BS.YellowBtn}
+              onClick={() => {
+                navigate(`/project/${id}/timelines`);
+              }}>
+              타임라인 버튼
+            </button>
           </div>
           <div className={`${MS.contentBox} ${S.contentBox}`}>
             {checkIsNoData(timelinesQuery.data) ? (
@@ -107,7 +86,8 @@ export default function ProjectDetail() {
           {checkIsNoData(memberQuery.data) ? (
             <NoMember />
           ) : (
-            <p>{JSON.stringify(memberQuery.data)}</p>
+            // JSON.stringify(memberQuery.data)
+            <MemberList list={memberQuery.data} />
           )}
         </div>
       </div>
@@ -118,16 +98,22 @@ export default function ProjectDetail() {
 const TimelinesList = ({ timelinesList }: { timelinesList: TimelineData[] }) => {
   return (
     <div className={S.timelineListContainer}>
-      {timelinesList.map(({ sprintOrder, sprintContent, sprintDurationWeek }) => {
-        return (
-          <div className={S.timelineContainer}>
-            <p className={`${TS.smallTitle} ${MS.Mb5}`}>
-              스프린트 {sprintOrder}({sprintDurationWeek}주)
-            </p>
-            <p>🚩 {sprintContent}</p>
-          </div>
-        );
-      })}
+      {timelinesList.map(
+        ({ sprintOrder, sprintContent, sprintStartDate, sprintEndDate, requiredManmonth }) => {
+          return (
+            <div className={S.timelineContainer}>
+              <div className={S.timelineTitle}>
+                <p className={`${TS.smallTitle} ${MS.Mr10}`}>스프린트 {sprintOrder}</p>
+                <p className={`${TS.smallText}`}>Man-Month: {requiredManmonth}</p>
+              </div>
+              <p className={`${TS.smallText} ${MS.Mb5}`}>
+                ({sprintStartDate} ~ {sprintEndDate})
+              </p>
+              <p>🚩 {sprintContent}</p>
+            </div>
+          );
+        }
+      )}
     </div>
   );
 };
@@ -154,6 +140,50 @@ const NoMember = () => {
   return (
     <div className={CS.notice}>
       <p>프로젝트에 포함된 인원이 없어요.</p>
+    </div>
+  );
+};
+
+const MemberList = ({ list }: { list: { employeeId: number; position: string }[] }) => {
+  return (
+    <div>
+      <div className={CS.contentTitle}>
+        <div className={MS.displayFlex}>
+          <div className={`${CS.category} ${MS.flexOne}`}>관리번호</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>이름</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>부서</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>직책</div>
+          <div className={`${CS.category} ${MS.flexTwo}`}>역할</div>
+        </div>
+      </div>
+      <div className={CS.contentBox}>
+        {list.map(({ employeeId }) => (
+          <MemberBlock employeeId={employeeId} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const MemberBlock = ({ employeeId }: { employeeId: number }) => {
+  const { memberAllInfo } = useMemberInfoById(employeeId);
+  const navigate = useNavigate();
+
+  return (
+    <div className={CS.container}>
+      <div className={CS.card}>
+        <div
+          className={CS.canClickPart}
+          onClick={() => {
+            navigate(`/employee/${employeeId}`);
+          }}>
+          <div className={`${CS.category} ${MS.flexOne}`}>{memberAllInfo.staffId}</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>{memberAllInfo.name}</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>{memberAllInfo.department}</div>
+          <div className={`${CS.category} ${MS.flexOne}`}>{memberAllInfo.position}</div>
+          <div className={`${CS.category} ${MS.flexTwo}`}>{memberAllInfo.role}</div>
+        </div>
+      </div>
     </div>
   );
 };

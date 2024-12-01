@@ -36,12 +36,68 @@ interface employeeIdObject {
   employeeId: number;
 }
 interface RegisterContent {
-  projectId: number;
   memberList: employeeIdObject[];
 }
+
+interface Objectives {
+  id?: number;
+  objectiveName: string;
+  objectiveContent: string;
+}
+
+interface Positions {
+  id?: number;
+  positionName: string;
+  positionContent: string;
+  positionCount?: number;
+}
+
+interface Principles {
+  id?: number;
+  principleName: string;
+  principleContent: string;
+}
+
+interface Scopes {
+  id?: number;
+  scopeName: string;
+  scopeContent: string;
+}
+
+interface Visions {
+  id?: number;
+  visionName: string;
+  visionContent: string;
+}
+
+interface Stakeholders {
+  id?: number;
+  stakeholderName: string;
+  stakeholderContent: string;
+}
+
+interface Risks {
+  id?: number;
+  riskName: string;
+  riskContent: string;
+}
+
+interface CharterContent {
+  id?: number;
+  objectives: Objectives[];
+  positions: Positions[];
+  principles: Principles[];
+  scopes: Scopes[];
+  visions: Visions[];
+  stakeholders: Stakeholders[];
+  risks: Risks[];
+}
+
 interface TimelineData {
-  id: number;
+  id?: number;
   sprintOrder: number;
   sprintContent: string;
-  sprintDurationWeek: number;
+  sprintStartDate: string;
+  sprintEndDate: string;
+  requiredManmonth: number;
 }

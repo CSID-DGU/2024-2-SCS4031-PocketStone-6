@@ -6,15 +6,11 @@ import { NavigateFunction } from 'react-router-dom';
 import { completeMessage } from '../../constants/completeMessage';
 import { ERROR_AT_CHARTER_REGISTER } from 'constants/errorMessage';
 
-export const modifyProjectTimelines = async (
+export const putProjectTimelines = async (
   projectId: number,
-  timelinesData: TimelineData[],
+  content: TimelineData[],
   navigate: NavigateFunction
 ) => {
-  timelinesData.sort((a, b) => a.sprintOrder - b.sprintOrder);
-  const content = timelinesData;
-  console.log(content)
-
   try {
     const response = await tokenAxios.put(
       `${API_URL}/api/projects/timelines/${projectId}`,
@@ -24,7 +20,7 @@ export const modifyProjectTimelines = async (
       }
     );
     if (response.data) {
-      alert(completeMessage.MODIFY_CHARTER);
+      alert(completeMessage.MODIFY_TIMELINES);
       navigate(`/project/${projectId}`);
       return;
     }

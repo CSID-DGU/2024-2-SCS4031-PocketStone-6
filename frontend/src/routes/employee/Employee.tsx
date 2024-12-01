@@ -60,7 +60,7 @@ export default function Employee() {
   );
 }
 
-const EmployeeContent = () => {
+export const EmployeeContent = () => {
   const allEmployInfoQuery = useAllEmployeeInfoQuery();
 
   return (

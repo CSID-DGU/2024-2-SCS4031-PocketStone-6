@@ -7,25 +7,17 @@ import { completeMessage } from '../../constants/completeMessage';
 import { ERROR_AT_CHARTER_REGISTER } from 'constants/errorMessage';
 import { refreshPage } from 'utils/movePage';
 
-export const createProjectTimelines = async (projectId: number, sprintOrder: number, navigate: NavigateFunction) => {
-  const content = [
-    {
-      sprintOrder: sprintOrder,
-      sprintContent: '스프린트 내용',
-      sprintDurationWeek: 1,
-    },
-  ];
-
+export const postProjectCharter = async (projectId: number, content: CharterContent, navigate: NavigateFunction) => {
   try {
     const response = await tokenAxios.post(
-      `${API_URL}/api/projects/timelines/${projectId}`,
+      `${API_URL}/api/projects/charter/${projectId}`,
       content,
       {
         headers: headers,
       }
     );
     if (response.data) {
-      alert(completeMessage.CREATE_CHARTER);
+      alert(completeMessage.MODIFY_CHARTER);
       refreshPage(navigate);
       return;
     }
