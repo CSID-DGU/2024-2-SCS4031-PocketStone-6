@@ -1,12 +1,10 @@
 from fastapi import FastAPI, Depends 
-from pydantic import BaseModel
-from typing import List
 from sqlalchemy.orm import Session
-# main.py에서 상대 경로 대신 절대 경로 사용
 from database import get_db
 import random
 import logging
 
+from schemas import Member, RecommendationRequestDto, RecommendationResponseDto
 from models import Employee, Company, Project
 
 logging.basicConfig(level=logging.INFO)
@@ -14,16 +12,7 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
-# Request와 Response에 사용될 데이터 모델 정의
-class Member(BaseModel):
-    employeeId: int
 
-class RecommendationRequestDto(BaseModel):
-    projectId: int
-    memberIds: List[int]
-
-class RecommendationResponseDto(BaseModel):
-    memberList: List[Member]
 
 
 @app.get("/")
