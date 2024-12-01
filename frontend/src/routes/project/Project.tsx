@@ -32,7 +32,7 @@ export default function Project() {
   );
 }
 
-const ProjectContent = () => {
+export const ProjectContent = () => {
   const allProjectQuery = useAllProjectQuery();
 
   return (
