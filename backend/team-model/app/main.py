@@ -6,6 +6,7 @@ import logging
 from employee_service import scale_employee_data  # scale_employee_data 함수 임포트
 from schemas import Member, RecommendationRequestDto, RecommendationResponseDto
 from models import Employee, Company, Project
+from personality_service import embedding_employee_personality
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -29,6 +30,13 @@ def read_employees(db: Session = Depends(get_db)):
 def scale_employee_data_endpoint(company_id:int, db: Session = Depends(get_db)):
     result = scale_employee_data(db,company_id)
     return {"message": result}
+
+# 성향 임베딩 저장하기
+@app.post("/embedding-employee-personality/") #쿼리파라미터로 회사아이디 보내기?company_id=1
+def embedding_personality_data_endpoint(company_id:int, db: Session = Depends(get_db)):
+    result = embedding_employee_personality(db,company_id)
+    return {"message": result}
+
 
 @app.post("/api/recommendation")
 def recommendation(body: RecommendationRequestDto, db: Session = Depends(get_db)):

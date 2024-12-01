@@ -1,5 +1,6 @@
 from sklearn.preprocessing import MinMaxScaler
 from sqlalchemy.orm import Session
+from sqlalchemy import select
 from models import Employee, ScaledEmployee
 import pandas as pd
 from database import get_db_scaled
@@ -12,11 +13,17 @@ def scale_group(group):
 
 # 데이터베이스에서 특정 회사의 Employee 데이터를 가져오는 함수
 def get_employee_data_by_company(db: Session, company_id: int):
-    return db.query(Employee).filter(Employee.company_id == company_id).all()
+    query = select(
+        Employee.employee_id,
+        Employee.company_id,
+        Employee.kpi_score,
+        Employee.peer_evaluation_score,
+        Employee.role
+    ).where(Employee.company_id == company_id)
+    
+    result = db.execute(query).all()
+    return result
 
-
-# 성향 임베딩함수
-# 
 # 정규화 후 새로저장하는 함수
 def scale_employee_data(db: Session, company_id:int):
     # 데이터프레임으로 변환
@@ -26,7 +33,7 @@ def scale_employee_data(db: Session, company_id:int):
         "company_id": employee.company_id,
         "kpi_score": employee.kpi_score,
         "peer_evaluation_score": employee.peer_evaluation_score,
-        "personal_type": employee.personal_type,
+        #"personal_type": employee.personal_type,
         "role": employee.role.value  # Role을 value로 변환
     } for employee in employees])
 
@@ -45,7 +52,6 @@ def scale_employee_data(db: Session, company_id:int):
                 company_id=row['company_id'],
                 kpi_score=row['kpi_score'],
                 peer_evaluation_score=row['peer_evaluation_score'],
-                personal_type=row['personal_type'],
                 role=row['role'],
                 #personality_embedding=personality_embedding
             )

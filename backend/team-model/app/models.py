@@ -44,7 +44,6 @@ class ScaledEmployee(Base_scaled):
     company_id = Column(Integer)
     kpi_score = Column(Float)
     peer_evaluation_score = Column(Float)
-    personal_type = Column(Text)
     role =  Column(Enum(Role))
     personality_embedding = Column(Text)  # 성향 임베딩을 저장할 필드
 
