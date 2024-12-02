@@ -30,7 +30,7 @@ export const addProjectMembers = async (
   } catch (error) {
     console.error(error);
     if (axios.isAxiosError(error)) {
-      return error.response?.data;
+      alert(error.response?.data.message);
     }
   }
 };
