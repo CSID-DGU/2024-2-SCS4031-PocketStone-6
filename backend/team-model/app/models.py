@@ -64,7 +64,45 @@ class Company(Base):
 
     id = Column(BigInteger, primary_key=True)
     user_id = Column(BigInteger)
+
+class Skill(enum.Enum):
+    ADOBE_XD = "ADOBE_XD"
+    AGILE = "AGILE"
+    ANGULAR = "ANGULAR"
+    DJANGO = "DJANGO"
+    FAST_API = "FAST_API"
+    FIGMA = "FIGMA"
+    FLASK = "FLASK"
+    GRAPHQL = "GRAPHQL"
+    HTML_CSS = "HTML_CSS"
+    IN_VISION = "IN_VISION"
+    JAVASCRIPT = "JAVASCRIPT"
+    JIRA = "JIRA"
+    J_QUERY = "J_QUERY"
+    NODE_JS = "NODE_JS"
+    PYTHON = "PYTHON"
+    R = "R"
+    REACT = "REACT"
+    ROADMAP = "ROADMAP"
+    RUBY = "RUBY"
+    SAS = "SAS"
+    SASS = "SASS"
+    SCRUM = "SCRUM"
+    SKETCH = "SKETCH"
+    SPRING_BOOT = "SPRING_BOOT"
+    SPRING_FRAMEWORK = "SPRING_FRAMEWORK"
+    SWOT_ANALYSIS = "SWOT_ANALYSIS"
+    TREND_ANALYSIS = "TREND_ANALYSIS"
+    TYPESCRIPT = "TYPESCRIPT"
+    USER_STORIES = "USER_STORIES"
+    VUE = "VUE"
     
+class EmployeeSkill(Base):
+    __tablename__ = "employee_skill"  # Spring Boot에서 생성된 테이블 이름과 일치해야 함
+
+    employee_id = Column(BigInteger, primary_key=True)
+    skill = Column(Enum(Skill), primary_key=True)  
+
 
 # 추천용 사원 데이터 저장
 class ScaledEmployee(Base_scaled):
