@@ -11,6 +11,6 @@ export const getMemberIdList = (list: { employeeId: number; position: string }[]
   return list.map((data) => data.employeeId);
 };
 
-export const getMemberIdListFromRecommend = (data: { memberList: { employeeId: number }[] }) => {
-  return data.memberList.map((element) => element.employeeId);
+export const getMemberIdListFromRecommend = (data: RecommendData) => {
+  return data.teams.map((team) => team.team_indices);
 };
