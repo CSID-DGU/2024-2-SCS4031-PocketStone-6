@@ -1,5 +1,5 @@
 # models.py
-from sqlalchemy import Column, String, Float, Text, Enum, ForeignKey, BigInteger
+from sqlalchemy import Column, String, Float, Text, Enum, ForeignKey, BigInteger,Integer
 from sqlalchemy.orm import relationship
 from database import Base,Base_scaled
 import enum
@@ -12,6 +12,39 @@ class Role(enum.Enum):
     PRODUCT_MANAGER = "PRODUCT_MANAGER"
     UI_UX_DESIGNER = "UI_UX_DESIGNER"
 
+class Skill(enum.Enum):
+    ADOBE_XD = "ADOBE_XD"
+    AGILE = "AGILE"
+    ANGULAR = "ANGULAR"
+    DJANGO = "DJANGO"
+    FAST_API = "FAST_API"
+    FIGMA = "FIGMA"
+    FLASK = "FLASK"
+    GRAPHQL = "GRAPHQL"
+    HTML_CSS = "HTML_CSS"
+    IN_VISION = "IN_VISION"
+    JAVASCRIPT = "JAVASCRIPT"
+    JIRA = "JIRA"
+    J_QUERY = "J_QUERY"
+    NODE_JS = "NODE_JS"
+    PYTHON = "PYTHON"
+    R = "R"
+    REACT = "REACT"
+    ROADMAP = "ROADMAP"
+    RUBY = "RUBY"
+    SAS = "SAS"
+    SASS = "SASS"
+    SCRUM = "SCRUM"
+    SKETCH = "SKETCH"
+    SPRING_BOOT = "SPRING_BOOT"
+    SPRING_FRAMEWORK = "SPRING_FRAMEWORK"
+    SWOT_ANALYSIS = "SWOT_ANALYSIS"
+    TREND_ANALYSIS = "TREND_ANALYSIS"
+    TYPESCRIPT = "TYPESCRIPT"
+    USER_STORIES = "USER_STORIES"
+    VUE = "VUE"
+    FLUTTER="FLUTTER"
+    
 # Spring Boot에서 생성된 Employee 테이블 모델 정의
 class Employee(Base):
     __tablename__ = "employee"  # Spring Boot에서 생성된 테이블 이름과 일치해야 함
@@ -46,51 +79,34 @@ class Project(Base):
     company_id= Column(BigInteger)
     project_name = Column(String(255))
     
-    
+class Position(Base):
+    __tablename__ = "position"  # Spring Boot에서 생성된 테이블 이름과 일치해야 함
+
+    id = Column(BigInteger, primary_key=True)
+    position_count = Column(Integer)
+    position_name = Column(Enum(Role))
+    project_charter_id = Column(BigInteger,ForeignKey('project_charter.id'))
+
 class ProjectCharter(Base):
     __tablename__ = "project_charter"
      
     id = Column(BigInteger, primary_key=True)
     project_id = Column(BigInteger, ForeignKey('project.id'), nullable=False) 
+
+class PositionSkill(Base):
+    __tablename__ = "position_skill"
     
+    id = Column(BigInteger, primary_key=True)
+    skill = Column(Enum(Skill))
+    position_id = Column(BigInteger)
+
 class Company(Base):
     __tablename__ = "company"  # Spring Boot에서 생성된 테이블 이름과 일치해야 함
 
     id = Column(BigInteger, primary_key=True)
     user_id = Column(BigInteger)
 
-class Skill(enum.Enum):
-    ADOBE_XD = "ADOBE_XD"
-    AGILE = "AGILE"
-    ANGULAR = "ANGULAR"
-    DJANGO = "DJANGO"
-    FAST_API = "FAST_API"
-    FIGMA = "FIGMA"
-    FLASK = "FLASK"
-    GRAPHQL = "GRAPHQL"
-    HTML_CSS = "HTML_CSS"
-    IN_VISION = "IN_VISION"
-    JAVASCRIPT = "JAVASCRIPT"
-    JIRA = "JIRA"
-    J_QUERY = "J_QUERY"
-    NODE_JS = "NODE_JS"
-    PYTHON = "PYTHON"
-    R = "R"
-    REACT = "REACT"
-    ROADMAP = "ROADMAP"
-    RUBY = "RUBY"
-    SAS = "SAS"
-    SASS = "SASS"
-    SCRUM = "SCRUM"
-    SKETCH = "SKETCH"
-    SPRING_BOOT = "SPRING_BOOT"
-    SPRING_FRAMEWORK = "SPRING_FRAMEWORK"
-    SWOT_ANALYSIS = "SWOT_ANALYSIS"
-    TREND_ANALYSIS = "TREND_ANALYSIS"
-    TYPESCRIPT = "TYPESCRIPT"
-    USER_STORIES = "USER_STORIES"
-    VUE = "VUE"
-    FLUTTER="FLUTTER"
+
     
 class EmployeeSkill(Base):
     __tablename__ = "employee_skill"  # Spring Boot에서 생성된 테이블 이름과 일치해야 함

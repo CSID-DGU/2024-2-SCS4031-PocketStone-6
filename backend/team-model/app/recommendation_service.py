@@ -2,25 +2,64 @@ from sqlalchemy.orm import Session
 import ast
 import numpy as np
 from itertools import combinations
-from models import Skill, Employee, EmployeeSkill, Role,ScaledEmployee,ScaledPastProject
+from models import Skill, Employee, EmployeeSkill, Role,ScaledEmployee,ScaledPastProject, Position, ProjectCharter,PositionSkill
 import pandas as pd
 from scipy.spatial.distance import cosine
-from concurrent.futures import ProcessPoolExecutor
-from sklearn.metrics import pairwise_distances
-# 팀 구성 인원 -가져오기
-back_num = 1
-front_num = 2
-design_num = 1
-pm_num = 1
-data_num = 0
+from typing import List
 
-# 스택 조건에 맞게 데이터 걸러내기 -데베에서 꺼내기기
-conditions = {
-    'BE': Skill.SPRING_FRAMEWORK,
-    'FE': Skill.FLUTTER,
-    'DE': Skill.SKETCH,
-    'DA': None
-}
+
+
+def get_position_num(db: Session, project_id: int) -> dict:
+    # 모든 Role 키를 포함하는 기본 구조
+    role_counts = {
+        "BACKEND_DEVELOPER": 0,
+        "FRONTEND_DEVELOPER": 0,
+        "UI_UX_DESIGNER": 0,
+        "DATA_ANALYST": 0,
+        "PRODUCT_MANAGER": 0,
+    }
+
+    # 쿼리 실행
+    results = (
+        db.query(Position.position_name, Position.position_count)
+        .join(ProjectCharter, ProjectCharter.id == Position.project_charter_id)
+        .filter(ProjectCharter.project_id == project_id)
+        .all()
+    )
+
+    # 결과를 반복하여 role_counts에 값 저장
+    for position_name, position_count in results:
+        role_key = position_name.name  # Enum의 이름 가져오기
+        if role_key in role_counts:  # 해당 role이 존재하면
+            role_counts[role_key] = position_count  # 값 업데이트
+
+    return role_counts
+
+def get_position_skill(db: Session, project_id: int) -> dict:
+    # 모든 Role 키를 포함하는 기본 구조 (기본값은 None)
+    position_skills = {
+        "BACKEND_DEVELOPER": None,
+        "FRONTEND_DEVELOPER": None,
+        "UI_UX_DESIGNER": None,
+        "DATA_ANALYST": None,
+        "PRODUCT_MANAGER": None,
+    }
+    # 쿼리 실행
+    results = (
+        db.query(Position.position_name, PositionSkill.skill)
+        .join(PositionSkill, PositionSkill.position_id == Position.id)
+        .join(ProjectCharter, ProjectCharter.id == Position.project_charter_id)
+        .filter(ProjectCharter.id == project_id)
+        .all()
+    )
+    # 결과를 반복하여 position_skills에 값 저장
+    for position_name, skill in results:
+        role_key = position_name.name  # Enum의 이름 가져오기
+        if role_key in position_skills:  # 해당 role이 존재하면
+            position_skills[role_key] = skill  # 스킬 업데이트
+
+    return position_skills
+
 # 임의 가중치
 weight_stack = 0.35
 weight_cosine = 0.28
@@ -31,50 +70,39 @@ weight_peer = 0.2
 
 # 회사 아이디랑 스킬, 역할로 사원조회
 def get_employee_ids_by_company_and_skill(db: Session, company_id: int, skill: Skill, role: Role) -> list[int]:
-    if skill is None and role == Role.PRODUCT_MANAGER:
-        employees = (
-            db.query(Employee.employee_id)
-            .filter(
-                Employee.company_id == company_id,
-                Employee.role == role
-            )
-            .with_entities(Employee.employee_id)
-            .all()
+    employees = (
+        db.query(Employee.employee_id)
+        .join(EmployeeSkill, Employee.employee_id == EmployeeSkill.employee_id)
+        .filter(
+            Employee.company_id == company_id,
+            Employee.role == role,
+            EmployeeSkill.skill == skill
         )
-    else:
-        # skill이 주어졌을 때만 해당 skill로 필터링
-        employees = (
-            db.query(Employee.employee_id)
-            .join(EmployeeSkill, Employee.employee_id == EmployeeSkill.employee_id)
-            .filter(
-                Employee.company_id == company_id,
-                Employee.role == role,
-                EmployeeSkill.skill == skill
-            )
-            .with_entities(Employee.employee_id)
-            .all()
-        )
+        .with_entities(Employee.employee_id)
+        .all()
+    )
     return [employee_id[0] for employee_id in employees]  # 튜플에서 값 추출
 
 
     
-def filter_team_by_role_and_skill(db: Session, company_id: int):
+def filter_team_by_role_and_skill(db: Session, company_id: int, project_id:int):
+    conditions = get_position_skill(db, project_id=project_id)
     # 역할별 팀 구성
     back_end = get_employee_ids_by_company_and_skill(
-        db, company_id=company_id, skill=conditions['BE'], role=Role.BACKEND_DEVELOPER
+        db, company_id=company_id, skill=conditions['BACKEND_DEVELOPER'], role=Role.BACKEND_DEVELOPER
     )
     front_end = get_employee_ids_by_company_and_skill(
-        db, company_id=company_id, skill=conditions['FE'], role=Role.FRONTEND_DEVELOPER
+        db, company_id=company_id, skill=conditions['FRONTEND_DEVELOPER'], role=Role.FRONTEND_DEVELOPER
     )
     design = get_employee_ids_by_company_and_skill(
-        db, company_id=company_id, skill=conditions['DE'], role=Role.UI_UX_DESIGNER
+        db, company_id=company_id, skill=conditions['UI_UX_DESIGNER'], role=Role.UI_UX_DESIGNER
     )
     data_analyst = get_employee_ids_by_company_and_skill(
-        db, company_id=company_id, skill=conditions['DA'], role=Role.DATA_ANALYST
+        db, company_id=company_id, skill=conditions['DATA_ANALYST'], role=Role.DATA_ANALYST
     )
-    # PM은 기술 조건이 없으므로 별도 처리
+
     pm = get_employee_ids_by_company_and_skill(
-        db, company_id=company_id, skill=None, role=Role.PRODUCT_MANAGER
+        db, company_id=company_id, skill=conditions['PRODUCT_MANAGER'], role=Role.PRODUCT_MANAGER
     )
     
     result = {
@@ -84,6 +112,8 @@ def filter_team_by_role_and_skill(db: Session, company_id: int):
         "DATA_ANALYST": data_analyst,
         "PRODUCT_MANAGER": pm,
     }
+    print("=========================================================")
+    print(conditions)
     
     return result
     
@@ -107,11 +137,17 @@ def get_project_fit_score(scaled_db: Session, employee_id:int, project_id:int):
         return 0
     
 
-def recommend_team(db: Session, company_id: int, project_id: int,scaled_db:Session):
-    filter_team = filter_team_by_role_and_skill(db,company_id=company_id)
+def recommend_team(memberIds:List[int],db: Session, company_id: int, project_id: int,scaled_db:Session):
+    position_num = get_position_num(db, project_id=project_id)
     
-    # 맨먼스랑 겹치는것만 다시 가져와
+    filter_team = filter_team_by_role_and_skill(db,company_id=company_id,project_id=project_id)
+     # `memberIds`에 포함된 직원만 필터링
+    filter_team = {
+        role: [employee_id for employee_id in employee_ids if employee_id in memberIds]
+        for role, employee_ids in filter_team.items()
+    }
     
+
      # 모든 직원 ID 추출
     all_employee_ids = []
     for role, employee_ids in filter_team.items():
@@ -120,7 +156,6 @@ def recommend_team(db: Session, company_id: int, project_id: int,scaled_db:Sessi
     
     # Scaled 데이터 가져오기
     scaled_employees = get_scaled_employees_by_team(scaled_db, employee_ids=all_employee_ids)
-    
     
     # 데이터프레임 변환
     team_df = pd.DataFrame([{
@@ -138,11 +173,11 @@ def recommend_team(db: Session, company_id: int, project_id: int,scaled_db:Sessi
     team_df['personality_embedding'] = [ast.literal_eval(item) for item in team_df['personality_embedding']]
     #print(team_df)
     final_scores = []
-    for back_team in combinations(filter_team['BACKEND_DEVELOPER'], back_num): #백
-        for front_team in combinations(filter_team['FRONTEND_DEVELOPER'], front_num): #프론트
-            for design_team in combinations(filter_team['UI_UX_DESIGNER'], design_num):  # 디자인
-                for pm_team in combinations(filter_team['PRODUCT_MANAGER'], pm_num):  # PM
-                    for data_team in combinations(filter_team['DATA_ANALYST'], data_num):  # 데이터
+    for back_team in combinations(filter_team['BACKEND_DEVELOPER'], position_num['BACKEND_DEVELOPER']): #백
+        for front_team in combinations(filter_team['FRONTEND_DEVELOPER'],  position_num['FRONTEND_DEVELOPER']): #프론트
+            for design_team in combinations(filter_team['UI_UX_DESIGNER'], position_num['UI_UX_DESIGNER']):  # 디자인
+                for pm_team in combinations(filter_team['PRODUCT_MANAGER'], position_num['PRODUCT_MANAGER']):  # PM
+                    for data_team in combinations(filter_team['DATA_ANALYST'], position_num['DATA_ANALYST']):  # 데이터
                         
                         team_indices = list(back_team) + list(front_team) + list(design_team) + list(pm_team) + list(data_team)
                         #team_data = get_scaled_employees_by_team(scaled_db,team_indices=team_indices)
