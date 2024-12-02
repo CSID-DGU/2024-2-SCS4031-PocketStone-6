@@ -117,3 +117,17 @@
 .displayBlock {
   display: block;
 }
+
+.recommendBtns {
+  display: flex;
+  margin-bottom: 10px;
+
+  > button {
+    margin-right: 10px;
+  }
+}
+
+.recommendModalBox {
+  @extend .modalBox;
+  height: auto;
+}

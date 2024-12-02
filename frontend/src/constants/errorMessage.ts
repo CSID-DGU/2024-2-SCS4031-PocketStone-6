@@ -6,3 +6,4 @@ export const ERROR_AT_PROJECT_REGISTER = `프로젝트 등록을 하지 못했�
 export const ERROR_AT_CHARTER_REGISTER = `프로젝트 차터를 만들 때 오류가 발생했어요.`;
 export const ERROR_AT_CHARTER_MODIFY = `프로젝트 차터를 수정할 때 오류가 발생했어요.`;
 export const NO_CHARTER_OR_TIMELINES = `정보와 타임라인 중 추가하지 않은 정보가 있습니다.`;
+export const NOT_CORRECT_PASSWORD = `비밀번호와 비밀번호 확인문자가 일치하지 않습니다.`;

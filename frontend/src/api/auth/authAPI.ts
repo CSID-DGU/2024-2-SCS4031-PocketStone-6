@@ -60,7 +60,7 @@ export const doRegister = async (
     navigate('/login');
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      return error.response?.data;
+      alert(error.response?.data.message);
     }
   }
 };
