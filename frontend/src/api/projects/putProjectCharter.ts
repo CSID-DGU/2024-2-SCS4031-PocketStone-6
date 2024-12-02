@@ -7,7 +7,7 @@ import { completeMessage } from '../../constants/completeMessage';
 import { ERROR_AT_CHARTER_REGISTER } from 'constants/errorMessage';
 import { parseCharterContent } from 'utils/parseCharterContent';
 
-export const postProjectCharter = async (
+export const putProjectCharter = async (
   projectId: number,
   content: CharterContent,
   navigate: NavigateFunction
@@ -15,7 +15,7 @@ export const postProjectCharter = async (
   const parsedCharterContent = parseCharterContent(content);
 
   try {
-    const response = await tokenAxios.post(
+    const response = await tokenAxios.put(
       `${API_URL}/api/projects/charter/${projectId}`,
       parsedCharterContent,
       {

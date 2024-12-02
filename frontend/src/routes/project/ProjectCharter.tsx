@@ -1,5 +1,5 @@
 import { useCharterState } from 'hooks/useCharterState';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { BS, MS } from 'styles';
 import S from './ProjectCharter.module.scss';
 import { FaPlus } from 'react-icons/fa';
@@ -28,23 +28,39 @@ import {
   handleStakeholdersChange,
   handleVisionsChange,
 } from 'utils/handleCharterContent';
+import { postProjectCharter } from 'api/projects/postProjectCharter';
+import { checkIsNoData } from 'utils/checkIsNoData';
+import { putProjectCharter } from 'api/projects/putProjectCharter';
+import { useProjectDetailInfoQuery } from 'hooks/useProjectDetailInfoQuery';
 
 export default function ProjectCharter() {
   const { id } = useParams();
+  const { charterQuery } = useProjectDetailInfoQuery(Number(id));
   const { charterContent, setCharterContent } = useCharterState(Number(id));
+  const navigate = useNavigate();
 
   return (
     <div className={MS.container}>
       <div className={MS.content}>
         <div className={`${MS.contentTitle} ${MS.displayFlex} ${MS.flexSpace}`}>
           <p>{id} 프로젝트 차터</p>
-          <button
-            className={BS.YellowBtn}
-            onClick={() => {
-              console.log(charterContent);
-            }}>
-            값 확인
-          </button>
+          {checkIsNoData(charterQuery?.data) ? (
+            <button
+              className={BS.YellowBtn}
+              onClick={() => {
+                postProjectCharter(Number(id), charterContent, navigate);
+              }}>
+              수정완료 및 저장
+            </button>
+          ) : (
+            <button
+              className={BS.YellowBtn}
+              onClick={() => {
+                putProjectCharter(Number(id), charterContent, navigate);
+              }}>
+              수정완료 및 저장
+            </button>
+          )}
         </div>
 
         <div className={MS.contentBox}>
