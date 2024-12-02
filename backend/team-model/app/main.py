@@ -50,7 +50,7 @@ def embedding_project_data_endpoint(company_id:int,project_id:int, db: Session =
 @app.post("/api/recommendation-team/") #쿼리파라미터로 회사아이디 보내기?project_id=1
 def recommend_project_team_endpoint(company_id:int,project_id:int, db: Session = Depends(get_db), scaled_db: Session=Depends(get_db_scaled)):
     result = recommend_team(db=db,company_id=company_id, project_id=project_id,scaled_db=scaled_db)
-    return {"message": result}
+    return result
 
 
 @app.post("/api/recommendation")
