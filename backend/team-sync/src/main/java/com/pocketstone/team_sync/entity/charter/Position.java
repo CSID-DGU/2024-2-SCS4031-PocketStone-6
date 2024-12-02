@@ -40,7 +40,8 @@ public class Position {
         private Set<PositionSkill> positionContent = new HashSet<>();
 
         @Column(name = "position_count", nullable = false)
-        private Integer positionCount = 1;
+        @Setter
+        private Integer positionCount;
 
         public void setPositionName(String label){
                 this.positionName = Role.fromLabel(label);
@@ -63,8 +64,5 @@ public class Position {
                         positionContent.forEach(skill -> skill.setPosition(this));
                         this.positionContent.addAll(positionContent);
                 }
-        }
-
-        public void setPositionCount(Integer positionCount) {
         }
 }
