@@ -130,7 +130,12 @@ const NoCharter = () => {
 const Charter = ({ charterData }: { charterData: CharterContent }) => {
   return (
     <div className={S.charterContainer}>
-      {/* <p>{JSON.stringify(charterData)}</p> */}
+      <div className={S.charterSection}>
+        <p className={`${TS.smallTitle} ${MS.Mb5}`}>필요 포지션</p>
+        {charterData.positions.map((data) => {
+          return <PositionBlock data={data} />;
+        })}
+      </div>
       <div className={S.charterSection}>
         <p className={`${TS.smallTitle} ${MS.Mb5}`}>목표</p>
         {charterData.objectives.map((data) => {
@@ -171,6 +176,16 @@ const Charter = ({ charterData }: { charterData: CharterContent }) => {
   );
 };
 
+const PositionBlock = ({ data }: { data: Positions }) => {
+  return (
+    <div className={S.charterBlock}>
+      <p>
+        {data.positionName} ({data.positionCount}명)
+      </p>
+      {data.positionCount === 0 ? <p></p> : <p>👉 {data.positionContent}</p>}
+    </div>
+  );
+};
 const ObjectiveBlock = ({ data }: { data: Objectives }) => {
   return (
     <div className={S.charterBlock}>

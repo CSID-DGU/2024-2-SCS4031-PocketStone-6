@@ -13,6 +13,7 @@ import {
 } from 'utils/addCharterData';
 import {
   ObjectivesInput,
+  PositionsInput,
   PrinciplesInput,
   RisksInput,
   ScopesInput,
@@ -51,14 +52,10 @@ export default function ProjectCharter() {
             <div className={S.sectionTitle}>
               <p>필요 포지션</p>
             </div>
-            {charterContent?.positions === undefined ? null : (
-              <ObjectivesInput
-                objectivesList={charterContent?.objectives}
-                onChange={handleObjectiveChange}
-                content={charterContent}
-                setContent={setCharterContent}
-              />
-            )}
+            <PositionsInput
+              positionsList={charterContent?.positions}
+              setCharterContent={setCharterContent}
+            />
           </div>
           <div className={S.section}>
             <div className={S.sectionTitle}>
