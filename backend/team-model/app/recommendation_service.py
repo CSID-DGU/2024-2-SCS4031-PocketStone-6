@@ -32,7 +32,7 @@ def get_position_num(db: Session, project_id: int) -> dict:
         role_key = position_name.name  # Enum의 이름 가져오기
         if role_key in role_counts:  # 해당 role이 존재하면
             role_counts[role_key] = position_count  # 값 업데이트
-
+    print(role_counts)
     return role_counts
 
 def get_position_skill(db: Session, project_id: int) -> dict:
@@ -47,10 +47,10 @@ def get_position_skill(db: Session, project_id: int) -> dict:
     # 쿼리 실행
     results = (
         db.query(Position.position_name, PositionSkill.skill)
-        .join(PositionSkill, PositionSkill.position_id == Position.id)
-        .join(ProjectCharter, ProjectCharter.id == Position.project_charter_id)
-        .filter(ProjectCharter.id == project_id)
-        .all()
+            .join(ProjectCharter, ProjectCharter.id == Position.project_charter_id)  # ProjectCharter와 Position 조인
+            .join(PositionSkill, PositionSkill.position_id == Position.id)  # Position과 PositionSkill 조인
+            .filter(ProjectCharter.project_id == project_id)  # 프로젝트 ID로 필터링
+            .all()
     )
     # 결과를 반복하여 position_skills에 값 저장
     for position_name, skill in results:
@@ -112,9 +112,9 @@ def filter_team_by_role_and_skill(db: Session, company_id: int, project_id:int):
         "DATA_ANALYST": data_analyst,
         "PRODUCT_MANAGER": pm,
     }
-    print("=========================================================")
-    print(conditions)
-    
+    #print("=========================================================")
+    #print(conditions)
+    #print(result)
     return result
     
 def get_scaled_employees_by_team(scaled_db: Session, employee_ids: list[int]):
@@ -146,7 +146,7 @@ def recommend_team(memberIds:List[int],db: Session, company_id: int, project_id:
         role: [employee_id for employee_id in employee_ids if employee_id in memberIds]
         for role, employee_ids in filter_team.items()
     }
-    
+    #print(filter_team)
 
      # 모든 직원 ID 추출
     all_employee_ids = []
@@ -228,6 +228,6 @@ def recommend_team(memberIds:List[int],db: Session, company_id: int, project_id:
             "final_score": row["최종 점수"],  # 최종 점수
         }
         grouped_results.append(final_team_data)
-
+    #print(grouped_results)
     # JSON 형태로 반환
     return {"teams": grouped_results}

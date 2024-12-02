@@ -130,8 +130,8 @@ class ScaledEmployee(Base_scaled):
 # 프로젝트 적합도
 class ScaledPastProject(Base_scaled):
     __tablename__ = "scaled_past_project"
-    
-    past_project_id = Column(BigInteger, primary_key=True, index=True)
+    id =Column(BigInteger, primary_key=True, autoincrement=True )
+    past_project_id = Column(BigInteger)
     new_project_id =Column(BigInteger)
     employee_id = Column(BigInteger,ForeignKey('scaled_employee.employee_id'))
     project_fit_score = Column(Float)  # 프프로젝트임베딩 적합도
