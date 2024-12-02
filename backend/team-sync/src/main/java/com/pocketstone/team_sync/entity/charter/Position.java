@@ -41,9 +41,12 @@ public class Position {
         @Column(name = "position_count", nullable = false)
         private Integer positionCount = 1;
 
-        public Position(ProjectCharter projectCharter, Role positionName, Set<PositionSkill> positionContent, Integer positionCount) {
+        public void setPositionName(String label){
+                this.positionName = Role.fromLabel(label);
+        }
+        public Position(ProjectCharter projectCharter, String positionName, Set<PositionSkill> positionContent, Integer positionCount) {
                 this.projectCharter = projectCharter;
-                this.positionName = positionName;
+                this.positionName = Role.fromLabel(positionName);
                 this.positionCount = positionCount;
                 setPositionContent(positionContent);
         }
