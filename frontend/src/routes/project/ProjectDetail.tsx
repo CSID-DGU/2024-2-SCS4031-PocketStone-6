@@ -40,7 +40,8 @@ export default function ProjectDetail() {
             {checkIsNoData(charterQuery.data) ? (
               <NoCharter />
             ) : (
-              <Charter charterData={charterQuery?.data} />
+              // <p>{JSON.stringify(charterQuery?.data)}</p>
+              <Charter charterData={charterQuery?.data as CharterContent} />
             )}
           </div>
         </div>

@@ -44,13 +44,20 @@ export default function ProjectCharter() {
       <div className={MS.content}>
         <div className={`${MS.contentTitle} ${MS.displayFlex} ${MS.flexSpace}`}>
           <p>{id} 프로젝트 차터</p>
+          <button
+              className={BS.YellowBtn}
+              onClick={() => {
+                console.log(charterContent)
+              }}>
+              값 확인
+            </button>
           {checkIsNoData(charterQuery?.data) ? (
             <button
               className={BS.YellowBtn}
               onClick={() => {
                 postProjectCharter(Number(id), charterContent, navigate);
               }}>
-              수정완료 및 저장
+              수정완료 및 저장POST
             </button>
           ) : (
             <button
@@ -58,7 +65,7 @@ export default function ProjectCharter() {
               onClick={() => {
                 putProjectCharter(Number(id), charterContent, navigate);
               }}>
-              수정완료 및 저장
+              수정완료 및 저장PUT
             </button>
           )}
         </div>

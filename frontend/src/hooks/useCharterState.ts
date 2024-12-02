@@ -15,8 +15,10 @@ export const useCharterState = (projectId: number) => {
   });
 
   useEffect(() => {
+    const rawData: any = charterQuery?.data;
+
     setCharterContent(
-      checkIsNoData(charterQuery?.data)
+      checkIsNoData(rawData)
         ? {
             objectives: [],
             positions: [],
@@ -26,7 +28,7 @@ export const useCharterState = (projectId: number) => {
             stakeholders: [],
             risks: [],
           }
-        : charterQuery?.data
+        : rawData
     );
   }, [charterQuery?.data]);
 
