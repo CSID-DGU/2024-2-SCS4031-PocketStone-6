@@ -10,3 +10,7 @@ export const deleteElementAtList = (element: any, list: any[]) => {
 export const getMemberIdList = (list: { employeeId: number; position: string }[]) => {
   return list.map((data) => data.employeeId);
 };
+
+export const getMemberIdListFromRecommend = (data: { memberList: { employeeId: number }[] }) => {
+  return data.memberList.map((element) => element.employeeId);
+};

@@ -51,7 +51,7 @@ export default function ProjectMember() {
     <div className={MS.container}>
       {loading && <LoadingModal />}
       {!checkIsNoData(recommendationData) && (
-        <RecommendationModal data={recommendationData} setData={setRecommendationData} />
+        <RecommendationModal data={recommendationData} setData={setRecommendationData} setSelectedMemberList={setSelectedMemberList} />
       )}
       {showModal && <EmployeeSpecModal id={currentId} setShowModal={setShowModal} />}
       <div className={MS.content}>
