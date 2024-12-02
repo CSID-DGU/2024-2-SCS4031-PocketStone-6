@@ -121,9 +121,23 @@
 .recommendBtns {
   display: flex;
   margin-bottom: 10px;
+  align-items: center;
 
   > button {
     margin-right: 10px;
+  }
+
+  > p {
+    font-size: large;
+    margin-left: 20px;
+  }
+
+  span {
+    font-family: 'NanumGothicBold';
+    background: #3DADFF;
+    padding: 2px;
+    border-radius: 5px;
+    color: white;
   }
 }
 

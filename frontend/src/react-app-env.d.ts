@@ -124,3 +124,16 @@ interface TimelineData {
   sprintEndDate: string;
   requiredManmonth: number;
 }
+
+interface RecommendData {
+  teams: {
+    team_indices: number[];
+    skill_score: number;
+    project_fit_score: number;
+    avg_personality_similarity: number;
+    scaled_personality_similarity: number;
+    kpi_score: number;
+    peer_evaluation_score: number;
+    final_score: number;
+  }[];
+}
