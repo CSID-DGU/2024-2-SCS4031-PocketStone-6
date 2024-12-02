@@ -64,4 +64,7 @@ public class Position {
                         this.positionContent.addAll(positionContent);
                 }
         }
+
+        public void setPositionCount(Integer positionCount) {
+        }
 }
