@@ -29,41 +29,6 @@ export default function ProjectMember() {
   const [loading, setLoading] = useState(false);
   const [recommendationData, setRecommendationData] = useState({});
 
-  const dummy = {
-    teams: [
-      {
-        team_indices: [201, 202, 203, 204, 205],
-        skill_score: 0.8650034,
-        project_fit_score: 0.6008065,
-        avg_personality_similarity: 0.11712858614250483,
-        scaled_personality_similarity: 0.8156341354376264,
-        kpi_score: 0.6738618000000001,
-        peer_evaluation_score: 0.63216392,
-        final_score: 0.7261435335437627,
-      },
-      {
-        team_indices: [206, 207, 208, 209, 210],
-        skill_score: 0.8650034,
-        project_fit_score: 0.6008065,
-        avg_personality_similarity: 0.11712858614250488,
-        scaled_personality_similarity: 0.8156341354376266,
-        kpi_score: 0.6738618000000001,
-        peer_evaluation_score: 0.63216392,
-        final_score: 0.7261435335437627,
-      },
-      {
-        team_indices: [211, 212, 213, 214, 215],
-        skill_score: 0.8650034,
-        project_fit_score: 0.6008065,
-        avg_personality_similarity: 0.09884731454972222,
-        scaled_personality_similarity: 0.7465320158773514,
-        kpi_score: 0.6738618000000001,
-        peer_evaluation_score: 0.63216392,
-        final_score: 0.7192333215877352,
-      },
-    ],
-  };
-
   const handleRecommendationClick = async () => {
     setLoading(true);
     try {
@@ -87,7 +52,7 @@ export default function ProjectMember() {
       {loading && <LoadingModal />}
       {!checkIsNoData(recommendationData) && (
         <RecommendationModal
-          data={dummy}
+          data={recommendationData}
           setData={setRecommendationData}
           setSelectedMemberList={setSelectedMemberList}
         />
