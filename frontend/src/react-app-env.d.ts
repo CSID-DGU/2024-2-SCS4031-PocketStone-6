@@ -52,6 +52,18 @@ interface Positions {
   positionCount?: number;
 }
 
+interface ChangedPositions {
+  id?: number;
+  positionName: string;
+  positionContent: Skill[];
+  positionCount?: number;
+}
+
+interface Skill {
+  id?: number;
+  skill: string;
+}
+
 interface Principles {
   id?: number;
   principleName: string;
@@ -86,6 +98,17 @@ interface CharterContent {
   id?: number;
   objectives: Objectives[];
   positions: Positions[];
+  principles: Principles[];
+  scopes: Scopes[];
+  visions: Visions[];
+  stakeholders: Stakeholders[];
+  risks: Risks[];
+}
+
+interface CharterChangedContent {
+  id?: number;
+  objectives: Objectives[];
+  positions: ChangedPositions[];
   principles: Principles[];
   scopes: Scopes[];
   visions: Visions[];
