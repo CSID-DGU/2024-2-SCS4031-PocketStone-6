@@ -32,7 +32,6 @@ import { postProjectCharter } from 'api/projects/postProjectCharter';
 import { checkIsNoData } from 'utils/checkIsNoData';
 import { putProjectCharter } from 'api/projects/putProjectCharter';
 import { useProjectDetailInfoQuery } from 'hooks/useProjectDetailInfoQuery';
-import { parseCharterContent } from 'utils/parseCharterContent';
 
 export default function ProjectCharter() {
   const { id } = useParams();
@@ -48,7 +47,7 @@ export default function ProjectCharter() {
           <button
               className={BS.YellowBtn}
               onClick={() => {
-                console.log(parseCharterContent(charterContent))
+                console.log(charterContent)
               }}>
               값 확인
             </button>

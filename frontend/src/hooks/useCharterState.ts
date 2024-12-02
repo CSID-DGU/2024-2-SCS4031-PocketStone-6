@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { checkIsNoData } from 'utils/checkIsNoData';
 import { useProjectDetailInfoQuery } from './useProjectDetailInfoQuery';
-import { parseCharterData } from 'utils/parseCharterContent';
 
 export const useCharterState = (projectId: number) => {
   const { charterQuery } = useProjectDetailInfoQuery(Number(projectId));
