@@ -21,6 +21,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import java.util.HashSet;
+import java.util.Set;
 
 
 @Service
@@ -114,22 +115,51 @@ public class ProjectCharterService {
 
     private void updatePositions(Long projectId, ProjectCharter projectCharter) {
         for (Position position : projectCharter.getPositions()) {
-            if(position.getId()==0){
+            System.out.println("Processing position ID: " + position.getId());
+            System.out.println("Skills to update: " + position.getPositionContent().size());
+
+            if(position.getId() == 0) {
                 ProjectCharter persistentCharter = projectCharterRepository.findByProjectId(projectId)
                         .orElseThrow(() -> new ProjectNotFoundException(" "));
                 position.setProjectCharter(persistentCharter);
 
-                if (position.getPositionContent()==null){
+                if (position.getPositionContent() == null) {
                     position.setPositionContent(new HashSet<>());
                 }
-                for (PositionSkill skill : position.getPositionContent()){
+                for (PositionSkill skill : position.getPositionContent()) {
                     skill.setPosition(position);
-
                 }
                 positionRepository.save(position);
             }
             else {
-                positionRepository.updatePositionByProjectId(projectId, position.getId(), position.getPositionName(), position.getPositionCount());
+                Position existingPosition = positionRepository.findById(position.getId())
+                        .orElseThrow(() -> new RuntimeException("Position not found"));
+
+                System.out.println("Found existing position with skills: " +
+                        existingPosition.getPositionContent().size());
+
+                // Clear and save to ensure old skills are deleted
+                existingPosition.getPositionContent().clear();
+                positionRepository.save(existingPosition);
+
+                // Create and add new skills
+                Set<PositionSkill> newSkills = new HashSet<>();
+                for (PositionSkill newSkill : position.getPositionContent()) {
+                    System.out.println("Adding skill: " + newSkill.getSkill());
+                    PositionSkill skillToAdd = new PositionSkill(newSkill.getSkill());
+                    skillToAdd.setPosition(existingPosition);
+                    newSkills.add(skillToAdd);
+                }
+
+                existingPosition.setPositionContent(newSkills);
+                System.out.println("After update, skills count: " +
+                        existingPosition.getPositionContent().size());
+
+                // Update other fields - using getLabel() instead of toString()
+                existingPosition.setPositionName(position.getPositionName().getLabel());
+                existingPosition.setPositionCount(position.getPositionCount());
+
+                positionRepository.save(existingPosition);
             }
         }
     }
