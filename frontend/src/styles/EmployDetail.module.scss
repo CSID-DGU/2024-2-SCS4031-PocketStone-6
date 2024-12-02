@@ -92,6 +92,72 @@
   background: #d8d8d8;
   padding: 5px;
   border-radius: 7px;
+
+
+  &.SpringBoot {
+    background-color: #6db33f !important;
+    color: white !important;
+  }
+
+  &.Django {
+    background-color: #092e20 !important;
+    color: white !important;
+  }
+
+  &.Ruby {
+    background-color: #cc342d !important;
+    color: white !important;
+  }
+
+  &.python {
+    background-color: #3776ab !important;
+    color: white !important;
+  }
+
+  &.React {
+    background-color: #61dafb !important;
+    color: black !important;
+  }
+
+  &.Vue {
+    background-color: #4fc08d !important;
+    color: white !important;
+  }
+
+  &.jQuery {
+    background-color: #0769ad !important;
+    color: white !important;
+  }
+
+  &.Figma {
+    background-color: #f24e1e !important;
+    color: white !important;
+  }
+
+  &.InVision {
+    background-color: #ff3366 !important;
+    color: white !important;
+  }
+
+  &.Sketch {
+    background-color: #f7b500 !important;
+    color: black !important;
+  }
+
+  &.Adobe {
+    background-color: #ff0000 !important;
+    color: white !important;
+  }
+
+  &.SAS {
+    background-color: #00629b !important;
+    color: white !important;
+  }
+
+  &.R {
+    background-color: #276dc3 !important;
+    color: white !important;
+  }
 }
 
 .scoreRow {

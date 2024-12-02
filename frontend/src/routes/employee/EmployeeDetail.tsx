@@ -83,7 +83,7 @@ const SpecInfo = ({ id }: { id: number }) => {
           {checkIsNoData(oneEmployeeSpecQuery.data?.skillSet) ? null : (
             <div className={`${MS.displayFlex}`}>
               {oneEmployeeSpecQuery.data?.skillSet.map((skill: string) => (
-                <p className={`${S.keyword} ${MS.Mr10}`}>{skill}</p>
+                <p className={`${S.keyword} ${MS.Mr10} ${S[skill]}`}>{skill}</p>
               ))}
             </div>
           )}
