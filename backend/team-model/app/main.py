@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends 
 from sqlalchemy.orm import Session
-from database import get_db, Base_scaled, scaled_engine
+from database import get_db, Base_scaled, scaled_engine, get_db_scaled
 import random
 import logging
 from employee_service import scale_employee_data  # scale_employee_data 함수 임포트
@@ -8,6 +8,7 @@ from schemas import Member, RecommendationRequestDto, RecommendationResponseDto
 from models import Employee, Company, Project
 from personality_service import embedding_employee_personality
 from project_service  import embedding_project
+from recommendation_service import recommend_team
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -27,21 +28,28 @@ def read_employees(db: Session = Depends(get_db)):
     return employees
 
 # 특정 회사 사원 점수 정규화 하기 
-@app.post("/scale-employee-score/") #쿼리파라미터로 회사아이디 보내기?company_id=1
+@app.post("/api/scale-employee-score/") #쿼리파라미터로 회사아이디 보내기?company_id=1
 def scale_employee_data_endpoint(company_id:int, db: Session = Depends(get_db)):
     result = scale_employee_data(db,company_id)
     return {"message": result}
 
 # 성향 임베딩 저장하기
-@app.post("/embedding-employee-personality/") #쿼리파라미터로 회사아이디 보내기?company_id=1
+@app.post("/api/embedding-employee-personality/") #쿼리파라미터로 회사아이디 보내기?company_id=1
 def embedding_personality_data_endpoint(company_id:int, db: Session = Depends(get_db)):
     result = embedding_employee_personality(db,company_id)
     return {"message": result}
 
 # 과거 프로젝트 적합도 임베딩하기
-@app.post("/embedding-project/") #쿼리파라미터로 회사아이디 보내기?company_id=1
+@app.post("/api/embedding-project/") #쿼리파라미터로 회사아이디 보내기?company_id=1
 def embedding_project_data_endpoint(company_id:int,project_id:int, db: Session = Depends(get_db)):
     result = embedding_project(db,company_id=company_id, project_id=project_id)
+    return {"message": result}
+
+
+# 추천
+@app.post("/api/recommendation-team/") #쿼리파라미터로 회사아이디 보내기?project_id=1
+def recommend_project_team_endpoint(company_id:int,project_id:int, db: Session = Depends(get_db), scaled_db: Session=Depends(get_db_scaled)):
+    result = recommend_team(db=db,company_id=company_id, project_id=project_id,scaled_db=scaled_db)
     return {"message": result}
 
 
