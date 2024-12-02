@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pocketstone.team_sync.entity.charter.Position;
 import com.pocketstone.team_sync.entity.ProjectCharter;
+import com.pocketstone.team_sync.entity.enums.Role;
+import com.pocketstone.team_sync.entity.enums.Skill;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -12,19 +14,19 @@ import lombok.Data;
 public class PositionDto {
     private Long id;
     @NotEmpty
-    private String positionName;
+    private Role positionName;
     @NotNull
-    private String positionContent;
+    private Skill positionContent;
 
-    public PositionDto(String positionName, String positionContent) {
+    public PositionDto(Role positionName, Skill positionContent) {
         this.positionName = positionName;
         this.positionContent = positionContent;
     }
 
     @JsonCreator
     public PositionDto(@JsonProperty("id") Long id,
-                        @JsonProperty("positionName") String positionName,
-                        @JsonProperty("positionContent") String positionContent) {
+                        @JsonProperty("positionName") Role positionName,
+                        @JsonProperty("positionContent") Skill positionContent) {
         this.id = id;
         this.positionName = positionName;
         this.positionContent = positionContent;

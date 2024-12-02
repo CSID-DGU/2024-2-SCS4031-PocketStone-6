@@ -2,8 +2,11 @@ package com.pocketstone.team_sync.entity.charter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pocketstone.team_sync.entity.ProjectCharter;
+import com.pocketstone.team_sync.entity.enums.Role;
+import com.pocketstone.team_sync.entity.enums.Skill;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,26 +28,28 @@ public class Position {
         @JoinColumn(name = "project_charter_id", nullable = false)
         private ProjectCharter projectCharter;
 
+        @Enumerated(EnumType.STRING)
         @Column(name = "position_name", nullable = false)
-        @NotEmpty(message = "포지션을 입력해주세요.")
-        private String positionName;
+        @NotNull(message = "포지션을 선택해주세요.")
+        private Role positionName;
 
+        @Enumerated(EnumType.STRING)
         @Column(name = "position_content", nullable = false)
-        @NotEmpty (message = "포지션 역할을 작성해주세요.")
-        private String positionContent;
+        @NotNull (message = "포지션 역할을 작성해주세요.")
+        private Skill positionContent;
 
         @Column(name = "position_count", nullable = false)
         private Integer positionCount = 1;
 
         @Builder (builderMethodName = "createPositionWithoutCount")
-        public Position(ProjectCharter projectCharter, String positionName, String positionContent) {
+        public Position(ProjectCharter projectCharter, Role positionName, Skill positionContent) {
                 this.projectCharter = projectCharter;
                 this.positionName = positionName;
                 this.positionContent = positionContent;
         }
 
         @Builder (builderMethodName = "createPositionWithCount")
-        public Position(ProjectCharter projectCharter, String positionName, String positionContent, Integer positionCount) {
+        public Position(ProjectCharter projectCharter, Role positionName, Skill positionContent, Integer positionCount) {
                 this.projectCharter = projectCharter;
                 this.positionName = positionName;
                 this.positionContent = positionContent;
