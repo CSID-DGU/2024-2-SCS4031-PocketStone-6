@@ -8,7 +8,7 @@ from database import get_db_scaled
 # 점수들에 대한 정규화 함수 정의
 def scale_group(group):
     scaler = MinMaxScaler()
-    group[['kpi_score', 'peer_evaluation_score']] = scaler.fit_transform(group[['kpi_score', 'peer_evaluation_score']])
+    group[['skill_score','kpi_score', 'peer_evaluation_score']] = scaler.fit_transform(group[['skill_score','kpi_score', 'peer_evaluation_score']])
     return group
 
 # 데이터베이스에서 특정 회사의 Employee 데이터를 가져오는 함수
@@ -16,6 +16,7 @@ def get_employee_data_by_company(db: Session, company_id: int):
     query = select(
         Employee.employee_id,
         Employee.company_id,
+        Employee.skill_score,
         Employee.kpi_score,
         Employee.peer_evaluation_score,
         Employee.role
@@ -31,6 +32,7 @@ def scale_employee_data(db: Session, company_id:int):
     data = pd.DataFrame([{
         "employee_id": employee.employee_id,
         "company_id": employee.company_id,
+        "skill_score": employee.skill_score,
         "kpi_score": employee.kpi_score,
         "peer_evaluation_score": employee.peer_evaluation_score,
         #"personal_type": employee.personal_type,
@@ -54,6 +56,7 @@ def scale_employee_data(db: Session, company_id:int):
             scaled_employee = ScaledEmployee(
                 employee_id=row['employee_id'],
                 company_id=row['company_id'],
+                skill_score=row['skill_score'],
                 kpi_score=row['kpi_score'],
                 peer_evaluation_score=row['peer_evaluation_score'],
                 role=row['role'],
