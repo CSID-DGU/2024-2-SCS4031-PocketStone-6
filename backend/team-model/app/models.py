@@ -44,14 +44,8 @@ class Project(Base):
 
     id = Column(BigInteger, primary_key=True)
     company_id= Column(BigInteger)
+    project_name = Column(String(255))
     
-class Objective(Base):
-    __tablename__ = "objective"  # Spring Boot에서 생성된 테이블 이름과 일치해야 함
-
-    id = Column(BigInteger, primary_key=True)
-    project_charter_id= Column(BigInteger)
-    objective_name = Column(String(255))
-    objective_content = Column(String(255))
     
 class ProjectCharter(Base):
     __tablename__ = "project_charter"
@@ -96,6 +90,7 @@ class Skill(enum.Enum):
     TYPESCRIPT = "TYPESCRIPT"
     USER_STORIES = "USER_STORIES"
     VUE = "VUE"
+    FLUTTER="FLUTTER"
     
 class EmployeeSkill(Base):
     __tablename__ = "employee_skill"  # Spring Boot에서 생성된 테이블 이름과 일치해야 함

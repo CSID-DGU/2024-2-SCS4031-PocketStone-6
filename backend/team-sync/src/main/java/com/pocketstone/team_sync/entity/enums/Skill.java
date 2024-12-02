@@ -37,6 +37,7 @@ public enum Skill {
     SASS("Sass", Role.FRONTEND_DEVELOPER),
     GRAPHQL("GraphQL", Role.FRONTEND_DEVELOPER),
     J_QUERY("jQuery", Role.FRONTEND_DEVELOPER),
+    FLUTTER("Flutter", Role.FRONTEND_DEVELOPER),
 
     // 데이터 분석 기술
     PYTHON("python", Role.DATA_ANALYST),

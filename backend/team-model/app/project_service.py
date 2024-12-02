@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from sklearn.preprocessing import MinMaxScaler
-from models import Employee, PastProject, Objective,ProjectCharter,ScaledPastProject
+from models import Employee, PastProject,ScaledPastProject, Project
 import pandas as pd
 from database import get_db_scaled
 from dotenv import load_dotenv
@@ -26,15 +26,14 @@ def get_past_projects_by_company(db: Session, company_id: int):
     return projects
     
 # 진행할 프로젝트 가져오기
-def get_objective_by_project_id(db: Session, project_id: int):
-    # `project_id` -> `project_charter_id` -> `objective_name`, `objective_content` 가져옴
-    results = db.query(Objective.objective_name, Objective.objective_content)\
-        .join(ProjectCharter, ProjectCharter.id == Objective.project_charter_id)\
-        .filter(ProjectCharter.project_id == project_id).all()
-    
-    # 목표 이름과 내용을 "; "로 구분하고 문자열로 반환하기
-    objectives_string = "; ".join([f"{name}: {content}" for name, content in results])
-    return objectives_string
+def get_new_project_name_by_project_id(db: Session, project_id: int)-> str:
+
+    # `project_id` -> projectName
+    return (
+        db.query(Project.project_name)
+        .filter(Project.id == project_id)
+        .scalar()  # 첫 번째 값을 반환
+    )
 
 # 데이터베이스에서 사원 역할 가져오기
 def get_employee_role_by_id(db: Session, employee_id: int):
@@ -70,7 +69,7 @@ def embedding_project(db: Session, company_id:int, project_id:int):
     
     # 진행할 프로젝트   
     reference_vector=client.embeddings.create(
-        input=get_objective_by_project_id(db, project_id),
+        input=get_new_project_name_by_project_id(db, project_id),
         model="solar-embedding-1-large-query"
     )
     project_embeddings.append(reference_vector.data[0].embedding)
