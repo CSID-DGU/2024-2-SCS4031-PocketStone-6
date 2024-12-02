@@ -14,6 +14,9 @@ import { useMemberInfoByIdList } from 'hooks/useMemberInfoByIdList';
 import { addElementAtList, deleteElementAtList } from 'utils/parseList';
 import { addProjectMembers } from 'api/member/addProjectMembers';
 import { FaPlus, FaTrash } from 'react-icons/fa';
+import LoadingModal from 'components/Modal/LoadingModal';
+import { getRecommendation } from 'api/member/getRecommendation';
+import RecommendationModal from 'components/Modal/RecommendationModal';
 
 export default function ProjectMember() {
   const { id } = useParams();
@@ -23,8 +26,22 @@ export default function ProjectMember() {
   const [currentId, setCurrentId] = useState(1);
   const { memberIdList } = useMemberList(Number(id));
   const [selectedMemberList, setSelectedMemberList] = useState<number[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [recommendationData, setRecommendationData] = useState({});
 
-  useScrollBlock(showModal);
+  const handleRecommendationClick = async () => {
+    setLoading(true);
+    try {
+      const data = await getRecommendation(Number(id));
+      setRecommendationData(data);
+    } catch (error) {
+      console.error('추천 요청 실패:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useScrollBlock(showModal || loading || !checkIsNoData(recommendationData));
 
   useEffect(() => {
     setSelectedMemberList(memberIdList);
@@ -32,7 +49,11 @@ export default function ProjectMember() {
 
   return (
     <div className={MS.container}>
-      {showModal ? <EmployeeSpecModal id={currentId} setShowModal={setShowModal} /> : null}
+      {loading && <LoadingModal />}
+      {!checkIsNoData(recommendationData) && (
+        <RecommendationModal data={recommendationData} setData={setRecommendationData} />
+      )}
+      {showModal && <EmployeeSpecModal id={currentId} setShowModal={setShowModal} />}
       <div className={MS.content}>
         <div className={`${MS.contentTitle} ${S.contentTitle}`}>
           <p>인원 수정</p>
@@ -67,7 +88,9 @@ export default function ProjectMember() {
           />
           {/* 버튼부 */}
           <div className={`${MS.displayFlex} ${MS.flexRight} ${MS.Mt10}`}>
-            <button className={`${BS.WhiteBtn} ${MS.Mr10}`}>인원 추천</button>
+            <button className={`${BS.WhiteBtn} ${MS.Mr10}`} onClick={handleRecommendationClick}>
+              인원 추천
+            </button>
             <button
               className={BS.YellowBtn}
               onClick={() => {
