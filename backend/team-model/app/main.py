@@ -45,16 +45,16 @@ def embedding_project_data_endpoint(company_id:int,project_id:int, db: Session =
     result = embedding_project(db,company_id=company_id, project_id=project_id)
     return {"message": result}
 
-
+"""
 # 추천
 @app.post("/api/recommendation-team/") #쿼리파라미터로 회사아이디 보내기?project_id=1
 def recommend_project_team_endpoint(company_id:int,project_id:int, db: Session = Depends(get_db), scaled_db: Session=Depends(get_db_scaled)):
     result = recommend_team(db=db,company_id=company_id, project_id=project_id,scaled_db=scaled_db)
     return result
+"""
 
-
-@app.post("/api/recommendation")
-def recommendation(body: RecommendationRequestDto, db: Session = Depends(get_db)):
+@app.post("/api/recommendation/")
+def recommendation( company_id:int, body: RecommendationRequestDto, scaled_db: Session=Depends(get_db_scaled),db: Session = Depends(get_db)):
     project_id = body.projectId
     memberIds = body.memberIds
     print("추천 API 시작")
@@ -63,7 +63,10 @@ def recommendation(body: RecommendationRequestDto, db: Session = Depends(get_db)
     logger.info(f"Raw body: {body}")
     logger.info(f"Project ID: {body.projectId}")
     logger.info(f"Member IDs: {body.memberIds}")
-
+    
+    result = recommend_team(memberIds=memberIds, db=db,company_id=company_id, project_id=project_id,scaled_db=scaled_db)
+    return result
+    """
     # 프로젝트 ID로 해당 프로젝트 조회
     project = db.query(Project).filter(Project.id == project_id).first()
 
@@ -92,19 +95,8 @@ def recommendation(body: RecommendationRequestDto, db: Session = Depends(get_db)
    
     print("valid members")
     print(valid_members)
-
-    # 필터링된 직원들 중 3명 무작위 선택 (조건에 맞는 직원이 3명 이상일 때)
-    if len(valid_members) > 3:
-        recommended_employees = random.sample(valid_members, 3)
-    else:
-        recommended_employees = valid_members 
-
-    # 직원 ID만 리스트로 추출
-    employee_ids = [employee.employee_id for employee in recommended_employees ]
+    """
     
-    recommended_members = [{"employeeId": id} for id in employee_ids]
-    response = RecommendationResponseDto(memberList=recommended_members)
-    
-    return response
+
 
 

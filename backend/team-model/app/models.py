@@ -1,5 +1,5 @@
 # models.py
-from sqlalchemy import Column, String, Float, Text, Enum, ForeignKey, BigInteger
+from sqlalchemy import Column, String, Float, Text, Enum, ForeignKey, BigInteger,Integer
 from sqlalchemy.orm import relationship
 from database import Base,Base_scaled
 import enum
@@ -11,53 +11,6 @@ class Role(enum.Enum):
     FRONTEND_DEVELOPER = "FRONTEND_DEVELOPER"
     PRODUCT_MANAGER = "PRODUCT_MANAGER"
     UI_UX_DESIGNER = "UI_UX_DESIGNER"
-
-# Spring Boot에서 생성된 Employee 테이블 모델 정의
-class Employee(Base):
-    __tablename__ = "employee"  # Spring Boot에서 생성된 테이블 이름과 일치해야 함
-
-    employee_id = Column(BigInteger, primary_key=True)
-    name = Column(String(100))
-    company_id = Column(BigInteger)
-    skill_score = Column(Float)
-    kpi_score = Column(Float)
-    peer_evaluation_score = Column(Float)
-    personal_type = Column(Text)
-    role = Column(Enum(Role))  
-
-    # Employee -> PastProject (한 사원이 참여한 여러 과거 프로젝트)
-    pastProjects = relationship('PastProject', back_populates='employee')
-
-class PastProject(Base):
-    __tablename__ = "past_project"
-    
-    past_project_id = Column(BigInteger, primary_key=True)
-    description = Column(String(255))
-    project_name = Column(String(255))
-    employee_id = Column(BigInteger, ForeignKey('employee.employee_id'))
-
-    employee = relationship('Employee', back_populates='pastProjects')
-    
-    
-class Project(Base):
-    __tablename__ = "project"  # Spring Boot에서 생성된 테이블 이름과 일치해야 함
-
-    id = Column(BigInteger, primary_key=True)
-    company_id= Column(BigInteger)
-    project_name = Column(String(255))
-    
-    
-class ProjectCharter(Base):
-    __tablename__ = "project_charter"
-     
-    id = Column(BigInteger, primary_key=True)
-    project_id = Column(BigInteger, ForeignKey('project.id'), nullable=False) 
-    
-class Company(Base):
-    __tablename__ = "company"  # Spring Boot에서 생성된 테이블 이름과 일치해야 함
-
-    id = Column(BigInteger, primary_key=True)
-    user_id = Column(BigInteger)
 
 class Skill(enum.Enum):
     ADOBE_XD = "ADOBE_XD"
@@ -92,6 +45,69 @@ class Skill(enum.Enum):
     VUE = "VUE"
     FLUTTER="FLUTTER"
     
+# Spring Boot에서 생성된 Employee 테이블 모델 정의
+class Employee(Base):
+    __tablename__ = "employee"  # Spring Boot에서 생성된 테이블 이름과 일치해야 함
+
+    employee_id = Column(BigInteger, primary_key=True)
+    name = Column(String(100))
+    company_id = Column(BigInteger)
+    skill_score = Column(Float)
+    kpi_score = Column(Float)
+    peer_evaluation_score = Column(Float)
+    personal_type = Column(Text)
+    role = Column(Enum(Role))  
+
+    # Employee -> PastProject (한 사원이 참여한 여러 과거 프로젝트)
+    pastProjects = relationship('PastProject', back_populates='employee')
+
+class PastProject(Base):
+    __tablename__ = "past_project"
+    
+    past_project_id = Column(BigInteger, primary_key=True)
+    description = Column(String(255))
+    project_name = Column(String(255))
+    employee_id = Column(BigInteger, ForeignKey('employee.employee_id'))
+
+    employee = relationship('Employee', back_populates='pastProjects')
+    
+    
+class Project(Base):
+    __tablename__ = "project"  # Spring Boot에서 생성된 테이블 이름과 일치해야 함
+
+    id = Column(BigInteger, primary_key=True)
+    company_id= Column(BigInteger)
+    project_name = Column(String(255))
+    
+class Position(Base):
+    __tablename__ = "position"  # Spring Boot에서 생성된 테이블 이름과 일치해야 함
+
+    id = Column(BigInteger, primary_key=True)
+    position_count = Column(Integer)
+    position_name = Column(Enum(Role))
+    project_charter_id = Column(BigInteger,ForeignKey('project_charter.id'))
+
+class ProjectCharter(Base):
+    __tablename__ = "project_charter"
+     
+    id = Column(BigInteger, primary_key=True)
+    project_id = Column(BigInteger, ForeignKey('project.id'), nullable=False) 
+
+class PositionSkill(Base):
+    __tablename__ = "position_skill"
+    
+    id = Column(BigInteger, primary_key=True)
+    skill = Column(Enum(Skill))
+    position_id = Column(BigInteger)
+
+class Company(Base):
+    __tablename__ = "company"  # Spring Boot에서 생성된 테이블 이름과 일치해야 함
+
+    id = Column(BigInteger, primary_key=True)
+    user_id = Column(BigInteger)
+
+
+    
 class EmployeeSkill(Base):
     __tablename__ = "employee_skill"  # Spring Boot에서 생성된 테이블 이름과 일치해야 함
 
@@ -114,8 +130,8 @@ class ScaledEmployee(Base_scaled):
 # 프로젝트 적합도
 class ScaledPastProject(Base_scaled):
     __tablename__ = "scaled_past_project"
-    
-    past_project_id = Column(BigInteger, primary_key=True, index=True)
+    id =Column(BigInteger, primary_key=True, autoincrement=True )
+    past_project_id = Column(BigInteger)
     new_project_id =Column(BigInteger)
     employee_id = Column(BigInteger,ForeignKey('scaled_employee.employee_id'))
     project_fit_score = Column(Float)  # 프프로젝트임베딩 적합도

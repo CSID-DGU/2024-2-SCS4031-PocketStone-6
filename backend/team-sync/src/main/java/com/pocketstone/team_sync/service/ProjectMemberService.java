@@ -96,16 +96,19 @@ public class ProjectMemberService {
         System.out.println("Available employees after filtering: " + availableEmployees.size());
         System.out.println("Available employee IDs: " + availableEmployees.stream().map(Employee::getId).toList());
         try {
-            return requestRecommendation(request)//추천 요청
+            return requestRecommendation(request,company.getId())//추천 요청
                     .block();
         } catch (Exception e) {
             throw new RuntimeException("추천 실패");
         }
     }
     // 모델서버에 요청보내기
-    private Mono<RecommendationResponseDto> requestRecommendation(RecommendationRequestDto body){
+    private Mono<RecommendationResponseDto> requestRecommendation(RecommendationRequestDto body,Long companyId){
         return webClient_model.post()
-            .uri("/api/recommendation") //endpoint설정
+            .uri(uriBuilder -> uriBuilder
+                .path("/api/recommendation/")
+                .queryParam("company_id", companyId)  // company_id를 URL 파라미터로 추가
+                .build())
             .bodyValue(body)
             .retrieve()
             .onStatus(//클라이언트 에러
