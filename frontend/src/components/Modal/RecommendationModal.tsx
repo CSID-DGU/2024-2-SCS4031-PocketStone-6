@@ -48,15 +48,16 @@ export default function RecommendationModal({
             }}>
             3순위
           </button>
+          <p className={MS.title}><span>최종 점수</span> {(data.teams[Number(page)].final_score * 100).toFixed(2)}점</p>
         </div>
-        <MemberList list={data.memberList} />
+        <MemberList list={data.teams[Number(page)].team_indices} />
         <div className={`${MS.displayFlex} ${MS.flexRight}`}>
           <button
             className={`${BS.YellowBtn}`}
             onClick={() => {
               setSelectedMemberList((prevList) => [
                 ...prevList,
-                ...getMemberIdListFromRecommend(data),
+                ...getMemberIdListFromRecommend(data)[Number(page)],
               ]);
               setData({});
             }}>
@@ -68,7 +69,7 @@ export default function RecommendationModal({
   );
 }
 
-export const MemberList = ({ list }: { list: { employeeId: number; position: string }[] }) => {
+export const MemberList = ({ list }: { list: number[] }) => {
   return (
     <div className={MS.Mb20}>
       <div className={CS.contentTitle}>
@@ -81,7 +82,7 @@ export const MemberList = ({ list }: { list: { employeeId: number; position: str
         </div>
       </div>
       <div className={CS.contentBox}>
-        {list.map(({ employeeId }) => (
+        {list.map((employeeId) => (
           <MemberBlock employeeId={employeeId} />
         ))}
       </div>
