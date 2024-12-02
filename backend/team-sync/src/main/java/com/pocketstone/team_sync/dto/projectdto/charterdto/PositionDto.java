@@ -32,15 +32,4 @@ public class PositionDto {
         this.positionContent = positionContent;
     }
 
-    public Position toPosition(ProjectCharter projectCharter, PositionDto positionDto) {
-        return Position.createPositionWithoutCount()
-                .projectCharter(projectCharter)
-                .positionName(positionDto.getPositionName())
-                .positionContent(positionDto.getPositionContent())
-                .build();
-    }
-
-    public PositionDto toPositionDto(Position position) {
-        return new PositionDto(position.getPositionName(), position.getPositionContent());
-    }
 }
