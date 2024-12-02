@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { checkIsNoData } from 'utils/checkIsNoData';
 import { useProjectDetailInfoQuery } from './useProjectDetailInfoQuery';
+import { parseCharterData } from 'utils/parseCharterContent';
 
 export const useCharterState = (projectId: number) => {
   const { charterQuery } = useProjectDetailInfoQuery(Number(projectId));
@@ -15,8 +16,10 @@ export const useCharterState = (projectId: number) => {
   });
 
   useEffect(() => {
+    const rawData: any = charterQuery?.data;
+
     setCharterContent(
-      checkIsNoData(charterQuery?.data)
+      checkIsNoData(rawData)
         ? {
             objectives: [],
             positions: [],
@@ -26,7 +29,7 @@ export const useCharterState = (projectId: number) => {
             stakeholders: [],
             risks: [],
           }
-        : charterQuery?.data
+        : rawData
     );
   }, [charterQuery?.data]);
 
