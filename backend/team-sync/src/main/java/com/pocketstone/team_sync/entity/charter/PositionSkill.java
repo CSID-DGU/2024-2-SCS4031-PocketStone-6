@@ -27,7 +27,10 @@ public class PositionSkill {
     @Column(nullable = false)
     private Skill skill;
 
-    public PositionSkill(Skill skill) {
-        this.skill = skill;
+    public void setSkill(String skillLabel) {
+        this.skill = Skill.fromLabel(skillLabel);
+    }
+    public PositionSkill(String skillLabel) {
+        this.skill = Skill.fromLabel(skillLabel);
     }
 }
