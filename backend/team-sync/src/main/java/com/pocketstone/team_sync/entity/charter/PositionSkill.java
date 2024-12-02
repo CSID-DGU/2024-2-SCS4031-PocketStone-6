@@ -30,6 +30,11 @@ public class PositionSkill {
     public void setSkill(String skillLabel) {
         this.skill = Skill.fromLabel(skillLabel);
     }
+
+    public String getSkill() {
+        return skill.getLabel();
+    }
+
     public PositionSkill(String skillLabel) {
         this.skill = Skill.fromLabel(skillLabel);
     }

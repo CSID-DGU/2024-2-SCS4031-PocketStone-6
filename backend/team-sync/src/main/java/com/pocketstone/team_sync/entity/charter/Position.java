@@ -2,6 +2,7 @@ package com.pocketstone.team_sync.entity.charter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pocketstone.team_sync.entity.ProjectCharter;
 import com.pocketstone.team_sync.entity.enums.Role;
 import jakarta.persistence.*;
@@ -43,6 +44,11 @@ public class Position {
 
         public void setPositionName(String label){
                 this.positionName = Role.fromLabel(label);
+        }
+
+        @JsonProperty("positionName")
+        public String getPositionLabel() {
+                return positionName != null ? positionName.getLabel() : null;
         }
         public Position(ProjectCharter projectCharter, String positionName, Set<PositionSkill> positionContent, Integer positionCount) {
                 this.projectCharter = projectCharter;
