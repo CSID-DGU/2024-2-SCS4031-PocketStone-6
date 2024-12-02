@@ -104,13 +104,13 @@ const TimelinesList = ({ timelinesList }: { timelinesList: TimelineData[] }) => 
           return (
             <div className={S.timelineContainer}>
               <div className={S.timelineTitle}>
-                <p className={`${TS.smallTitle} ${MS.Mr10}`}>스프린트 {sprintOrder}</p>
-                <p className={`${TS.smallText}`}>Man-Month: {requiredManmonth}</p>
+                <p className={`${TS.smallTitle} ${MS.Mr10}`}>{sprintContent}</p>
+                <p className={`${TS.smallText}`}>Sprint {sprintOrder}</p>
               </div>
               <p className={`${TS.smallText} ${MS.Mb5}`}>
-                ({sprintStartDate} ~ {sprintEndDate})
+               Required Man-Month: {requiredManmonth}   
               </p>
-              <p>🚩 {sprintContent}</p>
+              <p>{sprintStartDate} ~ {sprintEndDate} </p>
             </div>
           );
         }
