@@ -40,7 +40,7 @@ export default function ProjectDetail() {
             {checkIsNoData(charterQuery.data) ? (
               <NoCharter />
             ) : (
-              <p>{JSON.stringify(charterQuery.data)}</p>
+              <Charter charterData={charterQuery?.data} />
             )}
           </div>
         </div>
@@ -123,6 +123,114 @@ const NoCharter = () => {
     <div className={CS.notice}>
       <p>차터 정보를 아직 추가하지 않으셨어요.</p>
       <p>"프로젝트 차터 생성" 버튼을 눌러보세요!</p>
+    </div>
+  );
+};
+
+const Charter = ({ charterData }: { charterData: CharterContent }) => {
+  return (
+    <div className={S.charterContainer}>
+      <div className={S.charterSection}>
+        <p className={`${TS.smallTitle} ${MS.Mb5}`}>필요 포지션</p>
+        {charterData.positions.map((data) => {
+          return <PositionBlock data={data} />;
+        })}
+      </div>
+      <div className={S.charterSection}>
+        <p className={`${TS.smallTitle} ${MS.Mb5}`}>목표</p>
+        {charterData.objectives.map((data) => {
+          return <ObjectiveBlock data={data} />;
+        })}
+      </div>
+      <div className={S.charterSection}>
+        <p className={`${TS.smallTitle} ${MS.Mb5}`}>원칙</p>
+        {charterData.principles.map((data) => {
+          return <PrincipleBlock data={data} />;
+        })}
+      </div>
+      <div className={S.charterSection}>
+        <p className={`${TS.smallTitle} ${MS.Mb5}`}>범위</p>
+        {charterData.scopes.map((data) => {
+          return <ScopeBlock data={data} />;
+        })}
+      </div>
+      <div className={S.charterSection}>
+        <p className={`${TS.smallTitle} ${MS.Mb5}`}>비전</p>
+        {charterData.visions.map((data) => {
+          return <VisionBlock data={data} />;
+        })}
+      </div>
+      <div className={S.charterSection}>
+        <p className={`${TS.smallTitle} ${MS.Mb5}`}>이해 관계자</p>
+        {charterData.stakeholders.map((data) => {
+          return <StakeholderBlock data={data} />;
+        })}
+      </div>
+      <div className={S.charterSection}>
+        <p className={`${TS.smallTitle} ${MS.Mb5}`}>위험 요소</p>
+        {charterData.risks.map((data) => {
+          return <RiskBlock data={data} />;
+        })}
+      </div>
+    </div>
+  );
+};
+
+const PositionBlock = ({ data }: { data: Positions }) => {
+  return (
+    <div className={S.charterBlock}>
+      <p>
+        {data.positionName} ({data.positionCount}명)
+      </p>
+      {data.positionCount === 0 ? <p></p> : <p>👉 {data.positionContent}</p>}
+    </div>
+  );
+};
+const ObjectiveBlock = ({ data }: { data: Objectives }) => {
+  return (
+    <div className={S.charterBlock}>
+      <p>{data.objectiveName}</p>
+      <p>👉 {data.objectiveContent}</p>
+    </div>
+  );
+};
+const PrincipleBlock = ({ data }: { data: Principles }) => {
+  return (
+    <div className={S.charterBlock}>
+      <p>{data.principleName}</p>
+      <p>👉 {data.principleContent}</p>
+    </div>
+  );
+};
+const ScopeBlock = ({ data }: { data: Scopes }) => {
+  return (
+    <div className={S.charterBlock}>
+      <p>{data.scopeName}</p>
+      <p>👉 {data.scopeContent}</p>
+    </div>
+  );
+};
+const VisionBlock = ({ data }: { data: Visions }) => {
+  return (
+    <div className={S.charterBlock}>
+      <p>{data.visionName}</p>
+      <p>👉 {data.visionContent}</p>
+    </div>
+  );
+};
+const StakeholderBlock = ({ data }: { data: Stakeholders }) => {
+  return (
+    <div className={S.charterBlock}>
+      <p>{data.stakeholderName}</p>
+      <p>👉 {data.stakeholderContent}</p>
+    </div>
+  );
+};
+const RiskBlock = ({ data }: { data: Risks }) => {
+  return (
+    <div className={S.charterBlock}>
+      <p>{data.riskName}</p>
+      <p>👉 {data.riskContent}</p>
     </div>
   );
 };

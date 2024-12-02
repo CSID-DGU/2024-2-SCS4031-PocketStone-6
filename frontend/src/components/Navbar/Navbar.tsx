@@ -37,7 +37,7 @@ export const Navbar = () => {
           인원 관리
         </button>
         <button
-          className={getBtnClassName(category, 'test')}
+          className={S.hiddenNavBtn}
           onClick={() => {
             navigate('/test');
           }}>

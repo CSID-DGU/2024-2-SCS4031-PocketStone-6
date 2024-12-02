@@ -1,4 +1,126 @@
+import { usePositionState } from 'hooks/usePositionState';
+import { useProjectSkillsQuery } from 'hooks/useProjectSkillsQuery';
+import { MS } from 'styles';
 import S from 'styles/Inputs.module.scss';
+import { checkIsNoData } from 'utils/checkIsNoData';
+
+export const PositionsInput = ({
+  positionsList,
+  setCharterContent,
+}: {
+  positionsList: Positions[];
+  setCharterContent: React.Dispatch<React.SetStateAction<CharterContent>>;
+}) => {
+  const { position, setPosition } = usePositionState(positionsList);
+
+  const handleCountChange = (e: React.ChangeEvent<HTMLInputElement>, category: string) => {
+    const newValue = parseInt(e.target.value, 10) || 0;
+
+    const updatedPositions = position.map((pos) =>
+      pos.positionName === category ? { ...pos, positionCount: newValue } : pos
+    );
+
+    setPosition(updatedPositions);
+
+    setCharterContent((prevCharter) => ({
+      ...prevCharter,
+      positions: updatedPositions,
+    }));
+  };
+
+  return (
+    <div>
+      {['PM', 'BE', 'FE', 'DE', 'DA'].map((category) => {
+        const currentCount =
+          position.find((pos) => pos.positionName === category)?.positionCount || 0;
+
+        return (
+          <div key={category} className={S.positionsContainer}>
+            <div className={S.positionsTitle}>
+              <p>{category}</p>
+              <input
+                className={S.textInput}
+                placeholder="인원(명)"
+                type="number"
+                min={0}
+                value={currentCount}
+                onChange={(e) => handleCountChange(e, category)}
+              />
+              <p>명</p>
+            </div>
+            <StacksBlock
+              category={category}
+              position={position}
+              setPosition={setPosition}
+              setCharterContent={setCharterContent}
+            />
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+const StacksBlock = ({
+  category,
+  position,
+  setPosition,
+  setCharterContent,
+}: {
+  category: string;
+  position: Positions[];
+  setPosition: React.Dispatch<React.SetStateAction<Positions[]>>;
+  setCharterContent: React.Dispatch<React.SetStateAction<CharterContent>>;
+}) => {
+  const skillQuery = useProjectSkillsQuery();
+
+  const handleStackClick = (stack: string) => {
+    const updatedPositions = position.map((pos) => {
+      if (pos.positionName !== category) return pos;
+
+      const currentContent = pos.positionContent || '';
+      const stackArray = currentContent.split(',').filter((s) => s);
+
+      // 이미 포함된 경우 제거, 포함되지 않은 경우 추가
+      const updatedStackArray = stackArray.includes(stack)
+        ? stackArray.filter((s) => s !== stack)
+        : [...stackArray, stack];
+
+      return {
+        ...pos,
+        positionContent: updatedStackArray.join(','),
+      };
+    });
+
+    setPosition(updatedPositions);
+
+    setCharterContent((prevCharter) => ({
+      ...prevCharter,
+      positions: updatedPositions,
+    }));
+  };
+
+  return (
+    <div className={MS.displayFlex}>
+      {checkIsNoData(skillQuery?.data)
+        ? null
+        : skillQuery.data[category].map((stack: string) => {
+            const posInfo = position.find((pos) => pos.positionName === category)?.positionContent;
+            const isSelected =
+              posInfo === undefined || posInfo === '' ? false : posInfo.split(',').includes(stack);
+
+            return (
+              <p
+                key={stack}
+                className={isSelected ? S.selectedStack : S.stack}
+                onClick={() => handleStackClick(stack)}>
+                {stack}
+              </p>
+            );
+          })}
+    </div>
+  );
+};
 
 export const ObjectivesInput = ({
   objectivesList,

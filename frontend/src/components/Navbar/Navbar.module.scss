@@ -56,6 +56,11 @@
   color: #e52828;
 }
 
+.hiddenNavBtn {
+  @extend %btn;
+  color: #ffffff;
+}
+
 .selectedNavBtn:hover,
 .navBtn:hover {
   background: #e8e8e8;
