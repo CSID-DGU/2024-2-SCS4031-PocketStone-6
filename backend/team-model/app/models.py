@@ -19,6 +19,7 @@ class Employee(Base):
     employee_id = Column(BigInteger, primary_key=True)
     name = Column(String(100))
     company_id = Column(BigInteger)
+    skill_score = Column(Float)
     kpi_score = Column(Float)
     peer_evaluation_score = Column(Float)
     personal_type = Column(Text)
@@ -71,6 +72,7 @@ class ScaledEmployee(Base_scaled):
     
     employee_id = Column(BigInteger, primary_key=True, index=True)
     company_id = Column(BigInteger)
+    skill_score = Column(Float)
     kpi_score = Column(Float)
     peer_evaluation_score = Column(Float)
     role =  Column(Enum(Role))
