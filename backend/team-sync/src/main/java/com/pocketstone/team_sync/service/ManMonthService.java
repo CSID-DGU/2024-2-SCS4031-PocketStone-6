@@ -4,18 +4,12 @@ package com.pocketstone.team_sync.service;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.pocketstone.team_sync.entity.*;
+import com.pocketstone.team_sync.repository.ManMonthAggRepository;
 import org.springframework.stereotype.Service;
 
-import com.pocketstone.team_sync.entity.Company;
-import com.pocketstone.team_sync.entity.Employee;
-import com.pocketstone.team_sync.entity.ManMonth;
-import com.pocketstone.team_sync.entity.Project;
-import com.pocketstone.team_sync.entity.Timeline;
-import com.pocketstone.team_sync.entity.User;
 import com.pocketstone.team_sync.exception.ExceededWorkloadException;
 import com.pocketstone.team_sync.repository.CompanyRepository;
 import com.pocketstone.team_sync.repository.ManMonthRepository;
@@ -29,15 +23,16 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class ManMonthService {
 
-    private static final Double MAX_MANMONTH = 0.25;
+    private static final Double MAX_MANMONTH = 0.251;
     private final CompanyRepository companyRepository;
     private final ManMonthRepository manMonthRepository;
+    private final ManMonthAggRepository manMonthAggRepository;
 
     public Map<LocalDate, Double> checkAvailability(Employee employee, LocalDate startDate, LocalDate endDate) {
         LocalDate startMonday = startDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         LocalDate endSunday = endDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
 
-        List<ManMonth> existingAllocations = manMonthRepository.findByEmployeeAndDateRange(employee, startMonday, endSunday);
+        List<ManMonthAgg> existingAllocations = manMonthAggRepository.findByEmployeeAndDateRange(employee, startMonday, endSunday);
 
         Map<LocalDate, Double> weeklyAvailability = new HashMap<>();
 
@@ -47,7 +42,7 @@ public class ManMonthService {
             currentWeek = currentWeek.plusWeeks(1);
         }
 
-        for (ManMonth allocation : existingAllocations) {
+        for (ManMonthAgg allocation : existingAllocations) {
             weeklyAvailability.merge(
                     allocation.getWeekStartDate(),
                     -allocation.getManMonth(),
@@ -71,7 +66,7 @@ public class ManMonthService {
             Double availableManmonth = availability.getOrDefault(weekStart, MAX_MANMONTH);
 
             if (requiredManmonth > availableManmonth) {
-                throw new ExceededWorkloadException(employee.getName(), availableManmonth);
+               throw new ExceededWorkloadException(employee.getName(), availableManmonth);
             }
 
         }
@@ -103,17 +98,41 @@ public class ManMonthService {
 
         manMonthRepository.save(allocation);
 
+        updateAggregateManMonth(employee, startMonday);
+
     }
 
     public void deleteManMonthsByProjectId(Long projectId) {
         List<ManMonth> manMonths = manMonthRepository.findByProjectId(projectId);
 
         if (!manMonths.isEmpty()) {
+            Map<Employee, Set<LocalDate>> updateNeeded = new HashMap<>();
+
+            for (ManMonth mm : manMonths) {
+                updateNeeded
+                        .computeIfAbsent(mm.getEmployee(), k -> new HashSet<>())
+                        .add(mm.getWeekStartDate());
+            }
+
             manMonthRepository.deleteAll(manMonths);
+            updateNeeded.forEach((employee, weeks) ->
+                    weeks.forEach(week ->
+                            updateAggregateManMonth(employee, week)
+                    )
+            );
         }
     }
 
+    public void updateAggregateManMonth(Employee employee, LocalDate weekStartDate) {
+        Double totalManMonth = manMonthRepository.calculateTotalManMonthForWeek(employee, weekStartDate);
 
+        ManMonthAgg aggregation = manMonthAggRepository
+                .findByEmployeeAndWeekStartDate(employee, weekStartDate)
+                .orElse(new ManMonthAgg(employee, weekStartDate, weekStartDate.plusDays(6), 0.0));
 
+        aggregation.setManMonth(totalManMonth);
+
+        manMonthAggRepository.save(aggregation);
+    }
 
 }

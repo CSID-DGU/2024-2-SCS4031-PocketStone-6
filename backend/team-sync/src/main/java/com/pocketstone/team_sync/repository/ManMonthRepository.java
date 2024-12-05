@@ -45,4 +45,7 @@ public interface ManMonthRepository extends JpaRepository<ManMonth, Long> {
     void deleteAllByProjectId(Long projectId);
 
     List<ManMonth> findByProjectId(Long projectId);
+
+    @Query("SELECT SUM(m.manMonth) FROM ManMonth m WHERE m.employee = :employee AND m.weekStartDate = :weekStartDate")
+    Double calculateTotalManMonthForWeek(@Param("employee") Employee employee, @Param("weekStartDate") LocalDate weekStartDate);
 }
