@@ -10,23 +10,13 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-public class ManMonth {
+public class ManMonthAgg {
 
 
     @Id
     @JsonIgnore
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
-
-
-    @ManyToOne (fetch = FetchType.LAZY)
-    @JoinColumn (name = "project_id", nullable = false)
-    private Project project;
-
-
-    @ManyToOne (fetch = FetchType.LAZY)
-    @JoinColumn (name = "timeline_id", nullable = false)
-    private Timeline timeline;
 
 
     @ManyToOne (fetch = FetchType.LAZY)
@@ -44,9 +34,7 @@ public class ManMonth {
 
 
     @Builder
-    public ManMonth(Project project, Timeline timeline, Employee employee, LocalDate weekStartDate, LocalDate weekEndDate, Double manMonth) {
-        this.project = project;
-        this.timeline = timeline;
+    public ManMonthAgg(Employee employee, LocalDate weekStartDate, LocalDate weekEndDate, Double manMonth) {
         this.employee = employee;
         this.weekStartDate = weekStartDate;
         this.weekEndDate = weekEndDate;
