@@ -30,6 +30,13 @@ export const Navbar = () => {
           프로젝트 관리
         </button>
         <button
+          className={getBtnClassName(category, 'history')}
+          onClick={() => {
+            navigate('/history');
+          }}>
+          이전 프로젝트
+        </button>
+        <button
           className={getBtnClassName(category, 'employee')}
           onClick={() => {
             navigate('/employee');
