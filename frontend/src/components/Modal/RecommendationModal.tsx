@@ -1,15 +1,9 @@
 import { useMemberInfoById } from 'hooks/useMemberInfoById';
 import { useState } from 'react';
 import { FaXmark } from 'react-icons/fa6';
-import { BS, CS, MS, TS } from 'styles';
+import { BS, ChS, CS, MS, TS } from 'styles';
 import { getMemberIdListFromRecommend } from 'utils/parseList';
-import {
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  Radar,
-  ResponsiveContainer,
-} from 'recharts';
+import { RadarChart, PolarGrid, PolarAngleAxis, Radar, ResponsiveContainer } from 'recharts';
 import LoadingModal from 'components/Modal/LoadingModal';
 
 export default function RecommendationModal({
@@ -21,11 +15,9 @@ export default function RecommendationModal({
   setData: React.Dispatch<React.SetStateAction<any>>;
   setSelectedMemberList: React.Dispatch<React.SetStateAction<number[]>>;
 }) {
-
-  
   const [page, setPage] = useState('0');
   if (!data || !data.teams || !data.teams[Number(page)]) {
-    return <LoadingModal />; 
+    return <LoadingModal />;
   }
   const currentTeam = data.teams[Number(page)];
   const radarData = [
@@ -37,9 +29,9 @@ export default function RecommendationModal({
     { metric: '기술 점수', value: currentTeam.skill_score },
   ];
 
-  const barData = radarData.map(item => ({
+  const barData = radarData.map((item) => ({
     ...item,
-    percentage: (item.value * 100).toFixed(1)
+    percentage: (item.value * 100).toFixed(1),
   }));
 
   return (
@@ -53,8 +45,8 @@ export default function RecommendationModal({
           <FaXmark />
         </button>
         <p className={`${TS.title} ${MS.Mb20}`}>추천 결과</p>
-        
-        <div className={MS.topSection}>
+
+        <div className={`${MS.Mb20}`}>
           <div className={MS.recommendBtns}>
             <button
               className={page === '0' ? BS.YellowBtn : BS.WhiteBtn}
@@ -79,10 +71,10 @@ export default function RecommendationModal({
             </button>
           </div>
 
-          <div className={MS.chartsContainer}>
-            <div className={MS.radarChart}>
+          <div className={ChS.chartsContainer}>
+            <div className={ChS.radarChart}>
               <ResponsiveContainer width="100%" height={300}>
-                <RadarChart data={radarData.filter(item => item.metric !== '종합 점수')}>
+                <RadarChart data={radarData.filter((item) => item.metric !== '종합 점수')}>
                   <PolarGrid />
                   <PolarAngleAxis dataKey="metric" />
                   <Radar
@@ -96,43 +88,27 @@ export default function RecommendationModal({
               </ResponsiveContainer>
             </div>
 
-            <div className={MS.scoreDetails}>
-
-
+            <div className={ChS.scoreDetails}>
               {barData
-                .filter(item => item.metric !== '종합 점수')
+                .filter((item) => item.metric !== '종합 점수')
                 .map((item, index) => (
-                  <div key={index} className={MS.scoreItem}>
-                    <span className={MS.scoreLabel}>{item.metric}: </span>
-                    <span className={MS.scoreValue}>{item.percentage}점</span>
+                  <div key={index} className={ChS.scoreItem}>
+                    <span className={ChS.scoreLabel}>{item.metric}</span>
+                    <span className={ChS.scoreValue}>{item.percentage}점</span>
                   </div>
                 ))}
 
-            
-                {barData
-                  .filter(item => item.metric === '종합 점수')
-                  .map((item, index) => (
-                    <div 
-                      key={index} 
-                      className={`${MS.highlightedScore}`}
-                    >
-                      <span className={`${MS.highlightedLabel}`}>
-                        {item.metric}: 
-                      </span>
-                      <span className={`${MS.highlightedValue}`}>
-                        {item.percentage}점
-                      </span>
-                    </div>
-                  ))}
-
-             </div>
-            
+              {barData
+                .filter((item) => item.metric === '종합 점수')
+                .map((item, index) => (
+                  <div key={index} className={`${ChS.highlightedScore}`}>
+                    <span className={`${ChS.highlightedLabel}`}>{item.metric}</span>
+                    <span className={`${ChS.highlightedValue}`}>{item.percentage}점</span>
+                  </div>
+                ))}
+            </div>
           </div>
         </div>
-
-          
-
-          
 
         <MemberList list={data.teams[Number(page)].team_indices} />
         <div className={`${MS.displayFlex} ${MS.flexRight}`}>
@@ -155,7 +131,7 @@ export default function RecommendationModal({
 
 export const MemberList = ({ list }: { list: number[] }) => {
   return (
-    <div className={MS.Mb05}>
+    <div className={MS.Mb10}>
       <div className={CS.contentTitle}>
         <div className={MS.displayFlex}>
           <div className={`${CS.category} ${MS.flexOne}`}>관리번호</div>
