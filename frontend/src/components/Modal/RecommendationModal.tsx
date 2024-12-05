@@ -25,13 +25,12 @@ export default function RecommendationModal({
   
   const [page, setPage] = useState('0');
   if (!data || !data.teams || !data.teams[Number(page)]) {
-    return <LoadingModal />; // or return a loading state
+    return <LoadingModal />; 
   }
   const currentTeam = data.teams[Number(page)];
   const radarData = [
     { metric: '종합 점수', value: currentTeam.final_score },
     { metric: '프로젝트 적합도', value: currentTeam.project_fit_score },
-    { metric: '평균 성격 유사도', value: currentTeam.avg_personality_similarity },
     { metric: '성격 유사도', value: currentTeam.scaled_personality_similarity },
     { metric: 'KPI 평가점수', value: currentTeam.kpi_score },
     { metric: '동료 평가', value: currentTeam.peer_evaluation_score },
@@ -90,7 +89,7 @@ export default function RecommendationModal({
                     name="팀 점수"
                     dataKey="value"
                     fill="#FFB800"
-                    fillOpacity={0.82}
+                    fillOpacity={0.7}
                     stroke="#FFB800"
                   />
                 </RadarChart>
