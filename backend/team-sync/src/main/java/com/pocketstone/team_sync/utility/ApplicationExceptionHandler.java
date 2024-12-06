@@ -27,7 +27,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
         ErrorResponse error = new ErrorResponse(Collections.singletonList(ex.getMessage()));
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
-    @ExceptionHandler({CredentialsNotFoundException.class, ProjectNotFoundException.class, CharterNotFoundException.class, CharterPdfNotFoundException.class, UserNotFoundException.class})
+    @ExceptionHandler({CredentialsNotFoundException.class, ProjectNotFoundException.class, CharterNotFoundException.class, CharterPdfNotFoundException.class, UserNotFoundException.class, DataNotFoundException.class})
     public ResponseEntity<Object> NotFoundException(RuntimeException ex) {
         ErrorResponse error = new ErrorResponse(Collections.singletonList(ex.getMessage()));
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
