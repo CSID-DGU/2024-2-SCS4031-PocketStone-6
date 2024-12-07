@@ -88,11 +88,14 @@
   }
 }
 
+.rowContent {
+  flex-grow: 1;
+}
+
 .keyword {
   background: #d8d8d8;
   padding: 5px;
   border-radius: 7px;
-
 
   &.SpringBoot {
     background-color: #6db33f !important;
@@ -185,10 +188,67 @@
 }
 
 .projectBlock {
+  cursor: pointer;
+  background: white;
+  width: 100%;
+  padding: 10px;
   margin-bottom: 10px;
+  border-radius: 10px;
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);
+  transition: 0.3s background;
+
+  &:hover {
+    background: #d8d8d8;
+  }
+}
+
+.projectTitleContainer {
+  display: flex;
+  justify-content: space-between;
 }
 
 .projectTitle {
+  font-family: 'NanumGothicBold';
+  font-size: large;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  > *:first-child {
+    margin-right: 5px;
+  }
+}
+
+.projectStatus {
+  font-family: 'NanumGothicBold';
+  padding: 5px;
+  border-radius: 10px;
+  color: white;
+
+  &.pending {
+    background: gray;
+  }
+
+  &.running {
+    background: #3dadff;
+  }
+
+  &.ended {
+    background: #e52828;
+  }
+}
+
+.projectDate {
+  display: flex;
+  > p {
+    margin-right: 10px;
+  }
+}
+
+.pastProjectBlock {
+  margin-bottom: 10px;
+}
+
+.pastProjectTitle {
   font-family: 'NanumGothicBold';
   font-size: large;
   margin-bottom: 5px;
@@ -200,6 +260,6 @@
   }
 }
 
-.projectDescription {
+.pastProjectDescription {
   margin-left: 20px;
 }
