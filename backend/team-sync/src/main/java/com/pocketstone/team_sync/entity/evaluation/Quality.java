@@ -32,9 +32,6 @@ public class Quality {
     private Integer foundBugs;
 
     @Column(nullable = false)
-    private Double responsibilityScore;
-
-    @Column(nullable = false)
     private Double performance;
 
     @Column(nullable = false)
