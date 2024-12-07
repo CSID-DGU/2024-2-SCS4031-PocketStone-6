@@ -27,7 +27,7 @@ public class  Project {
 
     //프로젝트 고유 id
     @Id
-    @JsonIgnore
+    //@JsonIgnore
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
 
