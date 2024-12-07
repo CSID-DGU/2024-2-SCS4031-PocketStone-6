@@ -7,9 +7,9 @@ export const getCompletedProjects = async () => {
   try {
     const response = await tokenAxios.get(`${API_URL}/api/projects`, {
       headers: headers,
-      //params: {
-        //status: 'COMPLETED'
-      //}
+      params: {
+        status: 'COMPLETED'
+      }
     });
     return response.data;
   } catch (error) {
