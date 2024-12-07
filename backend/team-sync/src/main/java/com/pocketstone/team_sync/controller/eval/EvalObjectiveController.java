@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/projects/{projectId}/evaluations/objective")
 @RequiredArgsConstructor
@@ -24,7 +26,7 @@ public class EvalObjectiveController {
     }
 
     @GetMapping
-    public ResponseEntity<ObjectiveAchievementDto> getObjectiveAchievement(
+    public ResponseEntity<List<ObjectiveAchievementDto>> getObjectiveAchievement(
             @AuthenticationPrincipal User user,
             @PathVariable Long projectId) {
         return ResponseEntity.ok(projectEvalService.getObjectiveAchievement(user, projectId));
