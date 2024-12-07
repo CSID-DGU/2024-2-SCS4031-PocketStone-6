@@ -70,69 +70,96 @@ public class ManMonthService {
             }
 
         }
+        List<ManMonth> allocationsToSave = new ArrayList<>();
+        List<ManMonthAgg> aggregationsToUpdate = new ArrayList<>();
 
         for (Map.Entry<LocalDate, Double> entry : weeklyManmonths.entrySet()) {
-            allocateWork (employee, project, timeline, entry.getKey(), entry.getValue());
+            ManMonth allocation = createAllocation(employee, project, timeline,
+                    entry.getKey(), entry.getValue());
+            allocationsToSave.add(allocation);
+
+            ManMonthAgg agg = prepareAggregateUpdate(employee, entry.getKey(), entry.getValue());
+            aggregationsToUpdate.add(agg);
         }
+
+        manMonthRepository.saveAll(allocationsToSave);
+        manMonthAggRepository.saveAll(aggregationsToUpdate);
+
     }
 
-    private void allocateWork(Employee employee, Project project, Timeline timeline, LocalDate weekStartDate, Double manmonthValue) {
-
+    private ManMonth createAllocation(Employee employee, Project project, Timeline timeline,
+                                      LocalDate weekStartDate, Double manmonthValue) {
         LocalDate startMonday = weekStartDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         LocalDate endSunday = startMonday.plusDays(6);
 
-        ManMonth allocation = manMonthRepository
-                .findByEmployeeAndProjectAndTimelineAndWeekStartDate(employee, project, timeline, startMonday)
-                .orElse(new ManMonth());
-
-        if (allocation.getId() == null) {
-            allocation.setEmployee(employee);
-            allocation.setWeekStartDate(startMonday);
-            allocation.setWeekEndDate(endSunday);
-            allocation.setProject(project);
-            allocation.setTimeline(timeline);
-            allocation.setManMonth(manmonthValue);
-        } else {
-            allocation.setManMonth(allocation.getManMonth() + manmonthValue);
-        }
-
-        manMonthRepository.save(allocation);
-
-        updateAggregateManMonth(employee, startMonday);
-
+        return manMonthRepository
+                .findByEmployeeAndProjectAndTimelineAndWeekStartDate(
+                        employee, project, timeline, startMonday)
+                .map(existing -> {
+                    existing.setManMonth(existing.getManMonth() + manmonthValue);
+                    return existing;
+                })
+                .orElseGet(() -> {
+                    ManMonth newAllocation = new ManMonth();
+                    newAllocation.setEmployee(employee);
+                    newAllocation.setWeekStartDate(startMonday);
+                    newAllocation.setWeekEndDate(endSunday);
+                    newAllocation.setProject(project);
+                    newAllocation.setTimeline(timeline);
+                    newAllocation.setManMonth(manmonthValue);
+                    return newAllocation;
+                });
     }
 
+    private ManMonthAgg prepareAggregateUpdate(Employee employee, LocalDate weekStartDate,
+                                               Double additionalManMonth) {
+        Double totalManMonth = manMonthRepository.calculateTotalManMonthForWeek(employee, weekStartDate);
+        double currentTotal = (totalManMonth != null ? totalManMonth : 0.0);
+
+        return manMonthAggRepository
+                .findByEmployeeAndWeekStartDate(employee, weekStartDate)
+                .map(existing -> {
+                    existing.setManMonth(currentTotal + additionalManMonth);
+                    return existing;
+                })
+                .orElseGet(() -> new ManMonthAgg(
+                        employee,
+                        weekStartDate,
+                        weekStartDate.plusDays(6),
+                        additionalManMonth
+                ));
+    }
+
+
+    @Transactional
     public void deleteManMonthsByProjectId(Long projectId) {
         List<ManMonth> manMonths = manMonthRepository.findByProjectId(projectId);
 
         if (!manMonths.isEmpty()) {
-            Map<Employee, Set<LocalDate>> updateNeeded = new HashMap<>();
-
             for (ManMonth mm : manMonths) {
-                updateNeeded
-                        .computeIfAbsent(mm.getEmployee(), k -> new HashSet<>())
-                        .add(mm.getWeekStartDate());
+                subtractAggregateManMonth(
+                        mm.getEmployee(),
+                        mm.getWeekStartDate(),
+                        mm.getManMonth()
+                );
             }
 
             manMonthRepository.deleteAll(manMonths);
-            updateNeeded.forEach((employee, weeks) ->
-                    weeks.forEach(week ->
-                            updateAggregateManMonth(employee, week)
-                    )
-            );
+        }
+        }
+
+
+
+    public void subtractAggregateManMonth(Employee employee, LocalDate weekStartDate, Double manMonthValue) {
+        ManMonthAgg aggregation = manMonthAggRepository
+                .findByEmployeeAndWeekStartDate(employee, weekStartDate)
+                .orElse(null);
+
+        if (aggregation != null) {
+            aggregation.setManMonth(Math.max(0.0, aggregation.getManMonth() - manMonthValue));
+            manMonthAggRepository.save(aggregation);
         }
     }
 
-    public void updateAggregateManMonth(Employee employee, LocalDate weekStartDate) {
-        Double totalManMonth = manMonthRepository.calculateTotalManMonthForWeek(employee, weekStartDate);
-
-        ManMonthAgg aggregation = manMonthAggRepository
-                .findByEmployeeAndWeekStartDate(employee, weekStartDate)
-                .orElse(new ManMonthAgg(employee, weekStartDate, weekStartDate.plusDays(6), 0.0));
-
-        aggregation.setManMonth(totalManMonth);
-
-        manMonthAggRepository.save(aggregation);
-    }
 
 }

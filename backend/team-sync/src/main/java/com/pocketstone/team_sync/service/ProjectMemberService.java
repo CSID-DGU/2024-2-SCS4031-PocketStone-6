@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.pocketstone.team_sync.exception.AllocationNotAvailableException;
+import com.pocketstone.team_sync.exception.CompanyNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -138,7 +138,7 @@ public class ProjectMemberService {
     public void registerMember(User user, MemberRequestDto request, Long projectId) {
         
         Company company  = companyRepository.findByUserId(user.getId())
-                                                .orElseThrow(() -> new RuntimeException("Company not found"));
+                                                .orElseThrow(() -> new CompanyNotFoundException(user.getUsername()));
         //회사에 해당 프로젝트 속하는지 확인
         Project project = projectRepository.findByCompanyAndId(company, projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(""));
@@ -210,15 +210,15 @@ public class ProjectMemberService {
     public void deleteAllMembers(User user, Long projectId) {
     
         Company company  = companyRepository.findByUserId(user.getId())
-                                                .orElseThrow(() -> new RuntimeException("Company not found"));
+                                                .orElseThrow(() -> new CompanyNotFoundException(user.getUsername()));
         //회사 확인
         if (!projectRepository.existsByCompanyIdAndId(company.getId(), projectId)) {//회사에 해당 프로젝트있는지(company로 변경해야함)
             throw new ProjectNotFoundException("");
         }
         
         if (memberRepository.existsByProjectId(projectId)){
-            manMonthRepository.deleteAllByProjectId(projectId);
-            memberRepository.deleteAllByProjectId(projectId); 
+            manMonthService.deleteManMonthsByProjectId(projectId);
+            memberRepository.deleteAllByProjectId(projectId);
         }
          
     }
@@ -226,11 +226,11 @@ public class ProjectMemberService {
     //팀원 조회
     public List<MemberListResponseDto> getMember(User user, Long projectId) {
         Company company = companyRepository.findByUserId(user.getId())
-                                                    .orElseThrow(() -> new RuntimeException("Company not found"));
+                                                    .orElseThrow(() -> new CompanyNotFoundException(user.getUsername()));
         if (!projectRepository.existsByCompanyIdAndId(company.getId(), projectId)) {//회사에 해당 프로젝트있는지(company로 변경해야함함)
-            throw new RuntimeException("Project not found");
+            throw new CompanyNotFoundException(user.getUsername());
         }
-        List<ProjectMember> memberList = memberRepository.findByProjectId(projectId);
+        List<ProjectMember> memberList = memberRepository.findAllByProjectId(projectId);
         List<MemberListResponseDto> responseList = new ArrayList<>();
         for (int i=0; i < memberList.size(); i++) {
             responseList.add(new MemberListResponseDto(memberList.get(i).getEmployee().getId(),memberList.get(i).getEmployee().getPosition()));
@@ -252,8 +252,28 @@ public class ProjectMemberService {
                     return required <= available;
                 });
     }
-
     private Map<LocalDate, Double> buildManmonthMapFromTimelines(List<Timeline> timelines) {
+        Map<LocalDate, Double> manmonths = new HashMap<>();
+
+        for (Timeline timeline : timelines) {
+            LocalDate startMonday = timeline.getSprintStartDate()
+                    .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+            LocalDate endSunday = timeline.getSprintEndDate()
+                    .with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
+
+            long totalWeeks = ChronoUnit.WEEKS.between(startMonday, endSunday) + 1;
+            double weeklyManMonth = timeline.getRequiredManmonth() / (double) totalWeeks;
+
+            for (LocalDate date = startMonday;
+                 !date.isAfter(endSunday);
+                 date = date.plusWeeks(1)) {
+                manmonths.merge(date, weeklyManMonth, Double::sum);
+            }
+        }
+
+        return manmonths;
+    }
+    /*private Map<LocalDate, Double> buildManmonthMapFromTimelines(List<Timeline> timelines) {
         Map<LocalDate, Double> manmonths = new HashMap<>();
 
         for (Timeline timeline : timelines) {
@@ -296,7 +316,7 @@ public class ProjectMemberService {
                 });
 
         return manmonths;
-    }
+    }*/
 
     private Map<LocalDate, Double> extractManmonthsForTimeline(
             Map<LocalDate, Double> projectManmonths,
