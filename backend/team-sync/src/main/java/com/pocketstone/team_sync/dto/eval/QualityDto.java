@@ -14,7 +14,6 @@ public class QualityDto {
     private Double testCoverage;
     private Double productQuality;
     private Integer foundBugs;
-    private Double responsibilityScore;
     private Double performance;
     private Double reliability;
 }

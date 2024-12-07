@@ -13,5 +13,6 @@ public class ObjectiveAchievementDto {
     private Long id;
     private Long objectiveId;
     private Double achieveRate;
+    private String objectiveName;
 }
 
