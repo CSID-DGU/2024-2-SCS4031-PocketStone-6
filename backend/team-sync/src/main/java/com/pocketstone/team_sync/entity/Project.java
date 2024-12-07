@@ -27,7 +27,7 @@ public class  Project {
 
     //프로젝트 고유 id
     @Id
-    @JsonIgnore
+    //@JsonIgnore
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -44,6 +44,7 @@ public class  Project {
     @Column (name = "mvp_date", nullable = false)
     private LocalDate mvpDate;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;

@@ -230,12 +230,10 @@ public class ProjectMemberService {
         if (!projectRepository.existsByCompanyIdAndId(company.getId(), projectId)) {//회사에 해당 프로젝트있는지(company로 변경해야함함)
             throw new CompanyNotFoundException(user.getUsername());
         }
-        List<ProjectMember> memberList = memberRepository.findAllByProjectId(projectId);
-        List<MemberListResponseDto> responseList = new ArrayList<>();
-        for (int i=0; i < memberList.size(); i++) {
-            responseList.add(new MemberListResponseDto(memberList.get(i).getEmployee().getId(),memberList.get(i).getEmployee().getPosition()));
-        }
-
+        List<ProjectMember> memberList = memberRepository.findByProjectIdWithEmployee(projectId);
+        List<MemberListResponseDto> responseList = memberList.stream()
+            .map(pm -> new MemberListResponseDto(pm.getEmployee().getId(), pm.getEmployee().getPosition()))
+            .collect(Collectors.toList());
         return responseList;
     }
 
@@ -273,50 +271,7 @@ public class ProjectMemberService {
 
         return manmonths;
     }
-    /*private Map<LocalDate, Double> buildManmonthMapFromTimelines(List<Timeline> timelines) {
-        Map<LocalDate, Double> manmonths = new HashMap<>();
 
-        for (Timeline timeline : timelines) {
-            System.out.println("\n타임라인: " + timeline.getId());
-            System.out.println("Sprint Content: " + timeline.getSprintContent());
-            System.out.println("Start Date: " + timeline.getSprintStartDate());
-            System.out.println("End Date: " + timeline.getSprintEndDate());
-            System.out.println("총 필요 맨먼스: " + timeline.getRequiredManmonth());
-
-            LocalDate currentDate = timeline.getSprintStartDate();
-
-            long totalWeeks = ChronoUnit.WEEKS.between(
-                    timeline.getSprintStartDate(),
-                    timeline.getSprintEndDate().plusDays(1)
-            );
-
-            System.out.println("스프린트 총 주 수: " + totalWeeks);
-
-
-            double weeklyManMonth = timeline.getRequiredManmonth() / (double) totalWeeks;
-
-            System.out.println("주 단위 필요 맨먼스: " + weeklyManMonth);
-
-
-            while (!currentDate.isAfter(timeline.getSprintEndDate())) {
-                manmonths.merge(
-                        currentDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)),
-                        weeklyManMonth,
-                        Double::sum
-                );
-
-                currentDate = currentDate.plusWeeks(1);
-            }
-        }
-        System.out.println("\n타임라인 manmonth values:");
-        manmonths.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .forEach(entry -> {
-                    System.out.println(entry.getKey() + ": " + entry.getValue());
-                });
-
-        return manmonths;
-    }*/
 
     private Map<LocalDate, Double> extractManmonthsForTimeline(
             Map<LocalDate, Double> projectManmonths,
