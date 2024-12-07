@@ -23,8 +23,6 @@ import com.pocketstone.team_sync.utility.ProjectValidationUtils;
 
 import lombok.RequiredArgsConstructor;
 
-import javax.swing.text.html.Option;
-
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +38,7 @@ public class ProjectService {
     private final ProjectCharterService projectCharterService;
 
     private final EnumMap<ProjectStatus, Function<User, List<ProjectDto>>> statusToFunctionMap = new EnumMap<>(ProjectStatus.class);
-    {   statusToFunctionMap.put(ProjectStatus.UPCOMING, this::findUpcomingProjects);
+    {
         statusToFunctionMap.put(ProjectStatus.ONGOING, this::findOngoingProjects);
         statusToFunctionMap.put(ProjectStatus.COMPLETED, this::findCompletedProjects);
         statusToFunctionMap.put(ProjectStatus.ALL, this::findAllProjects);}
@@ -87,27 +85,13 @@ public class ProjectService {
         return statusToFunctionMap.getOrDefault(status, this::findAllProjects).apply(user);
     }
 
-    public List<ProjectDto> findUpcomingProjects(User user){
-        Company company  = companyRepository.findByUserId(user.getId())
-                                                .orElseThrow(() -> new RuntimeException("Company not found"));
-        List<Project> projects = projectRepository.findAllByCompany(company);
-        return projects.stream()
-                .filter(project -> project.getStartDate().isAfter(LocalDate.now()))
-                .map(project -> new ProjectDto(
-                        project.getId(),
-                        project.getProjectName(),
-                        project.getStartDate(),
-                        project.getMvpDate()
-                ))
-                .collect(Collectors.toList());
-    }
 
     public List<ProjectDto> findOngoingProjects(User user){
         Company company  = companyRepository.findByUserId(user.getId())
                                                 .orElseThrow(() -> new RuntimeException("Company not found"));
         List<Project> projects = projectRepository.findAllByCompany(company);
         return projects.stream()
-                .filter(project -> project.getStartDate().isBefore(LocalDate.now()) && project.getMvpDate().isAfter(LocalDate.now()))
+                .filter(project -> project.getMvpDate().isAfter(LocalDate.now()))
                 .map(project -> new ProjectDto(
                         project.getId(),
                         project.getProjectName(),
