@@ -10,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PeerEvalDto {
     private Long id;
-    private Long projectMemberId;
+    private Long memberId;
     private Double performanceScore;
     private Double interpersonalScore;
     private Double expertiseScore;

@@ -17,12 +17,13 @@ public class EvalPeerController {
 
     private final ProjectEvalService projectEvalService;
 
-    @PostMapping
+    @PostMapping("/{memberId}")
     public ResponseEntity<PeerEvalDto> createPeerEvaluation(
             @AuthenticationPrincipal User user,
-            @PathVariable Long projectId,
+            @PathVariable("projectId") Long projectId,
+            @PathVariable("memberId") Long memberId,
             @RequestBody PeerEvalDto dto) {
-        return ResponseEntity.ok(projectEvalService.savePeerEval(user, projectId, dto));
+        return ResponseEntity.ok(projectEvalService.savePeerEval(user, projectId, memberId, dto));
     }
 
     @GetMapping
@@ -32,12 +33,13 @@ public class EvalPeerController {
         return ResponseEntity.ok(projectEvalService.getPeerEval(user, projectId));
     }
 
-    @PutMapping
+    @PutMapping("/{memberId}")
     public ResponseEntity<PeerEvalDto> updatePeerEvaluation(
             @AuthenticationPrincipal User user,
-            @PathVariable Long projectId,
+            @PathVariable("projectId") Long projectId,
+            @PathVariable("memberId") Long memberId,
             @RequestBody PeerEvalDto dto) {
-        return ResponseEntity.ok(projectEvalService.updatePeerEval(user, projectId, dto));
+        return ResponseEntity.ok(projectEvalService.updatePeerEval(user, projectId, memberId,  dto));
     }
 
     @DeleteMapping
