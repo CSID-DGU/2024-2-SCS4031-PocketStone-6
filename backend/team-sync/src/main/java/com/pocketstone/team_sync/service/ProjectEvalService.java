@@ -4,11 +4,13 @@ import com.pocketstone.team_sync.dto.eval.*;
 import com.pocketstone.team_sync.entity.ProjectMember;
 import com.pocketstone.team_sync.entity.Timeline;
 import com.pocketstone.team_sync.entity.User;
+import com.pocketstone.team_sync.entity.charter.Objective;
 import com.pocketstone.team_sync.entity.evaluation.*;
 import com.pocketstone.team_sync.exception.DataNotFoundException;
 import com.pocketstone.team_sync.exception.ProjectNotFoundException;
 import com.pocketstone.team_sync.repository.ProjectMemberRepository;
 import com.pocketstone.team_sync.repository.TimelineRepository;
+import com.pocketstone.team_sync.repository.charter.ObjectiveRepository;
 import com.pocketstone.team_sync.repository.eval.*;
 import com.pocketstone.team_sync.entity.Project;
 import com.pocketstone.team_sync.repository.ProjectRepository;
@@ -32,6 +34,7 @@ public class ProjectEvalService {
     private final PeerEvalRepository peerEvalRepository;
     private final ProjectMemberRepository projectMemberRepository;
     private final TimelineRepository timelineRepository;
+    private final ObjectiveRepository objectiveRepository;
 
     private Project getProject(User user, Long projectId) {
 
@@ -45,7 +48,10 @@ public class ProjectEvalService {
     public ObjectiveAchievementDto saveObjectiveAchievement(User user, Long projectId, ObjectiveAchievementDto dto) {
         Project project = getProject(user, projectId);
         ObjectiveAchievement entity = new ObjectiveAchievement();
+        Objective objective = objectiveRepository.findById(dto.getObjectiveId()).orElseThrow(
+                DataNotFoundException::new);
         entity.setProject(project);
+        entity.setObjective(objective);
         entity.setAchieveRate(dto.getAchieveRate());
         return convertToObjectiveAchievementDto(objectiveAchievementRepository.save(entity));
     }
@@ -68,7 +74,6 @@ public class ProjectEvalService {
         entity.setTestCoverage(dto.getTestCoverage());
         entity.setProductQuality(dto.getProductQuality());
         entity.setFoundBugs(dto.getFoundBugs());
-        entity.setResponsibilityScore(dto.getResponsibilityScore());
         entity.setPerformance(dto.getPerformance());
         entity.setReliability(dto.getReliability());
         return convertToQualityDto(qualityRepository.save(entity));
@@ -101,11 +106,15 @@ public class ProjectEvalService {
         return convertToPeerEvalDto(peerEvalRepository.save(entity));
     }
 
-    public ObjectiveAchievementDto getObjectiveAchievement(User user, Long projectId) {
+    public List<ObjectiveAchievementDto> getObjectiveAchievement(User user, Long projectId) {
         Project project = getProject(user, projectId);
-        ObjectiveAchievement entity = objectiveAchievementRepository.findByProject(project)
-                .orElseThrow(DataNotFoundException::new);
-        return convertToObjectiveAchievementDto(entity);
+        List<ObjectiveAchievement> objectives = objectiveAchievementRepository.findAllByProject(project);
+        List<ObjectiveAchievementDto> objectivesDto = new ArrayList<>();
+        for (ObjectiveAchievement objective : objectives){
+            objectivesDto.add(convertToObjectiveAchievementDto(objective));
+        }
+        return objectivesDto;
+
     }
 
     public ResourcesUsageDto getResourcesUsage(User user, Long projectId) {
@@ -145,7 +154,9 @@ public class ProjectEvalService {
     @Transactional
     public ObjectiveAchievementDto updateObjectiveAchievement(User user, Long projectId, ObjectiveAchievementDto dto) {
         Project project = getProject(user, projectId);
-        ObjectiveAchievement entity = objectiveAchievementRepository.findByProject(project)
+        Objective objective = objectiveRepository.findById(dto.getObjectiveId()).orElseThrow(
+                DataNotFoundException::new);
+        ObjectiveAchievement entity = objectiveAchievementRepository.findByProjectAndObjective(project, objective)
                 .orElseThrow(DataNotFoundException::new);
         entity.setAchieveRate(dto.getAchieveRate());
         return convertToObjectiveAchievementDto(objectiveAchievementRepository.save(entity));
@@ -169,7 +180,6 @@ public class ProjectEvalService {
         entity.setTestCoverage(dto.getTestCoverage());
         entity.setProductQuality(dto.getProductQuality());
         entity.setFoundBugs(dto.getFoundBugs());
-        entity.setResponsibilityScore(dto.getResponsibilityScore());
         entity.setPerformance(dto.getPerformance());
         entity.setReliability(dto.getReliability());
         return convertToQualityDto(qualityRepository.save(entity));
@@ -228,11 +238,12 @@ public class ProjectEvalService {
         peerEvalRepository.deleteByProject(project);
     }
 
-    // Conversion methods remain the same
     private ObjectiveAchievementDto convertToObjectiveAchievementDto(ObjectiveAchievement entity) {
         ObjectiveAchievementDto dto = new ObjectiveAchievementDto();
         dto.setId(entity.getId());
+        dto.setObjectiveId(entity.getObjective().getId());
         dto.setAchieveRate(entity.getAchieveRate());
+        dto.setObjectiveName(entity.getObjective().getObjectiveName());
         return dto;
     }
 
@@ -250,7 +261,6 @@ public class ProjectEvalService {
         dto.setTestCoverage(entity.getTestCoverage());
         dto.setProductQuality(entity.getProductQuality());
         dto.setFoundBugs(entity.getFoundBugs());
-        dto.setResponsibilityScore(entity.getResponsibilityScore());
         dto.setPerformance(entity.getPerformance());
         dto.setReliability(entity.getReliability());
         return dto;
