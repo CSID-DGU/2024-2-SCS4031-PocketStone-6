@@ -34,7 +34,7 @@ export const Navbar = () => {
           onClick={() => {
             navigate('/history');
           }}>
-          이전 프로젝트
+          프로젝트 이력
         </button>
         <button
           className={getBtnClassName(category, 'employee')}

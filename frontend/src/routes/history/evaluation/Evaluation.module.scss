@@ -1,0 +1,41 @@
+
+.evaluationContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+  }
+  
+  .chartSection {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .chartTitle {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #333;
+  }
+  
+  .topCharts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  .bottomMetrics {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  
+    .metricCard {
+      flex: 1;
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  }

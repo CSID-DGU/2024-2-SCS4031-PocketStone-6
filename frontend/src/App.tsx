@@ -16,6 +16,7 @@ import BeforeLogin from 'routes/BeforeLogin';
 import ProjectCharter from 'routes/project/ProjectCharter';
 import ProjectTimelines from 'routes/project/ProjectTimelines';
 import History from 'routes/history/History';
+import Evaluation from 'routes/history/evaluation/Evaluation';
 
 function App() {
   const { isLogin } = useLoginInfoQuery();
@@ -64,6 +65,7 @@ const AfterLoginApp = () => {
 
           {/* 이전 프로젝트 */}
           <Route path="/history" element={<History />} />
+          <Route path="/history/:id/evaluation" element={<Evaluation />} />
 
           {/* 인원 관리 */}
           <Route path="/employee" element={<Employee />} />

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.pocketstone.team_sync.exception.AllocationNotAvailableException;
+import com.pocketstone.team_sync.exception.CompanyNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -138,7 +138,7 @@ public class ProjectMemberService {
     public void registerMember(User user, MemberRequestDto request, Long projectId) {
         
         Company company  = companyRepository.findByUserId(user.getId())
-                                                .orElseThrow(() -> new RuntimeException("Company not found"));
+                                                .orElseThrow(() -> new CompanyNotFoundException(user.getUsername()));
         //회사에 해당 프로젝트 속하는지 확인
         Project project = projectRepository.findByCompanyAndId(company, projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(""));
@@ -210,15 +210,15 @@ public class ProjectMemberService {
     public void deleteAllMembers(User user, Long projectId) {
     
         Company company  = companyRepository.findByUserId(user.getId())
-                                                .orElseThrow(() -> new RuntimeException("Company not found"));
+                                                .orElseThrow(() -> new CompanyNotFoundException(user.getUsername()));
         //회사 확인
         if (!projectRepository.existsByCompanyIdAndId(company.getId(), projectId)) {//회사에 해당 프로젝트있는지(company로 변경해야함)
             throw new ProjectNotFoundException("");
         }
         
         if (memberRepository.existsByProjectId(projectId)){
-            manMonthRepository.deleteAllByProjectId(projectId);
-            memberRepository.deleteAllByProjectId(projectId); 
+            manMonthService.deleteManMonthsByProjectId(projectId);
+            memberRepository.deleteAllByProjectId(projectId);
         }
          
     }
@@ -226,9 +226,9 @@ public class ProjectMemberService {
     //팀원 조회
     public List<MemberListResponseDto> getMember(User user, Long projectId) {
         Company company = companyRepository.findByUserId(user.getId())
-                                                    .orElseThrow(() -> new RuntimeException("Company not found"));
+                                                    .orElseThrow(() -> new CompanyNotFoundException(user.getUsername()));
         if (!projectRepository.existsByCompanyIdAndId(company.getId(), projectId)) {//회사에 해당 프로젝트있는지(company로 변경해야함함)
-            throw new RuntimeException("Project not found");
+            throw new CompanyNotFoundException(user.getUsername());
         }
         List<ProjectMember> memberList = memberRepository.findByProjectIdWithEmployee(projectId);
         List<MemberListResponseDto> responseList = memberList.stream()
@@ -250,51 +250,28 @@ public class ProjectMemberService {
                     return required <= available;
                 });
     }
-
     private Map<LocalDate, Double> buildManmonthMapFromTimelines(List<Timeline> timelines) {
         Map<LocalDate, Double> manmonths = new HashMap<>();
 
         for (Timeline timeline : timelines) {
-            System.out.println("\n타임라인: " + timeline.getId());
-            System.out.println("Sprint Content: " + timeline.getSprintContent());
-            System.out.println("Start Date: " + timeline.getSprintStartDate());
-            System.out.println("End Date: " + timeline.getSprintEndDate());
-            System.out.println("총 필요 맨먼스: " + timeline.getRequiredManmonth());
+            LocalDate startMonday = timeline.getSprintStartDate()
+                    .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+            LocalDate endSunday = timeline.getSprintEndDate()
+                    .with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
 
-            LocalDate currentDate = timeline.getSprintStartDate();
-
-            long totalWeeks = ChronoUnit.WEEKS.between(
-                    timeline.getSprintStartDate(),
-                    timeline.getSprintEndDate().plusDays(1)
-            );
-
-            System.out.println("스프린트 총 주 수: " + totalWeeks);
-
-
+            long totalWeeks = ChronoUnit.WEEKS.between(startMonday, endSunday) + 1;
             double weeklyManMonth = timeline.getRequiredManmonth() / (double) totalWeeks;
 
-            System.out.println("주 단위 필요 맨먼스: " + weeklyManMonth);
-
-
-            while (!currentDate.isAfter(timeline.getSprintEndDate())) {
-                manmonths.merge(
-                        currentDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)),
-                        weeklyManMonth,
-                        Double::sum
-                );
-
-                currentDate = currentDate.plusWeeks(1);
+            for (LocalDate date = startMonday;
+                 !date.isAfter(endSunday);
+                 date = date.plusWeeks(1)) {
+                manmonths.merge(date, weeklyManMonth, Double::sum);
             }
         }
-        System.out.println("\n타임라인 manmonth values:");
-        manmonths.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .forEach(entry -> {
-                    System.out.println(entry.getKey() + ": " + entry.getValue());
-                });
 
         return manmonths;
     }
+
 
     private Map<LocalDate, Double> extractManmonthsForTimeline(
             Map<LocalDate, Double> projectManmonths,
