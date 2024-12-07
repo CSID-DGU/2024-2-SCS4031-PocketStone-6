@@ -30,7 +30,7 @@ public class CharterController {
     //프로젝트 차터 저장
     @PostMapping("/{projectId}")
     public ResponseEntity<Object> saveProjectCharter(@AuthenticationPrincipal User user,
-                                                                @PathVariable Long projectId,
+                                                                @PathVariable("projectId") Long projectId,
                                                                 @Valid @RequestBody ProjectCharterDto projectCharterDto) {
         return new ResponseEntity<>(projectCharterService.saveProjectCharter(user, projectId, projectCharterDto), HttpStatus.CREATED);
 
@@ -39,14 +39,14 @@ public class CharterController {
     //프로젝트 id로 차터 검색
     @GetMapping("/{projectId}")
     public ResponseEntity<ProjectCharterDto> getProjectCharter(@AuthenticationPrincipal User user,
-                                                            @PathVariable Long projectId) {
+                                                            @PathVariable("projectId") Long projectId) {
         return new ResponseEntity<>(projectCharterService.findByProjectId(user, projectId), HttpStatus.OK);
     }
 
     //프로젝트 차터 업데이트
     @PutMapping("/{projectId}")
     public ResponseEntity<Object> updateProjectCharter(@AuthenticationPrincipal User user,
-                                                                  @PathVariable Long projectId,
+                                                                  @PathVariable("projectId") Long projectId,
                                                                   @RequestBody ProjectCharterDto projectCharterDto) {
 
         return new ResponseEntity<>(projectCharterService.updateProjectCharterByProjectId(user, projectId, projectCharterDto), HttpStatus.OK);
@@ -55,7 +55,7 @@ public class CharterController {
 
     @PostMapping(value ="/{projectId}/pdf", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<FileUploadResponseDto> uploadPDF(@AuthenticationPrincipal User user,
-                                                            @PathVariable Long projectId,
+                                                            @PathVariable("projectId") Long projectId,
                                                             @RequestParam("file") MultipartFile file,
                                                             @RequestParam(value = "reUpload", defaultValue = "false") boolean reUpload) {
         FileUploadResponseDto response = reUpload
@@ -68,13 +68,13 @@ public class CharterController {
 
     @GetMapping( "/{projectId}/pdf")
     public ResponseEntity<ByteArrayResource> downloadPDF (@AuthenticationPrincipal User user,
-                                                          @PathVariable Long projectId) {
+                                                          @PathVariable("projectId") Long projectId) {
         return (charterFileService.downloadFile(user, projectId));
     }
 
     @DeleteMapping("/{projectId}")
     public ResponseEntity<Object> deleteProjectCharter(@AuthenticationPrincipal User user,
-                                                       @PathVariable Long projectId) {
+                                                       @PathVariable("projectId") Long projectId) {
         projectCharterService.deleteProjectCharter(user, projectId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -27,6 +27,7 @@ import com.pocketstone.team_sync.entity.enums.Skill;
 import com.pocketstone.team_sync.repository.CompanyRepository;
 import com.pocketstone.team_sync.repository.EmployeeRepository;
 import com.pocketstone.team_sync.repository.PastProjectRepository;
+import com.pocketstone.team_sync.repository.ProjectMemberRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final PastProjectRepository pastProjectRepository;
     private final CompanyRepository companyRepository;
+    private final ProjectMemberRepository projectMemberRepository;
 
     // 엑셀로 사원 목록 등록
     @Transactional
@@ -258,7 +260,8 @@ public class EmployeeService {
                                                 employee.getPeerEvaluationScore(),
                                                 employee.getPersonalType(),
                                                 employee.getRole(),
-                                                employee.getPastProjects()
+                                                employee.getPastProjects(),
+                                                projectMemberRepository.findProjectsByEmployeeId(employee.getId())
                                             );
         return dto;
     }

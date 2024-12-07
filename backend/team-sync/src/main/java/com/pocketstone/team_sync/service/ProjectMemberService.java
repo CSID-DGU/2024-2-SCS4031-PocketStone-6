@@ -230,12 +230,10 @@ public class ProjectMemberService {
         if (!projectRepository.existsByCompanyIdAndId(company.getId(), projectId)) {//회사에 해당 프로젝트있는지(company로 변경해야함함)
             throw new RuntimeException("Project not found");
         }
-        List<ProjectMember> memberList = memberRepository.findByProjectId(projectId);
-        List<MemberListResponseDto> responseList = new ArrayList<>();
-        for (int i=0; i < memberList.size(); i++) {
-            responseList.add(new MemberListResponseDto(memberList.get(i).getEmployee().getId(),memberList.get(i).getEmployee().getPosition()));
-        }
-
+        List<ProjectMember> memberList = memberRepository.findByProjectIdWithEmployee(projectId);
+        List<MemberListResponseDto> responseList = memberList.stream()
+            .map(pm -> new MemberListResponseDto(pm.getEmployee().getId(), pm.getEmployee().getPosition()))
+            .collect(Collectors.toList());
         return responseList;
     }
 

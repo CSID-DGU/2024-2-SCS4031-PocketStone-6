@@ -44,6 +44,7 @@ public class  Project {
     @Column (name = "mvp_date", nullable = false)
     private LocalDate mvpDate;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;

@@ -27,7 +27,7 @@ public class TimelineController {
     //프로젝트별 타임라인(스프린트)일정 추가
     @PostMapping("/{projectId}")
     public ResponseEntity<Object> addTimelines(@AuthenticationPrincipal User user,
-                                                          @PathVariable Long projectId,
+                                                          @PathVariable("projectId") Long projectId,
                                                           @Valid @RequestBody List<TimelineDto> timelineDtos) {
 
             timelineService.saveTimelines(user, projectId, timelineDtos);
@@ -37,14 +37,14 @@ public class TimelineController {
     //프로젝트별 타임라인(스프린트)일정 조회
     @GetMapping("/{projectId}")
     public ResponseEntity<List<TimelineDto>> getAllTimelinesForProject(@AuthenticationPrincipal User user,
-                                                                       @PathVariable Long projectId) {
+                                                                       @PathVariable("projectId") Long projectId) {
         List<TimelineDto> timelines = timelineService.findAllByProjectId(user, projectId);
         return new ResponseEntity<>(timelines, HttpStatus.OK);
     }
 
     @PutMapping("/{projectId}")
     public ResponseEntity<Object> updateTimelines(@AuthenticationPrincipal User user,
-                                                             @PathVariable Long projectId,
+                                                             @PathVariable("projectId") Long projectId,
                                                              @RequestBody List<TimelineDto> timelineDtos) {
 
         List<TimelineDto> updatedTimelines = timelineService.updateTimelines(user, projectId, timelineDtos);
@@ -54,7 +54,7 @@ public class TimelineController {
     }
 
     @DeleteMapping ("/{projectId}")
-    public ResponseEntity<Object> deleteTimelines(@AuthenticationPrincipal User user, @PathVariable Long projectId) {
+    public ResponseEntity<Object> deleteTimelines(@AuthenticationPrincipal User user, @PathVariable("projectId") Long projectId) {
         timelineService.deleteTimelines(user, projectId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
