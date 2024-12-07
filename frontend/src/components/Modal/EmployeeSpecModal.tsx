@@ -9,6 +9,10 @@ import { BS, MS } from 'styles';
 import S from 'styles/EmployDetail.module.scss';
 import { checkIsNoData } from 'utils/checkIsNoData';
 import { parsePhoneNumber } from 'utils/parsePhoneNumber';
+import { PiProjectorScreenChartFill } from 'react-icons/pi';
+import { useNavigate } from 'react-router-dom';
+import { BsCursorFill } from 'react-icons/bs';
+import { checkDate } from 'utils/checkDate';
 
 interface ModalProps {
   id: number;
@@ -121,13 +125,27 @@ const SpecInfo = ({ id }: { id: number }) => {
 
       <div className={S.rowInfo}>
         <p className={S.rowTitle}>
-          <BiSolidReport />
+          <PiProjectorScreenChartFill />
           프로젝트
         </p>
+        <div className={S.rowContent}>
+          {checkIsNoData(oneEmployeeSpecQuery.data?.projects) ? (
+            <NoProjectBlocks />
+          ) : (
+            <ProjectBlocks projects={oneEmployeeSpecQuery.data?.projects} />
+          )}
+        </div>
+      </div>
+
+      <div className={S.rowInfo}>
+        <p className={S.rowTitle}>
+          <BiSolidReport />
+          이력
+        </p>
         {checkIsNoData(oneEmployeeSpecQuery.data?.pastProjects) ? (
-          <NoProjectBlocks />
+          <NoPastProjectBlocks />
         ) : (
-          <ProjectBlocks pastProjects={oneEmployeeSpecQuery.data?.pastProjects} />
+          <PastProjectBlocks pastProjects={oneEmployeeSpecQuery.data?.pastProjects} />
         )}
       </div>
     </div>
@@ -137,7 +155,55 @@ const SpecInfo = ({ id }: { id: number }) => {
 const NoProjectBlocks = () => {
   return (
     <div className={S.noProjectContainer}>
-      <p>이전에 수행한 프로젝트가 없습니다.</p>
+      <p>수행한 프로젝트가 없습니다.</p>
+    </div>
+  );
+};
+
+const ProjectBlocks = ({ projects }: { projects: projectInfoType[] }) => {
+  const navigate = useNavigate();
+
+  return (
+    <div>
+      {projects.map((project) => {
+        return (
+          <div
+            className={S.projectBlock}
+            onClick={() => {
+              navigate(`/project/${project.id}`);
+            }}>
+            <div className={S.projectTitleContainer}>
+              <p className={S.projectTitle}>
+                <BsCursorFill />
+                {project.projectName}
+              </p>
+              <p
+                className={`${S.projectStatus} ${
+                  S[checkDate(project.startDate, project.mvpDate)]
+                }`}>
+                {checkDate(project.startDate, project.mvpDate) === 'pending'
+                  ? '진행 예정'
+                  : checkDate(project.startDate, project.mvpDate) === 'running'
+                  ? '진행 중'
+                  : '종료'}
+              </p>
+            </div>
+            <div className={S.projectDate}>
+              <p className={S.projectDescription}>{project.startDate}</p>
+              <p>~</p>
+              <p className={S.projectDescription}>{project.mvpDate}</p>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+const NoPastProjectBlocks = () => {
+  return (
+    <div className={S.noProjectContainer}>
+      <p>이력에 프로젝트 정보가 없습니다.</p>
     </div>
   );
 };
@@ -148,17 +214,17 @@ interface PastProjectInfo {
   description: string;
 }
 
-const ProjectBlocks = ({ pastProjects }: { pastProjects: PastProjectInfo[] }) => {
+const PastProjectBlocks = ({ pastProjects }: { pastProjects: PastProjectInfo[] }) => {
   return (
     <div>
       {pastProjects.map((project) => {
         return (
-          <div className={S.projectBlock}>
-            <p className={S.projectTitle}>
+          <div className={S.pastProjectBlock}>
+            <p className={S.pastProjectTitle}>
               <FaDotCircle />
               {project.projectName}
             </p>
-            <p className={S.projectDescription}>{project.description}</p>
+            <p className={S.pastProjectDescription}>{project.description}</p>
           </div>
         );
       })}

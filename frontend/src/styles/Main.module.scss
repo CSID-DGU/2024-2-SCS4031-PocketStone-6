@@ -39,7 +39,7 @@
 }
 
 .modalBox {
-  padding: 10px;
+  padding: 20px;
   width: 80vw;
   height: 80vh;
   overflow-y: scroll;
@@ -144,4 +144,11 @@
 .recommendModalBox {
   @extend .modalBox;
   height: 90vh;
+}
+
+.recommendConfirmBox {
+  @extend .modalBox;
+  overflow-y: auto;
+  min-height: 350px;
+  height: auto;
 }

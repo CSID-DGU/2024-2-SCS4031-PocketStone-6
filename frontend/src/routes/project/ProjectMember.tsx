@@ -17,19 +17,37 @@ import { FaPlus, FaTrash } from 'react-icons/fa';
 import LoadingModal from 'components/Modal/LoadingModal';
 import { getRecommendation } from 'api/member/getRecommendation';
 import RecommendationModal from 'components/Modal/RecommendationModal';
+import RecommendConfirmModal from 'components/Modal/RecommendConfirmModal';
 
 export default function ProjectMember() {
   const { id } = useParams();
   const memberQuery = useProjectMemberQuery(Number(id));
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
+  const [showRecommendModal, setShowRecommendModal] = useState(false);
   const [currentId, setCurrentId] = useState(1);
   const { memberIdList } = useMemberList(Number(id));
   const [selectedMemberList, setSelectedMemberList] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
   const [recommendationData, setRecommendationData] = useState({});
 
+  const handleDeleteAllMemberClick = async () => {
+    setLoading(true);
+    try {
+      deleteAllProjectMembers(Number(id), navigate);
+    } catch (error) {
+      console.error('전체 삭제 요청 실패:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleRecommendationClick = async () => {
+    setShowRecommendModal(true);
+  };
+
+  const handleRecommandModalClick = async () => {
+    setShowRecommendModal(false);
     setLoading(true);
     try {
       const data = await getRecommendation(Number(id));
@@ -41,7 +59,18 @@ export default function ProjectMember() {
     }
   };
 
-  useScrollBlock(showModal || loading || !checkIsNoData(recommendationData));
+  const handleAddProjectMemberClick = async () => {
+    setLoading(true);
+    try {
+      addProjectMembers(Number(id), selectedMemberList, navigate);
+    } catch (error) {
+      console.error('인원 저장 실패', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useScrollBlock(showModal || showRecommendModal || loading || !checkIsNoData(recommendationData));
 
   useEffect(() => {
     setSelectedMemberList(memberIdList);
@@ -50,6 +79,12 @@ export default function ProjectMember() {
   return (
     <div className={MS.container}>
       {loading && <LoadingModal />}
+      {showRecommendModal && (
+        <RecommendConfirmModal
+          setModal={setShowRecommendModal}
+          confirmFunc={handleRecommandModalClick}
+        />
+      )}
       {!checkIsNoData(recommendationData) && (
         <RecommendationModal
           data={recommendationData}
@@ -62,11 +97,7 @@ export default function ProjectMember() {
         <div className={`${MS.contentTitle} ${S.contentTitle}`}>
           <p>인원 수정</p>
           {checkIsNoData(memberQuery.data) ? null : (
-            <button
-              className={BS.YellowBtn}
-              onClick={() => {
-                deleteAllProjectMembers(Number(id), navigate);
-              }}>
+            <button className={BS.YellowBtn} onClick={handleDeleteAllMemberClick}>
               전체 인원 삭제 및 저장
             </button>
           )}
@@ -95,11 +126,7 @@ export default function ProjectMember() {
             <button className={`${BS.WhiteBtn} ${MS.Mr10}`} onClick={handleRecommendationClick}>
               인원 추천
             </button>
-            <button
-              className={BS.YellowBtn}
-              onClick={() => {
-                addProjectMembers(Number(id), selectedMemberList, navigate);
-              }}>
+            <button className={BS.YellowBtn} onClick={handleAddProjectMemberClick}>
               수정사항 저장
             </button>
           </div>
