@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,7 +24,7 @@ public class PastProject {
     private Long id;
 
     //해당 사원
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
