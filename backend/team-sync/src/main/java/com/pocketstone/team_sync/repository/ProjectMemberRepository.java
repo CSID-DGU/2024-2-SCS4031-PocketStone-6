@@ -10,7 +10,7 @@ import com.pocketstone.team_sync.entity.ProjectMember;
 public interface ProjectMemberRepository extends JpaRepository<ProjectMember, Long>{
 
     Optional<ProjectMember> findByProjectIdAndEmployeeId(Long projectId, Long employeeId);
-    List<ProjectMember> findByProjectId(Long projectId);
+    List<ProjectMember> findAllByProjectId(Long projectId);
     boolean existsByProjectId(Long projectId);
     void deleteAllByProjectId(Long projectId);
 

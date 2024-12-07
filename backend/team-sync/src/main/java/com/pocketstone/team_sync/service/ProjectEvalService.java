@@ -92,9 +92,9 @@ public class ProjectEvalService {
     }
 
     @Transactional
-    public PeerEvalDto savePeerEval(User user, Long projectId, PeerEvalDto dto) {
+    public PeerEvalDto savePeerEval(User user, Long projectId, Long memberId, PeerEvalDto dto) {
         Project project = getProject(user, projectId);
-        ProjectMember member = projectMemberRepository.findById(dto.getProjectMemberId()).orElseThrow(
+        ProjectMember member = projectMemberRepository.findByProjectIdAndEmployeeId(projectId, memberId).orElseThrow(
                 DataNotFoundException::new);
         PeerEval entity = new PeerEval();
         entity.setProject(project);
@@ -195,9 +195,9 @@ public class ProjectEvalService {
     }
 
     @Transactional
-    public PeerEvalDto updatePeerEval(User user, Long projectId, PeerEvalDto dto) {
+    public PeerEvalDto updatePeerEval(User user, Long projectId, Long memberId, PeerEvalDto dto) {
         Project project = getProject(user, projectId);
-        ProjectMember member = projectMemberRepository.findById(dto.getProjectMemberId()).orElseThrow(
+        ProjectMember member = projectMemberRepository.findByProjectIdAndEmployeeId(projectId, memberId).orElseThrow(
                 DataNotFoundException::new);
         PeerEval entity = peerEvalRepository.findByProjectAndProjectMember(project, member)
                 .orElseThrow(DataNotFoundException::new);
@@ -276,7 +276,7 @@ public class ProjectEvalService {
     private PeerEvalDto convertToPeerEvalDto(PeerEval entity) {
         PeerEvalDto dto = new PeerEvalDto();
         dto.setId(entity.getId());
-        dto.setProjectMemberId(entity.getProjectMember().getId());
+        dto.setMemberId(entity.getProjectMember().getEmployee().getId());
         dto.setPerformanceScore(entity.getPerformanceScore());
         dto.setInterpersonalScore(entity.getInterpersonalScore());
         dto.setExpertiseScore(entity.getExpertiseScore());
