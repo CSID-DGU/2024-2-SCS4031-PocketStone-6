@@ -213,7 +213,6 @@ public class ProjectEvalService {
         Project project = getProject(user, projectId);
         objectiveAchievementRepository.deleteByProject(project);
     }
-
     @Transactional
     public void deleteResourcesUsage(User user, Long projectId) {
         Project project = getProject(user, projectId);
