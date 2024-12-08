@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pocketstone.team_sync.dto.MessageResponseDto;
 import com.pocketstone.team_sync.dto.memberdto.MemberListResponseDto;
 import com.pocketstone.team_sync.dto.memberdto.MemberRequestDto;
-import com.pocketstone.team_sync.dto.memberdto.RecommendationRequestDto;
 import com.pocketstone.team_sync.dto.memberdto.RecommendationResponseDto;
 import com.pocketstone.team_sync.entity.User;
 import com.pocketstone.team_sync.service.ProjectMemberService;
@@ -32,8 +32,11 @@ public class ProjectMemberController {
 
     //팀 추천요청
     @GetMapping("/{projectId}/recommendation")
-    public ResponseEntity<RecommendationResponseDto> recommendMember(@AuthenticationPrincipal User user, @PathVariable("projectId") Long projectId) {
-        return ResponseEntity.ok(projectMemberService.recommendMember(user, projectId));
+    public ResponseEntity<RecommendationResponseDto> recommendMember(
+                                    @AuthenticationPrincipal User user, 
+                                    @PathVariable("projectId") Long projectId,
+                                    @RequestParam(value = "weightType", defaultValue = "basic") String weightType) {
+        return ResponseEntity.ok(projectMemberService.recommendMember(user, projectId,weightType));
     }
     
     //팀원 저장

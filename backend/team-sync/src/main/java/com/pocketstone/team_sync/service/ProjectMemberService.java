@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.pocketstone.team_sync.exception.CompanyNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -24,6 +23,7 @@ import com.pocketstone.team_sync.entity.Project;
 import com.pocketstone.team_sync.entity.ProjectMember;
 import com.pocketstone.team_sync.entity.Timeline;
 import com.pocketstone.team_sync.entity.User;
+import com.pocketstone.team_sync.exception.CompanyNotFoundException;
 import com.pocketstone.team_sync.exception.ExceededWorkloadException;
 import com.pocketstone.team_sync.exception.ProjectNotFoundException;
 import com.pocketstone.team_sync.repository.CompanyRepository;
@@ -53,7 +53,7 @@ public class ProjectMemberService {
     private final WebClient webClient_model;
 
     //팀원 추천 요청
-    public RecommendationResponseDto recommendMember(User user, Long projectId){
+    public RecommendationResponseDto recommendMember(User user, Long projectId, String weightType){
         Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
         if (company == null){
             return null;
@@ -88,8 +88,9 @@ public class ProjectMemberService {
                     return isAvailable;
                 })
                 .toList();
-
+        
         request.setProjectId(projectId);
+        request.setWeightType(weightType);
         request.setAvailableEmployeeIds(availableEmployees.stream()
                 .map(Employee::getId)
                 .toList());

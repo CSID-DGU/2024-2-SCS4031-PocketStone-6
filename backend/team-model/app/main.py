@@ -56,6 +56,7 @@ def recommend_project_team_endpoint(company_id:int,project_id:int, db: Session =
 @app.post("/api/recommendation/")
 def recommendation( company_id:int, body: RecommendationRequestDto, scaled_db: Session=Depends(get_db_scaled),db: Session = Depends(get_db)):
     project_id = body.projectId
+    weightType = body.weightType
     memberIds = body.memberIds
     print("추천 API 시작")
 
@@ -63,8 +64,9 @@ def recommendation( company_id:int, body: RecommendationRequestDto, scaled_db: S
     logger.info(f"Raw body: {body}")
     logger.info(f"Project ID: {body.projectId}")
     logger.info(f"Member IDs: {body.memberIds}")
+    logger.info(f"weight type:{weightType}")
     
-    result = recommend_team(memberIds=memberIds, db=db,company_id=company_id, project_id=project_id,scaled_db=scaled_db)
+    result = recommend_team(memberIds=memberIds, db=db,company_id=company_id, project_id=project_id,scaled_db=scaled_db, weightType=weightType)
     return result
     """
     # 프로젝트 ID로 해당 프로젝트 조회
