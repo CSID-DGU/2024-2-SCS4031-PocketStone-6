@@ -6,6 +6,7 @@ import { PiProjectorScreenChartFill } from 'react-icons/pi';
 import { IoMdPerson } from 'react-icons/io';
 import { BiSolidPencil } from 'react-icons/bi';
 import { BsEmojiSmile } from 'react-icons/bs';
+import { FaInfoCircle } from 'react-icons/fa';
 
 interface RecommendConfirmModalProps {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -32,6 +33,14 @@ export default function RecommendConfirmModal({
         <div className={S.selectCardContainer}>
           <div className={category === 0 ? S.selectedCard : S.card} onClick={() => setCategory(0)}>
             <div className={S.cardTitleContainer}>
+              <FaInfoCircle className={S.cardInfoIcon} size={20} />
+              <div className={S.cardInfoBox}>
+                <p>기술: 0.35</p>
+                <p>프로젝트 유사도: 0.28</p>
+                <p>성향: 0.10</p>
+                <p>KPI: 0.07</p>
+                <p>동료: 0.20</p>
+              </div>
               <p className={S.cardTitle}>기본</p>
               <BsEmojiSmile size={100} />
             </div>
@@ -42,7 +51,15 @@ export default function RecommendConfirmModal({
           </div>
           <div className={category === 1 ? S.selectedCard : S.card} onClick={() => setCategory(1)}>
             <div className={S.cardTitleContainer}>
-              <p className={S.cardTitle}>기술점수 위주</p>
+              <FaInfoCircle className={S.cardInfoIcon} size={20} />
+              <div className={S.cardInfoBox}>
+                <p className={S.highlight}>기술: 0.45</p>
+                <p>프로젝트 유사도: 0.30</p>
+                <p>성향: 0.05</p>
+                <p>KPI: 0.05</p>
+                <p>동료: 0.15</p>
+              </div>
+              <p className={S.cardTitle}>기술점수</p>
               <BiSolidPencil size={100} />
             </div>
             <div className={S.cardDiscriptionContainer}>
@@ -52,7 +69,15 @@ export default function RecommendConfirmModal({
           </div>
           <div className={category === 2 ? S.selectedCard : S.card} onClick={() => setCategory(2)}>
             <div className={S.cardTitleContainer}>
-              <p className={S.cardTitle}>프로젝트 유사도 위주</p>
+              <FaInfoCircle className={S.cardInfoIcon} size={20} />
+              <div className={S.cardInfoBox}>
+                <p>기술: 0.25</p>
+                <p className={S.highlight}>프로젝트 유사도: 0.35</p>
+                <p>성향: 0.15</p>
+                <p>KPI: 0.05</p>
+                <p>동료: 0.20</p>
+              </div>
+              <p className={S.cardTitle}>프로젝트 유사도</p>
               <PiProjectorScreenChartFill size={100} />
             </div>
             <div className={S.cardDiscriptionContainer}>
@@ -62,7 +87,15 @@ export default function RecommendConfirmModal({
           </div>
           <div className={category === 3 ? S.selectedCard : S.card} onClick={() => setCategory(3)}>
             <div className={S.cardTitleContainer}>
-              <p className={S.cardTitle}>개인 성향 위주</p>
+              <FaInfoCircle className={S.cardInfoIcon} size={20} />
+              <div className={S.cardInfoBox}>
+                <p>기술: 0.20</p>
+                <p>프로젝트 유사도: 0.10</p>
+                <p className={S.highlight}>성향: 0.40</p>
+                <p>KPI: 0.10</p>
+                <p>동료: 0.20</p>
+              </div>
+              <p className={S.cardTitle}>개인 성향</p>
               <IoMdPerson size={100} />
             </div>
             <div className={S.cardDiscriptionContainer}>
@@ -80,19 +113,3 @@ export default function RecommendConfirmModal({
     </div>
   );
 }
-
-// const Card = ({
-//   id,
-//   category,
-//   setCategory,
-// }: {
-//   id: number;
-//   category: number;
-//   setCategory: React.Dispatch<React.SetStateAction<number>>;
-// }) => {
-//   return (
-//     <div className={category === 0 ? S.selectedCard : S.card} onClick={() => setCategory(0)}>
-//       <p>하나</p>
-//     </div>
-//   );
-// };
