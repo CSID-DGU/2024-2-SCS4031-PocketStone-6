@@ -46,11 +46,11 @@ export default function ProjectMember() {
     setShowRecommendModal(true);
   };
 
-  const handleRecommandModalClick = async () => {
+  const handleRecommandModalClick = async (category: number) => {
     setShowRecommendModal(false);
     setLoading(true);
     try {
-      const data = await getRecommendation(Number(id));
+      const data = await getRecommendation(Number(id), category);
       setRecommendationData(data);
     } catch (error) {
       console.error('추천 요청 실패:', error);
