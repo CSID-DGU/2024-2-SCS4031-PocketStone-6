@@ -10,5 +10,5 @@ export const parseDateToString = (date: Date | null): string => {
 
 export const parseStringToDate = (dateString: string): Date => {
   const [year, month, day] = dateString.split('-').map(Number);
-  return new Date(year, month, day);
+  return new Date(year, month-1, day);
 };
