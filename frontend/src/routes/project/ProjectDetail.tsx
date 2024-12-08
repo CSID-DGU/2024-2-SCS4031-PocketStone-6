@@ -1,5 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { BS, CS, MS, TS } from 'styles';
+import 'react-calendar/dist/Calendar.css';
+import 'styles/Calendar.css';
 import S from './ProjectDetail.module.scss';
 import { useProjectDetailInfoQuery } from 'hooks/useProjectDetailInfoQuery';
 import { useProjectMemberQuery } from 'hooks/useProjectMemberQuery';
@@ -7,11 +9,17 @@ import { checkIsNoData } from 'utils/checkIsNoData';
 import { NO_CHARTER_OR_TIMELINES } from 'constants/errorMessage';
 import { MdDateRange } from 'react-icons/md';
 import { useMemberInfoById } from 'hooks/useMemberInfoById';
+import { FaCalendar } from 'react-icons/fa';
+import { GrNext, GrPrevious } from 'react-icons/gr';
+import { useState } from 'react';
+import Calendar from 'react-calendar';
+import moment from 'moment';
 
 export default function ProjectDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { basicInfoQuery, charterQuery, timelinesQuery } = useProjectDetailInfoQuery(Number(id));
+  const [isCalendar, setIsCalendar] = useState(false);
   const memberQuery = useProjectMemberQuery(Number(id));
 
   return (
@@ -48,17 +56,28 @@ export default function ProjectDetail() {
         <div className={MS.content}>
           <div className={`${MS.contentTitle} ${MS.displayFlex} ${MS.flexSpace}`}>
             <p>타임라인</p>
-            <button
-              className={BS.YellowBtn}
-              onClick={() => {
-                navigate(`/project/${id}/timelines`);
-              }}>
-              타임라인 버튼
-            </button>
+            <div className={MS.displayFlex}>
+              <button
+                className={`${isCalendar ? BS.YellowBtn : BS.WhiteBtn} ${MS.Mr10}`}
+                onClick={() => {
+                  setIsCalendar(!isCalendar);
+                }}>
+                <FaCalendar />
+              </button>
+              <button
+                className={BS.YellowBtn}
+                onClick={() => {
+                  navigate(`/project/${id}/timelines`);
+                }}>
+                타임라인 버튼
+              </button>
+            </div>
           </div>
           <div className={`${MS.contentBox} ${S.contentBox}`}>
             {checkIsNoData(timelinesQuery.data) ? (
               <NoTimelines />
+            ) : isCalendar ? (
+              <TimelinesCalendar timelinesList={timelinesQuery?.data} />
             ) : (
               <TimelinesList timelinesList={timelinesQuery?.data} />
             )}
@@ -96,6 +115,56 @@ export default function ProjectDetail() {
   );
 }
 
+const TimelinesCalendar = ({ timelinesList }: { timelinesList: TimelineData[] }) => {
+  const tileContent = ({ date }: { date: Date }) => {
+    const timeline = timelinesList.find((item) => {
+      const startDate = new Date(item.sprintStartDate);
+      const mvpDate = new Date(item.sprintEndDate);
+
+      startDate.setHours(0, 0, 0, 0);
+      mvpDate.setHours(0, 0, 0, 0);
+
+      return startDate <= date && mvpDate >= date;
+    });
+
+    const getSprintStyle = (sprintOrder: number) => {
+      if (sprintOrder % 5 === 1) return S['red'];
+      if (sprintOrder % 5 === 2) return S['blue'];
+      if (sprintOrder % 5 === 3) return S['yellow'];
+      if (sprintOrder % 5 === 4) return S['green'];
+      return S['gray'];
+    };
+
+    if (timeline) {
+      return (
+        <div className={`${S.calendarSprint} ${getSprintStyle(timeline.sprintOrder)}`}>
+          <p>{timeline.sprintContent}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  return (
+    <div>
+      <Calendar
+        tileContent={tileContent}
+        defaultActiveStartDate={new Date(timelinesList[0].sprintStartDate)}
+        minDate={new Date(timelinesList[0].sprintStartDate)}
+        maxDate={new Date(timelinesList[timelinesList.length - 1].sprintEndDate)}
+        formatDay={(_, date) => moment(date).format('DD')}
+        tileClassName={S.calendarTile}
+        minDetail="month"
+        prev2Label={null}
+        next2Label={null}
+        prevLabel={<GrPrevious />}
+        nextLabel={<GrNext />}
+        showNeighboringMonth={false}
+      />
+    </div>
+  );
+};
+
 const TimelinesList = ({ timelinesList }: { timelinesList: TimelineData[] }) => {
   return (
     <div className={S.timelineListContainer}>
@@ -107,10 +176,10 @@ const TimelinesList = ({ timelinesList }: { timelinesList: TimelineData[] }) => 
                 <p className={`${TS.smallTitle} ${MS.Mr10}`}>{sprintContent}</p>
                 <p className={`${TS.smallText}`}>Sprint {sprintOrder}</p>
               </div>
-              <p className={`${TS.smallText} ${MS.Mb5}`}>
-               Required Man-Month: {requiredManmonth}   
+              <p className={`${TS.smallText} ${MS.Mb5}`}>Required Man-Month: {requiredManmonth}</p>
+              <p>
+                {sprintStartDate} ~ {sprintEndDate}{' '}
               </p>
-              <p>{sprintStartDate} ~ {sprintEndDate} </p>
             </div>
           );
         }
