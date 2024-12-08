@@ -76,10 +76,10 @@ def get_weight_type(weight_type: str = "basic"):
         weight_peer = 0.15
     elif weight_type == "domain":
         weight_stack = 0.25
-        weight_cosine = 0.2
+        weight_cosine = 0.35
         weight_personality = 0.15
         weight_kpi = 0.05
-        weight_peer = 0.35
+        weight_peer = 0.2
     elif weight_type == "personality":
         weight_stack = 0.2
         weight_cosine = 0.1
