@@ -7,6 +7,7 @@ class Member(BaseModel):
 
 class RecommendationRequestDto(BaseModel):
     projectId: int
+    weightType: str
     memberIds: List[int]
 
 class RecommendationResponseDto(BaseModel):

@@ -61,12 +61,46 @@ def get_position_skill(db: Session, project_id: int) -> dict:
     return position_skills
 
 # 임의 가중치
-weight_stack = 0.35
-weight_cosine = 0.28
-weight_personality = 0.1
-weight_kpi = 0.07
-weight_peer = 0.2
-
+def get_weight_type(weight_type: str = "basic"):
+    if weight_type == "basic":
+        weight_stack = 0.35
+        weight_cosine = 0.28
+        weight_personality = 0.1
+        weight_kpi = 0.07
+        weight_peer = 0.2
+    elif weight_type == "skill":
+        weight_stack = 0.45
+        weight_cosine = 0.3
+        weight_personality = 0.05
+        weight_kpi = 0.05
+        weight_peer = 0.15
+    elif weight_type == "domain":
+        weight_stack = 0.25
+        weight_cosine = 0.2
+        weight_personality = 0.15
+        weight_kpi = 0.05
+        weight_peer = 0.35
+    elif weight_type == "personality":
+        weight_stack = 0.2
+        weight_cosine = 0.1
+        weight_personality = 0.4
+        weight_kpi = 0.1
+        weight_peer = 0.2
+    else:
+        # 기본값 반환
+        weight_stack = 0.35
+        weight_cosine = 0.28
+        weight_personality = 0.1
+        weight_kpi = 0.07
+        weight_peer = 0.2
+    
+    return {
+        "weight_stack": weight_stack,
+        "weight_cosine": weight_cosine,
+        "weight_personality": weight_personality,
+        "weight_kpi": weight_kpi,
+        "weight_peer": weight_peer,
+    }
 
 # 회사 아이디랑 스킬, 역할로 사원조회
 def get_employee_ids_by_company_and_skill(db: Session, company_id: int, skill: Skill, role: Role) -> list[int]:
@@ -137,7 +171,7 @@ def get_project_fit_score(scaled_db: Session, employee_id:int, project_id:int):
         return 0
     
 
-def recommend_team(memberIds:List[int],db: Session, company_id: int, project_id: int,scaled_db:Session):
+def recommend_team(memberIds:List[int],db: Session, company_id: int, project_id: int,weightType:str,scaled_db:Session):
     position_num = get_position_num(db, project_id=project_id)
     
     filter_team = filter_team_by_role_and_skill(db,company_id=company_id,project_id=project_id)
@@ -203,12 +237,13 @@ def recommend_team(memberIds:List[int],db: Session, company_id: int, project_id:
     max_similarity = final_scores_df['평균 성향 유사도'].max()
     final_scores_df['평균 성향 유사도 (스케일링)'] = (final_scores_df['평균 성향 유사도'] - min_similarity) / (max_similarity - min_similarity)
     #################가중치 부여
+    weight = get_weight_type(weightType)
     final_scores_df['최종 점수'] = (
-        final_scores_df['기술점수'] * weight_stack +
-        final_scores_df['프로젝트 적합도'] * weight_cosine +
-        final_scores_df['평균 성향 유사도 (스케일링)'] * weight_personality +
-        final_scores_df['KPI 평가점수'] * weight_kpi +
-        final_scores_df['동료 평가'] * weight_peer
+        final_scores_df['기술점수'] * weight['weight_stack'] +
+        final_scores_df['프로젝트 적합도'] * weight['weight_cosine'] +
+        final_scores_df['평균 성향 유사도 (스케일링)'] * weight['weight_personality'] +
+        final_scores_df['KPI 평가점수'] * weight['weight_kpi'] +
+        final_scores_df['동료 평가'] * weight['weight_peer']
     )
 
     final_scores_df.sort_values(by='최종 점수', ascending=False, inplace=True)

@@ -12,6 +12,7 @@ import java.util.List;
 public class RecommendationRequestDto {
 
     private Long projectId;
+    private String weightType;
     private List<Long> memberIds;
     public void setAvailableEmployeeIds(List<Long> ids) {
         this.memberIds = ids;
