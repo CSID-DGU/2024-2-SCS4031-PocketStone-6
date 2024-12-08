@@ -29,13 +29,6 @@ export default function Employee() {
               }}>
               <IoMdDownload /> 사원 정보 양식
             </button>
-            <button
-              className={`${BS.WhiteBtn} ${S.iconBtn}`}
-              onClick={() => {
-                getExcelTemplate('applicant');
-              }}>
-              <IoMdDownload /> 지원자 정보 양식
-            </button>
           </div>
         </div>
         <div className={MS.contentBox}>
