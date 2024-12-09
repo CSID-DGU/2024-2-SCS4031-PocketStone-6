@@ -107,6 +107,10 @@ const SpecInfo = ({ id }: { id: number }) => {
             <p className={S.scoreTitle}>동료평가</p>
             <p className={S.scoreTitle}>{oneEmployeeSpecQuery.data?.getPeerEvaluationScore}</p>
           </div>
+          <div className={S.scoreColumn}>
+            <p className={S.scoreTitle}>기술점수</p>
+            <p className={S.scoreTitle}>{oneEmployeeSpecQuery.data?.skillScore}</p>
+          </div>
         </div>
       </div>
 
