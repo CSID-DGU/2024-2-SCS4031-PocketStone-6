@@ -57,6 +57,7 @@ export const Navbar = () => {
             className={BtnStyles.YellowBtn}
             onClick={() => {
               doLogout();
+              navigate('/');
               refreshPage(navigate);
             }}>
             로그아웃
