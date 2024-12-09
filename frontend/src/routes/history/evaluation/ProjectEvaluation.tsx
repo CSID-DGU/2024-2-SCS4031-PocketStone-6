@@ -9,6 +9,7 @@ import TeamMemberSlider from './TeamMemberSlider';
 
 interface OtherMetricsProps {
   projectId: string | number;
+  onMemberChange: (memberId: number) => void;
 }
 
 interface PeerEvaluation {
@@ -19,7 +20,7 @@ interface PeerEvaluation {
   responsibilityScore: number;
 }
 
-const OtherMetricsCharts: React.FC<OtherMetricsProps> = ({ projectId }) => {
+const OtherMetricsCharts: React.FC<OtherMetricsProps> = ({ projectId, onMemberChange }) => {
   const [currentMemberId, setCurrentMemberId] = useState<number | null>(null);
   const qualityQuery = useQualityEvaluationQuery(projectId);
   const resourceQuery = useResourceEvaluationQuery(projectId);
@@ -85,8 +86,10 @@ const OtherMetricsCharts: React.FC<OtherMetricsProps> = ({ projectId }) => {
 
       <div className={S.metricCard}>
         <TeamMemberSlider 
-          projectId={Number(projectId)} 
-          onMemberChange={setCurrentMemberId}
+          projectId={Number(projectId)}
+          onMemberChange={(memberId: number) => {
+            setCurrentMemberId(memberId);
+            onMemberChange(memberId);}}
         />
       </div>
 
