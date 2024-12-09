@@ -74,9 +74,12 @@ def embedding_project(db: Session, company_id:int, project_id:int):
     )
     project_embeddings.append(reference_vector.data[0].embedding)
     
+    n_samples = len(data)  # 사원 수
+    n_com = min(n_samples, 100)
     # 차원 축소하기
-    pca = PCA(n_components=100)
+    pca = PCA(n_components=n_com)
 
+    
     project_reduced_embeddings = pca.fit_transform(project_embeddings)
     project_reduced_embeddings_list = project_reduced_embeddings.tolist()
     #project_reduced_embeddings_list_str = [str(inner_list) for inner_list in project_reduced_embeddings_list]
