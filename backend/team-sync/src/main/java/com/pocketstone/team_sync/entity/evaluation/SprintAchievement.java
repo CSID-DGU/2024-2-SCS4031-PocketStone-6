@@ -2,6 +2,7 @@ package com.pocketstone.team_sync.entity.evaluation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pocketstone.team_sync.entity.Project;
+import com.pocketstone.team_sync.entity.ProjectMember;
 import com.pocketstone.team_sync.entity.Timeline;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -22,6 +23,10 @@ public class SprintAchievement {
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn (name = "project_id", nullable = false)
     private Project project;
+
+    @ManyToOne (fetch = FetchType.LAZY)
+    @JoinColumn (name = "projectMember_id", nullable = false)
+    private ProjectMember projectMember;
 
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn (name = "timeline_id", nullable = false)
