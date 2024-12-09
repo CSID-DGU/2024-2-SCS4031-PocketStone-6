@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,12 +81,15 @@ public class ProjectEvalService {
     }
 
     @Transactional
-    public SprintAchievementDto saveSprintAchievement(User user, Long projectId, SprintAchievementDto dto) {
+    public SprintAchievementDto saveSprintAchievement(User user, Long projectId, Long memberId, SprintAchievementDto dto) {
         Project project = getProject(user, projectId);
+        ProjectMember member = projectMemberRepository.findByProjectIdAndEmployeeId(projectId, memberId).orElseThrow(
+                DataNotFoundException::new);
         Timeline timeline = timelineRepository.findById(dto.getTimelineId()).orElseThrow(
                 DataNotFoundException::new);
         SprintAchievement entity = new SprintAchievement();
         entity.setProject(project);
+        entity.setProjectMember(member);
         entity.setTimeline(timeline);
         entity.setBurndownRate(dto.getBurndownRate());
         return convertToSprintAchievementDto(sprintAchievementRepository.save(entity));
@@ -131,9 +135,11 @@ public class ProjectEvalService {
         return convertToQualityDto(entity);
     }
 
-    public List<SprintAchievementDto> getSprintAchievement(User user, Long projectId) {
+    public List<SprintAchievementDto> getSprintAchievement(User user, Long projectId, Long memberId) {
         Project project = getProject(user, projectId);
-        List<SprintAchievement> sprintList = sprintAchievementRepository.findAllByProject(project);
+        ProjectMember member = projectMemberRepository.findByProjectIdAndEmployeeId(projectId, memberId).orElseThrow(
+                DataNotFoundException::new);
+        List<SprintAchievement> sprintList = sprintAchievementRepository.findAllByProjectMember(member);
         List<SprintAchievementDto> sprintListDto = new ArrayList<>();
         for(SprintAchievement sprint : sprintList){
             sprintListDto.add(convertToSprintAchievementDto(sprint));
@@ -149,6 +155,31 @@ public class ProjectEvalService {
             peerEvalDtoList.add(convertToPeerEvalDto(peerEval));
         }
         return peerEvalDtoList;
+    }
+
+    public TotalManMonthDto getTotalManMonthForSprint(User user, Long projectId) {
+        Project project = getProject(user, projectId);
+        List<Timeline> sprints = timelineRepository.findAllByProjectId(project.getId());
+
+        double totalManMonth = sprints.stream()
+                .mapToDouble(Timeline::getRequiredManmonth)
+                .sum();
+
+        long totalDaysInWeeks = sprints.stream()
+                .mapToLong(sprint -> {
+                    long daysBetween = ChronoUnit.DAYS.between(
+                            sprint.getSprintStartDate(),
+                            sprint.getSprintEndDate()
+                    );
+                    return (long) Math.ceil(daysBetween / 7.0);
+                })
+                .sum();
+
+        TotalManMonthDto totalManMonthDto = new TotalManMonthDto();
+        totalManMonthDto.setTotalManMonth(totalManMonth);
+        totalManMonthDto.setDurationWeek(totalDaysInWeeks);
+
+        return totalManMonthDto;
     }
 
     @Transactional
@@ -186,9 +217,11 @@ public class ProjectEvalService {
     }
 
     @Transactional
-    public SprintAchievementDto updateSprintAchievement(User user, Long projectId, SprintAchievementDto dto) {
+    public SprintAchievementDto updateSprintAchievement(User user, Long projectId, Long memberId, SprintAchievementDto dto) {
         Project project = getProject(user, projectId);
-        SprintAchievement entity = sprintAchievementRepository.findByTimelineId(dto.getTimelineId())
+        ProjectMember member = projectMemberRepository.findByProjectIdAndEmployeeId(projectId, memberId).orElseThrow(
+                DataNotFoundException::new);
+        SprintAchievement entity = sprintAchievementRepository.findByTimelineIdAndProjectMember(dto.getTimelineId(), member)
                 .orElseThrow(DataNotFoundException::new);
         entity.setBurndownRate(dto.getBurndownRate());
         return convertToSprintAchievementDto(sprintAchievementRepository.save(entity));
@@ -226,9 +259,11 @@ public class ProjectEvalService {
     }
 
     @Transactional
-    public void deleteSprintAchievement(User user, Long projectId) {
+    public void deleteSprintAchievement(User user, Long projectId, Long memberId) {
         Project project = getProject(user, projectId);
-        sprintAchievementRepository.deleteByProject(project);
+        ProjectMember member = projectMemberRepository.findByProjectIdAndEmployeeId(projectId, memberId).orElseThrow(
+                DataNotFoundException::new);
+        sprintAchievementRepository.deleteAllByProjectAndProjectMember(project, member);
     }
 
     @Transactional
