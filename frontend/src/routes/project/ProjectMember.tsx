@@ -34,7 +34,7 @@ export default function ProjectMember() {
   const handleDeleteAllMemberClick = async () => {
     setLoading(true);
     try {
-      deleteAllProjectMembers(Number(id), navigate);
+      await deleteAllProjectMembers(Number(id), navigate);
     } catch (error) {
       console.error('전체 삭제 요청 실패:', error);
     } finally {
@@ -62,7 +62,7 @@ export default function ProjectMember() {
   const handleAddProjectMemberClick = async () => {
     setLoading(true);
     try {
-      addProjectMembers(Number(id), selectedMemberList, navigate);
+      await addProjectMembers(Number(id), selectedMemberList, navigate);
     } catch (error) {
       console.error('인원 저장 실패', error);
     } finally {

@@ -1,5 +1,5 @@
 .contentBox {
-  height: 400px;
+  height: 620px;
   overflow-y: scroll;
 }
 
@@ -86,4 +86,44 @@
   margin-bottom: 3px;
   display: flex;
   align-items: end;
+}
+
+.calendarTile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2px;
+  border-radius: 10px;
+  font-size: small;
+  font-family: 'NanumGothicBold';
+}
+
+.calendarSprint {
+  flex-grow: 1;
+  font-size: smaller;
+  font-family: 'NanumGothic';
+  width: 100%;
+  color: black;
+  padding: 3px;
+  border-radius: 10px;
+
+  &.gray {
+    background: #DEE3E1;
+  }
+
+  &.red {
+    background: #f7cacd;
+  }
+
+  &.blue {
+    background: #d8e4ff;
+  }
+
+  &.yellow {
+    background: #f7f3e3;
+  }
+
+  &.green {
+    background: #c7f0bd;
+  }
 }

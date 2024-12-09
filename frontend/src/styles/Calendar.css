@@ -1,0 +1,28 @@
+.react-calendar {
+  width: 100%;
+}
+
+.react-calendar__tile {
+  height: 100px;
+}
+
+.react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none;
+}
+
+.react-calendar__month-view__days__day--weekend {
+  color: black;
+}
+
+.react-calendar__navigation button:disabled {
+  font-family: 'NanumGothicBold';
+  background: none;
+  color: black;
+}
+
+.react-calendar__tile--active:enabled,
+.react-calendar__tile--active:enabled:hover,
+.react-calendar__tile--active:enabled:focus {
+  background: #8f7d78;
+  color: white;
+}
