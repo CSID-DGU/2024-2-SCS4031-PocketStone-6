@@ -47,8 +47,11 @@ def embedding_employee_personality(db: Session, company_id:int):
 
         personality_embeddings.append(upstage_embedding_vector.data[0].embedding)
 
+    n_samples = len(data)  # 사원 수
+    n_com = min(n_samples, 100)
     # 차원 축소하기
-    pca = PCA(n_components=100)
+    pca = PCA(n_components=n_com)
+
 
     personality_reduced_embeddings = pca.fit_transform(personality_embeddings)
     personality_reduced_embeddings_list = personality_reduced_embeddings.tolist()
