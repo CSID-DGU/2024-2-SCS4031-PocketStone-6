@@ -43,13 +43,13 @@ export const Navbar = () => {
           }}>
           인원 관리
         </button>
-        <button
+        {/* <button
           className={S.hiddenNavBtn}
           onClick={() => {
             navigate('/test');
           }}>
           테스트페이지 이동
-        </button>
+        </button> */}
       </div>
       <div className={S.rightContainer}>
         {isLogin ? (
