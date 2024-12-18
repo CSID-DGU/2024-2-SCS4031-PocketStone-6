@@ -61,7 +61,7 @@ def embedding_project(db: Session, company_id:int, project_id:int):
     project_embeddings=[]
     for i in range(len(data)):
         upstage_embedding_vector=client.embeddings.create(
-            input=data['description'][i],
+            input=data['project_name'][i],
             model="solar-embedding-1-large-query"
         )
 
