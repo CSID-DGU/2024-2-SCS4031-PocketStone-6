@@ -7,21 +7,31 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.pocketstone.team_sync.entity.*;
-import com.pocketstone.team_sync.repository.ProjectCharterRepository;
-import com.pocketstone.team_sync.repository.TimelineRepository;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import com.pocketstone.team_sync.dto.MessageResponseDto;
 import com.pocketstone.team_sync.dto.projectdto.ProjectDto;
+import com.pocketstone.team_sync.entity.Company;
+import com.pocketstone.team_sync.entity.Project;
+import com.pocketstone.team_sync.entity.ProjectCharter;
+import com.pocketstone.team_sync.entity.Timeline;
+import com.pocketstone.team_sync.entity.User;
 import com.pocketstone.team_sync.entity.enums.ProjectStatus;
+import com.pocketstone.team_sync.event.ProjectRegisteredEvent;
 import com.pocketstone.team_sync.exception.ProjectNotFoundException;
 import com.pocketstone.team_sync.repository.CompanyRepository;
+import com.pocketstone.team_sync.repository.ProjectCharterRepository;
 import com.pocketstone.team_sync.repository.ProjectRepository;
+import com.pocketstone.team_sync.repository.TimelineRepository;
 import com.pocketstone.team_sync.utility.ProjectValidationUtils;
 
-
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Mono;
 
 
 @Service
@@ -42,7 +52,40 @@ public class ProjectService {
         statusToFunctionMap.put(ProjectStatus.ONGOING, this::findOngoingProjects);
         statusToFunctionMap.put(ProjectStatus.COMPLETED, this::findCompletedProjects);
         statusToFunctionMap.put(ProjectStatus.ALL, this::findAllProjects);}
+    
+    private final WebClient webClient_model;
+    private final ApplicationEventPublisher eventPublisher;
 
+     // 모델서버에 요청보내기
+    private Mono<MessageResponseDto> requestEmbeddingProject(String path, Long companyId, Long projectId){
+        return webClient_model.post()
+            .uri(uriBuilder -> uriBuilder
+                .path(path)
+                .queryParam("company_id", companyId)  // company_id를 URL 파라미터로 추가
+                .queryParam("project_id", projectId)  // project_id를 URL 파라미터로 추가
+                .build())
+            //.bodyValue()
+            .retrieve()
+            .onStatus(//클라이언트 에러
+                status -> status.is4xxClientError(),
+                clientResponse -> clientResponse.bodyToMono(String.class)
+                        .flatMap(errorResponse -> {
+                            // 클라이언트 오류 처리 (4xx)
+                            System.err.println("에러발생222");
+                            return Mono.error(new RuntimeException("Client error: " + errorResponse));
+                        })
+            )
+            .onStatus( //서버에러
+                status -> status.is5xxServerError(),
+                    clientResponse -> clientResponse.bodyToMono(String.class)
+                        .flatMap(errorResponse -> {
+                            // 서버 오류 처리 (5xx)
+                            System.err.println("에러발생222666666");
+                            return Mono.error(new RuntimeException("Server error: " + errorResponse));
+                        })
+            )
+            .bodyToMono(MessageResponseDto.class); // 응답을 DTO로 처리
+    }
 
     public ProjectDto save(User user, ProjectDto dto){
         Company company  = companyRepository.findByUserId(user.getId()).orElse(null);
@@ -52,7 +95,23 @@ public class ProjectService {
                 .mvpDate(dto.getMvpDate())
                 .company(company)
                 .build());
+        
+        // 이벤트 발행
+        eventPublisher.publishEvent(new ProjectRegisteredEvent(company.getId(), project.getId()));
         return ProjectDto.toProjectDto(project);
+    }
+
+    @Async
+    @EventListener
+    public void handleProjectRegisteredEvent(ProjectRegisteredEvent event) {
+        Long companyId = event.getCompanyId();
+        Long projectId = event.getProjectId();
+
+        requestEmbeddingProject("/api/embedding-project/", companyId, projectId)
+        .doOnError(e -> {
+            throw new RuntimeException("프로젝트 정보 임베딩 실패: " + e.getMessage());
+        })
+        .subscribe(); // 비동기 실행
     }
 
     //이름으로 프로젝트 찾기, dto로 변환

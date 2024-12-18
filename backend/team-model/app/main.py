@@ -30,18 +30,21 @@ def read_employees(db: Session = Depends(get_db)):
 # 특정 회사 사원 점수 정규화 하기 
 @app.post("/api/scale-employee-score/") #쿼리파라미터로 회사아이디 보내기?company_id=1
 def scale_employee_data_endpoint(company_id:int, db: Session = Depends(get_db)):
+    print(f"점수 스케일링시작!!!!!!: {company_id}")
     result = scale_employee_data(db,company_id)
     return {"message": result}
 
 # 성향 임베딩 저장하기
 @app.post("/api/embedding-employee-personality/") #쿼리파라미터로 회사아이디 보내기?company_id=1
 def embedding_personality_data_endpoint(company_id:int, db: Session = Depends(get_db)):
+    print(f"성향 임베딩 시작!!!!!!: {company_id}")
     result = embedding_employee_personality(db,company_id)
     return {"message": result}
 
 # 과거 프로젝트 적합도 임베딩하기
 @app.post("/api/embedding-project/") #쿼리파라미터로 회사아이디 보내기?company_id=1
 def embedding_project_data_endpoint(company_id:int,project_id:int, db: Session = Depends(get_db)):
+    print(f"프로젝트 임베딩 시작!!!!!!: {project_id}")
     result = embedding_project(db,company_id=company_id, project_id=project_id)
     return {"message": result}
 
