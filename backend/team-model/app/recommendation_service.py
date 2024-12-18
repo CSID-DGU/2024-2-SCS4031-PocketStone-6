@@ -223,10 +223,14 @@ def recommend_team(memberIds:List[int],db: Session, company_id: int, project_id:
                         
                         personality_vectors = np.array(team_data['personality_embedding'].tolist()) # 성향벡터가져오기
                         personality_similarity = []
-                        for i, j in combinations(range(len(personality_vectors)), 2):
-                            similarity = 1 - cosine(personality_vectors[i], personality_vectors[j])
-                            personality_similarity.append(similarity)
-                        avg_personality_similarity = np.mean(personality_similarity)
+                        # 팀에 한 명만 있는 경우 성향 유사도를 1로 설정
+                        if len(personality_vectors) > 1:
+                            for i, j in combinations(range(len(personality_vectors)), 2):
+                                similarity = 1 - cosine(personality_vectors[i], personality_vectors[j])
+                                personality_similarity.append(similarity)
+                            avg_personality_similarity = np.mean(personality_similarity)  # 성향 유사도의 평균
+                        else:
+                            avg_personality_similarity = 1  # 팀원이 한 명일 경우 성향 유사도는 1로 설정
                         final_scores.append((team_indices, avg_stack_score, avg_project_score, 
                                         avg_personality_similarity, avg_kpi_score, avg_peer_score))
     final_scores_df = pd.DataFrame(final_scores, columns=['팀원 인덱스', '기술점수', 
@@ -235,7 +239,12 @@ def recommend_team(memberIds:List[int],db: Session, company_id: int, project_id:
     #####팀별로 성향 유사도 스케일링하기###########################
     min_similarity = final_scores_df['평균 성향 유사도'].min()
     max_similarity = final_scores_df['평균 성향 유사도'].max()
-    final_scores_df['평균 성향 유사도 (스케일링)'] = (final_scores_df['평균 성향 유사도'] - min_similarity) / (max_similarity - min_similarity)
+    # min_similarity와 max_similarity가 같으면, 스케일링을 하지 않음
+    if min_similarity == max_similarity:
+        final_scores_df['평균 성향 유사도 (스케일링)'] = 1  # 모든 값이 동일하므로 1로 설정
+    else:
+        # 스케일링 적용
+        final_scores_df['평균 성향 유사도 (스케일링)'] = (final_scores_df['평균 성향 유사도'] - min_similarity) / (max_similarity - min_similarity)
     #################가중치 부여
     weight = get_weight_type(weightType)
     final_scores_df['최종 점수'] = (
